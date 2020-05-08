@@ -1,25 +1,22 @@
 
-export const setBlockSpeed = speed => ({
-    type: "SET_BLOCK_SPEED",
-    speed
-})
+export const setBlockState = (actionType, stateValue) => {
 
-export const setBlockOn = blockOn => ({
-    type: "SET_BLOCK_ON",
-    blockOn
-})
-
-export const setBlockPosition = postition => ({
-    type: "SET_BLOCK_POSITION",
-    postition
-})
-
-export const setBlockNumber = number => ({
-    type: "SET_BLOCK_NUMBER",
-    number
-})
-
-export const setBlockState = blockState => ({
-    type: "SET_BLOCK_STATE",
-    blockState
-})
+    try {
+        switch (actionType) {
+            case "SET_BLOCK_SPEED":
+                return { type: "SET_BLOCK_SPEED", value: stateValue}
+            case "SET_BLOCK_ON":
+                return { type: "SET_BLOCK_ON", value: stateValue}
+            case "SET_BLOCK_POSITION":
+                return { type: "SET_BLOCK_POSITION", value: stateValue}
+            case "SET_BLOCK_STATE":
+                return { type: "SET_BLOCK_STATE", value: stateValue}
+            default:
+                throw Error("Unknown block action type")
+        }
+    }
+    catch(e) {
+        console.log(e.message)
+    }
+    
+}
