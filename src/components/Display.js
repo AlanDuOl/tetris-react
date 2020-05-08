@@ -9,13 +9,16 @@ function Display() {
 
     // const viewport = React.useRef()
     const [width, setWidth] = useState(0)
+    const [height, setHeight] = useState(0)
     const [blockType, setBlockType] = useState("")
 
     useEffect(() => {
-        const viewport = document.getElementById("display-viewport")
+        let viewport = document.getElementById("display-viewport")
         setWidth(viewport.offsetWidth)
+        setHeight(viewport.offsetHeight)
         viewport.addEventListener("resize", evt => {
             setWidth(evt.target.offsetWidth)
+            setHeight(viewport.offsetHeight)
         })
 
     }, [window.offsetWidth])
@@ -28,7 +31,7 @@ function Display() {
     return (
         <main id="display">
             <section id="display-viewport">
-                <Block type={blockType} viewportWidth={width} />
+                <Block type={blockType} viewportWidth={width} viewportHeight={height} />
             </section>
         </main>
     )
