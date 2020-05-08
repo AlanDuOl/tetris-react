@@ -3,6 +3,7 @@ import '../css/Tile.css'
 import { NUM_TILES_WIDTH } from '../globals'
 
 function Tile(props) {
+    
     const [dim, setDim] = React.useState(0)
 
     React.useEffect(() => {

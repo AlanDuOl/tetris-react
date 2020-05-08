@@ -5,6 +5,7 @@ import '../css/Blocks.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
 
+
 function Block(props) {
 
     const [tiles, setTiles] = React.useState([])
@@ -51,6 +52,7 @@ function getTiles(viewportWidth) {
     }
     return tiles
 }
+
 
 const mapStateToProps = state => ({
     ...state

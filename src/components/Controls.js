@@ -1,12 +1,20 @@
 import React from 'react'
 import '../css/Controls.scss'
+import { connect } from 'react-redux'
+import { setBlockState } from '../actions/blockActions.js'
 
 function Controls() {
+
+    
+    function turn() {
+        setBlockState("", )
+    }
+
     return (
         <section id="controls">
             <div id="controls-line-1" className="controls-line">
                 <div className="controls-element">
-                    <button type="button" className="controls-btn" id="controls-turn">&#8635;</button>
+                    <button type="button" className="controls-btn" id="controls-turn" onClick={turn}>&#8635;</button>
                 </div>
             </div>
             <div id="controls-line-2" className="controls-line">
@@ -26,4 +34,12 @@ function Controls() {
     )
 }
 
-export default Controls
+const mapStateToProps = state => ({
+    ...state
+})
+
+const mapDispatchToProps = dispatch => ({
+    setBlockState: (actionType, stateValue) => dispatch(setBlockState(actionType, stateValue))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Controls)
