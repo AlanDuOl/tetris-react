@@ -1,0 +1,51 @@
+
+#menu {
+    align-items: center;
+
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    justify-items: center;
+}
+
+.menu-btn {
+    width: 10vh;
+    font-weight: var(--app-font-weight);
+    background: linear-gradient(150deg, lightgray,  gray);
+    border: 2px solid gray;
+    border-radius: var(--app-inner-border-radius);
+}
+
+.menu-element {
+    padding: 1px;
+    border: 1px solid rgb(94, 92, 92);
+    border-radius: var(--app-inner-border-radius);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(63, 62, 62);
+}
+
+#menu-element-1 {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+#menu-element-2 {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+#menu-element-3 {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+}
+
+#menu-element-4 {
+    grid-column: 1 / 2;
+    grid-row: 4 / 5;
+}
