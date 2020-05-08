@@ -1,9 +1,9 @@
-const globals = require('../Globals.js')
+import { NUM_TILES_WIDTH, NUM_TILES_HEIGHT } from '../globals.js'
 
 const initialState = {
     level: 1,
     score: 0,
-    wall: new Array([globals.NUM_TILES_WIDTH][globals.NUM_TILES_HEIGHT]),
+    wall: new Array([NUM_TILES_WIDTH][NUM_TILES_HEIGHT]),
     gameOn: false,
     gamePaused: false
 }
