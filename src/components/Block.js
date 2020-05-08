@@ -9,21 +9,36 @@ function Block(props) {
 
     const [tiles, setTiles] = React.useState([])
     const [type, setType] = React.useState("")
+    // const [on, setOn] = React.useState(false)
+    const [el, setEl] = React.useState(null)
 
     React.useEffect(() => {
+        // When viewport changes get info for the new sizes
         setTiles(getTiles(props.viewportWidth))
+        setEl(document.getElementById("block"))
     }, [props.viewportWidth])
 
     React.useEffect(() => {
+        // When block type changes, change state type
         setType(props.type)
     }, [props.type])
 
-    const setInitialPos = () => {
-        console.log("pos: " + this.style.top)
-    }
+    React.useEffect(() => {
+        // When el changes, change its position
+        if (el) {
+            if (props.type != "I") {
+                el.style.left = (props.viewportWidth / 2 - (props.viewportWidth / 12)) + "px"
+                el.style.bottom = `${props.viewportHeight}px`
+            }
+            else {
+                el.style.left = (props.viewportWidth / 2 - (props.viewportWidth / 12) / 2) + "px"
+                el.style.bottom = `${props.viewportHeight}px`
+            }
+        }
+    }, [el])
 
     return (
-        <div className={"" + type + ""} onLoad={setInitialPos}>
+        <div id="block" className={"" + type + ""}>
             {tiles}
         </div>
     )
