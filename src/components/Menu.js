@@ -14,8 +14,11 @@ function Menu(props) {
                 evt.target.textContent = "Finish"
             }
             else {
-                props.setGameState("SET_GAME_ON", false)
-                evt.target.textContent = "Start"
+                let quit = window.confirm("Finish?")
+                if (quit) {
+                    props.setGameState("SET_GAME_ON", false)
+                    evt.target.textContent = "Start"
+                }
             }
         }
         catch(e) {
