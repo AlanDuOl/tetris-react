@@ -21,6 +21,8 @@ const gameReducer = (state = initialState, action) => {
             return Object.assign({}, state, { gameOn: action.value })
         case "SET_GAME_PAUSED":
             return Object.assign({}, state, { gamePaused: action.value })
+        case "SET_GAME_STATE":
+            return Object.assign({}, state, action.value )
         default:
             return state  // Return the current state if action.type does not match
     }
