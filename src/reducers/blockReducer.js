@@ -1,24 +1,22 @@
 import { BLOCK_INITIAL_SPEED } from '../globals.js'
 
 const initialState = {
-    currentBlock: {
-        speedUp: false,
-        turn: false,
-        moveLeft: false,
-        moveRight: false,
-        on: false,
-        speed: BLOCK_INITIAL_SPEED,
-        number: 0,
-        position: { left: 0, bottom: 0 },
-        rotation: 0
-    }
+    speedUp: false,
+    turn: false,
+    moveLeft: false,
+    moveRight: false,
+    on: true,
+    speed: BLOCK_INITIAL_SPEED,
+    number: 0,
+    position: { left: 0, bottom: 0 },
+    rotation: 0
 }
 
 const blockReducer = (state = initialState, action) => {
     // Set the new state based on the action type and value sent through the action
+    // Merge objects into the new state
     switch (action.type) {
         case "SET_BLOCK_TURN":
-            // Merge objects into the new state
             return Object.assign({}, state, { turn: action.value })
         case "SET_BLOCK_MOVE_LEFT":
             return Object.assign({}, state, { moveLeft: action.value })
@@ -36,7 +34,7 @@ const blockReducer = (state = initialState, action) => {
             return Object.assign({}, state, { rotation: action.value })
         case "SET_BLOCK_NUMBER":
             return Object.assign({}, state, { number: action.value })
-        case "SET_BLOCK_STATE":
+        case "SET_BLOCK":
             return Object.assign({}, state, action.value)
         default:
             // Return the current state if action.type does not match

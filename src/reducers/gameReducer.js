@@ -12,19 +12,17 @@ const gameReducer = (state = initialState, action) => {
     // Set the new state based on the action type and value sent through the action
     switch (action.type) {
         case "SET_GAME_LEVEL":
-            // Merge objects into the new state
-            return Object.assign({}, state, { level: action.level })
+            return Object.assign({}, state, { level: action.value }) // Merge objects into the new state
         case "SET_GAME_SCORE":
-            return Object.assign({}, state, { score: action.score })
+            return Object.assign({}, state, { score: action.value })
         case "SET_GAME_WALL":
-            return Object.assign({}, state, { wall: action.wall })
+            return Object.assign({}, state, { wall: action.value })
         case "SET_GAME_ON":
-            return Object.assign({}, state, { gameOn: action.gameOn })
+            return Object.assign({}, state, { gameOn: action.value })
         case "SET_GAME_PAUSED":
-            return Object.assign({}, state, { gamePaused: action.gamePaused })
+            return Object.assign({}, state, { gamePaused: action.value })
         default:
-            // Return the current state if action.type does not match
-            return state
+            return state  // Return the current state if action.type does not match
     }
 }
 
