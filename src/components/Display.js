@@ -10,6 +10,7 @@ function Display(props) {
 
     const [width, setWidth] = useState(0)
     const [height, setHeight] = useState(0)
+    const [block, setBlock] = useState(null)
 
     useEffect(() => {
         let viewport = document.getElementById("display-viewport")
@@ -17,10 +18,19 @@ function Display(props) {
         setHeight(viewport.offsetHeight)
     }, [])
 
+    useEffect(() => {
+        if (props.gameReducer.gameOn) {
+            setBlock(getBlock(width, height))
+        }
+        else {
+            setBlock(null)
+        }
+    }, [props.gameReducer.gameOn])
+
     return (
         <main id="display">
             <section id="display-viewport">
-                { props.gameReducer.gameOn ? getBlock(width, height) : null }
+                { block }
             </section>
         </main>
     )
