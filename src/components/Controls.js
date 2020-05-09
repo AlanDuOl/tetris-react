@@ -3,11 +3,15 @@ import '../css/Controls.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
 
-function Controls() {
+function Controls(props) {
 
     
     function turn() {
-        setBlockState("", )
+        setBlockState("SET_BLOCK_TURN", true)
+    }
+
+    const blockOn = () => {
+        props.setBlockState("SET_BLOCK_ON", false)
     }
 
     return (
@@ -27,7 +31,7 @@ function Controls() {
             </div>
             <div id="controls-line-3" className="controls-line">
                 <div className="controls-element">
-                    <button type="button" className="controls-btn" id="controls-down">&#8595;</button>
+                    <button type="button" className="controls-btn" id="controls-down" onClick={blockOn}>&#8595;</button>
                 </div>
             </div>
         </section>
@@ -39,7 +43,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    setBlockState: (actionType, stateValue) => dispatch(setBlockState(actionType, stateValue))
+    setBlockState: (actionType, stateValue) => dispatch(setBlockState(actionType, stateValue)),
+    // setBlockOn: actionValue => dispatch(setBlockOn(actionValue))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Controls)
