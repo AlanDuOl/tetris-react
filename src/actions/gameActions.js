@@ -1,30 +1,26 @@
 
-export const setGameLevel = level => ({
-    type: "SET_GAME_LEVEL",
-    level
-})
+export const setGameState = (actionType, actionValue) => {
 
-export const setGameScore = score => ({
-    type: "SET_GAME_SCORE",
-    score
-})
-
-export const setGameWall = wall => ({
-    type: "SET_GAME_WALL",
-    wall
-})
-
-export const setGameOn = gameOn => ({
-    type: "SET_GAME_ON",
-    gameOn
-})
-
-export const setGamePause = gamePaused => ({
-    type: "SET_GAME_PAUSED",
-    gamePaused
-})
-
-export const setGameState = gameState => ({
-    type: "SET_GAME_STATE",
-    gameState
-})
+    try {
+        switch (actionType) {
+            case "SET_GAME_WALL":
+                return { type: "SET_GAME_WALL", value: actionValue }
+            case "SET_GAME_LEVEL":
+                return { type: "SET_GAME_LEVEL", value: actionValue }
+            case "SET_GAME_SCORE":
+                return { type: "SET_GAME_SCORE", value: actionValue }
+            case "SET_GAME_ON":
+                return { type: "SET_GAME_ON", value: actionValue }
+            case "SET_GAME_PAUSED":
+                return { type: "SET_GAME_PAUSED", value: actionValue }
+            case "SET_GAME_STATE":
+                return { type: "SET_GAME_STATE", value: actionValue }
+            default:
+                return { type: "", value: null };
+        }
+    }
+    catch(e) {
+        console.log(e.message)
+    } 
+    
+}
