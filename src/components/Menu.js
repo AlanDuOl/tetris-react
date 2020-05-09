@@ -1,13 +1,13 @@
 import React from 'react'
 import '../css/Menu.scss'
 import { connect } from 'react-redux'
-import { setGameOn } from '../actions/gameActions.js'
+import { setGameState } from '../actions/gameActions.js'
 
 function Menu(props) {
 
     // Start the game and create block
     function start() {
-        props.setGameOn(true)
+        // props.setGameOn(true)
     }
 
     return (
@@ -29,7 +29,7 @@ function Menu(props) {
 }
 
 const mapDispatchToProps = dispatch => ({
-    setGameOn: gameOn => dispatch(setGameOn(gameOn))
+    setGameState: gameOn => dispatch(setGameState(gameOn))
 })
 
 export default connect(null, mapDispatchToProps)(Menu)
