@@ -3,41 +3,38 @@ import { connect } from 'react-redux'
 import Block from './Block'
 import '../css/Display.css'
 import { blockTypes, NUM_BLOCK_TYPES } from '../globals.js'
+import { setBlockState } from '../actions/blockActions'
+import { setGameState } from '../actions/gameActions'
 
 
-function Display() {
+function Display(props) {
 
     // const viewport = React.useRef()
     const [width, setWidth] = useState(0)
     const [height, setHeight] = useState(0)
-    const [blockType, setBlockType] = useState("")
+    // const [blockType, setBlockType] = useState("")
 
     useEffect(() => {
         let viewport = document.getElementById("display-viewport")
         setWidth(viewport.offsetWidth)
         setHeight(viewport.offsetHeight)
-        viewport.addEventListener("resize", evt => {
-            setWidth(evt.target.offsetWidth)
-            setHeight(viewport.offsetHeight)
-        })
-
-    }, [window.offsetWidth])
-
-    // Need to change second parameter for when new block event is fired
-    useEffect(() => {
-        setBlockType(setBlock())
+        // setBlockType(setBlock())
     }, [])
 
     return (
         <main id="display">
             <section id="display-viewport">
-                <Block type={blockType} viewportWidth={width} viewportHeight={height} />
+                {props.gameReducer.gameOn ? restartBlock(getBlockType(), width, height) : null }
             </section>
         </main>
     )
 }
 
-function setBlock() {
+function restartBlock(type, viewportWidth, viewportHeight) {
+    return (<Block type={type} viewportWidth={viewportWidth} viewportHeight={viewportHeight} />)
+}
+
+function getBlockType() {
 
     let blockType = ""
     let blockNumber = getBlockNumber()
@@ -83,14 +80,13 @@ function getBlockNumber() {
     return blockNum
 }
 
-const mapStateToProps = state => {
-    return {
-        ...state
-    }
-}
+const mapStateToProps = state => ({
+    ...state
+})
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = dispatch => ({
+    setBlockState: (actionType, actionValue) => dispatch(setBlockState(actionType, actionValue)),
+    setGameState: (actionType, actionValue) => dispatch(setGameState(actionType, actionValue))
+})
 
-}
-
-export default Display
+export default connect(mapStateToProps, mapDispatchToProps)(Display)
