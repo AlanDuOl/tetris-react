@@ -14,36 +14,31 @@ function Block(props) {
 
     let timerCounter = 0
 
+    // When viewport changes get info for the new sizes
     useEffect(() => {
-        // When viewport changes get info for the new sizes
         setTiles(getTiles(props.viewportWidth))
     }, [props.viewportWidth])
 
+    // Get block reference on its first render
     useEffect(() => {
         setBlock(document.getElementById("block"))
     }, [])
 
+    // When block type changes, change state type
     useEffect(() => {
-        // When block type changes, change state type
         setType(props.type)
     }, [props.type])
 
+    // Wnen block reference changes
     useEffect(() => {
-        try {
-            if (block) {
-                setInitialPosition(block, props.viewportWidth, props.viewportHeight)
-                setTimer(setInterval(move, 500))
-            }
+        // If block is set, set its position and make it move
+        if (block) {
+            setInitialPosition(block, props.viewportWidth, props.viewportHeight)
+            setTimer(setInterval(move, 500))
         }
-        catch(e) {
-            console.log(e.message)
-        }
-        finally {
-            clearInterval(timer)
-        }
-        
     }, [block])
 
+    // If state gamePaused change make block stop or move  
     useEffect(() => {
         if (props.gameReducer.gamePaused) {
             clearInterval(timer)
@@ -54,7 +49,11 @@ function Block(props) {
     }, [props.gameReducer.gamePaused])
     
     const move = () => {
-        block.style.bottom = (parseInt(block.style.bottom) - props.blockReducer.speed) + "px"
+        // If block move it downwards with current speed
+        if (block) {
+            block.style.bottom = (parseInt(block.style.bottom) - props.blockReducer.speed) + "px"
+        }
+        // Clear timer after more than 100 iteractions
         timerCounter++
         if (timerCounter > 100) {
             clearInterval(timer)
