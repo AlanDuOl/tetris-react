@@ -1,7 +1,7 @@
 import React from "react";
 import Block from '../components/Block';
 import Tile from '../components/Tile'
-import { blockTypes, NUM_TILES, BLOCK_DELTA_SPEED } from '../globals.js'
+import { blockTypes, NUM_TILES, BLOCK_DELTA_SPEED, timerSpeeds } from '../globals.js'
 
 export function getBlock(viewportWidth, viewportHeight) {
     let blockType = getBlockType();
@@ -23,9 +23,24 @@ export const setInitialPosition = (block, viewportWidth, viewportHeight) => {
     }
 }
 
-export function speedUp(currentSpeed) {
+export function blockNewSpeed(currentSpeed) {
     let newSpeed = currentSpeed + BLOCK_DELTA_SPEED
     return newSpeed
+}
+
+export function getTimerSpeed(gameLevel) {
+    switch (gameLevel) {
+        case 1:
+            return timerSpeeds.level1
+        case 2:
+            return timerSpeeds.level2
+        case 3:
+            return timerSpeeds.level3
+        case 4:
+            return timerSpeeds.level4
+        default:
+            return timerSpeeds.level4
+    }
 }
 
 function getBlockType() {
