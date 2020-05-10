@@ -1,3 +1,4 @@
+import { BLOCK_DELTA_SPEED } from '../globals'
 
 const initialState = {
     speedUp: false,
@@ -5,7 +6,7 @@ const initialState = {
     moveLeft: false,
     moveRight: false,
     on: true,
-    speed: 0,
+    speed: BLOCK_DELTA_SPEED,
     number: 0,
     position: { left: 0, bottom: 0 },
     rotation: 0,
