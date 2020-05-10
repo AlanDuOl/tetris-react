@@ -1,7 +1,7 @@
 import React from "react";
 import Block from '../components/Block';
 import Tile from '../components/Tile'
-import { blockTypes, NUM_TILES } from '../globals.js'
+import { blockTypes, NUM_TILES, BLOCK_DELTA_SPEED } from '../globals.js'
 
 export function getBlock(viewportWidth, viewportHeight) {
     let blockType = getBlockType();
@@ -21,6 +21,11 @@ export const setInitialPosition = (block, viewportWidth, viewportHeight) => {
         block.style.left = (viewportWidth / 2 - (viewportWidth / 12)) + "px"
         block.style.bottom = `${viewportHeight}px`
     }
+}
+
+export function speedUp(currentSpeed) {
+    let newSpeed = currentSpeed + BLOCK_DELTA_SPEED
+    return newSpeed
 }
 
 function getBlockType() {
