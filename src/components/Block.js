@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import '../css/Blocks.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
-import { getTiles, setInitialPosition } from '../libs/blockLib.js'
+import { getTiles, setInitialPosition, getTimerSpeed } from '../libs/blockLib.js'
+import { timerSpeeds } from '../globals.js'
 
 
 function Block(props) {
@@ -11,10 +12,9 @@ function Block(props) {
     const [type, setType] = useState("")
     const [block, setBlock] = useState(null)
     const [timer, setTimer] = useState(null)
+    const [timerSpeed, setTimerSpeed] = useState(timerSpeeds.level1)
 
-    let timerCounter = 0
-
-    // When viewport changes get info for the new sizes
+    // When viewport change update state tiles
     useEffect(() => {
         setTiles(getTiles(props.viewportWidth))
     }, [props.viewportWidth])
@@ -24,39 +24,50 @@ function Block(props) {
         setBlock(document.getElementById("block"))
     }, [])
 
-    // When block type changes, change state type
+    // When block type changes update state type
     useEffect(() => {
         setType(props.type)
     }, [props.type])
 
     // Wnen block reference changes
     useEffect(() => {
-        // If block is set, set its position and make it move
+        // If block is set, set its initial position and state timerSpeed
         if (block) {
             setInitialPosition(block, props.viewportWidth, props.viewportHeight)
-            setTimer(setInterval(move, 500))
+            setTimerSpeed(getTimerSpeed(props.gameReducer.level))
         }
     }, [block])
 
-    // If state gamePaused change make block stop or move  
+    // When state gamePaused change make block stop or move  
     useEffect(() => {
+        // Make block stop
         if (props.gameReducer.gamePaused) {
             clearInterval(timer)
         }
+        // Make block move
         else {
-            setTimer(setInterval(move, 500))
+            setTimer(setInterval(move, timerSpeed))
         }
     }, [props.gameReducer.gamePaused])
+
+    // When block speed changes, set timerSpeed
+    // TODO: see the best speed for speeded block
+    useEffect(() => {
+        setTimerSpeed(getTimerSpeed(props.blockReducer.speed))
+    }, [props.blockReducer.speed])
+
+    // When timerSpeed changes reset block speed
+    useEffect(() => {
+        if (timer) {
+            clearInterval(timer)
+        }
+        setTimer(setInterval(move, timerSpeed))
+    }, [timerSpeed])
     
-    const move = () => {
+    function move() {
         // If block move it downwards with current speed
         if (block) {
             block.style.bottom = (parseInt(block.style.bottom) - props.blockReducer.speed) + "px"
-        }
-        // Clear timer after more than 100 iteractions
-        timerCounter++
-        if (timerCounter > 100) {
-            clearInterval(timer)
         }
     }
 
@@ -66,9 +77,6 @@ function Block(props) {
         </div>
     )
 }
-
-
-
 
 const mapStateToProps = state => ({
     ...state
