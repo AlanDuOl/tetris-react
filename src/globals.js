@@ -30,3 +30,10 @@ export const blockTypes = {
         name: "O"
     }
 }
+
+export const timerSpeeds = {
+    level1: 400,
+    level2: 300,
+    level3: 200,
+    level4: 100
+}
