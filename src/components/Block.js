@@ -1,42 +1,67 @@
-import React from 'react'
-import Tile from './Tile'
-import { NUM_TILES } from '../globals.js'
+import React, { useState, useEffect } from 'react'
 import '../css/Blocks.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
+import { getTiles, setInitialPosition } from '../libs/blockLib.js'
 
 
 function Block(props) {
 
-    const [tiles, setTiles] = React.useState([])
-    const [type, setType] = React.useState("")
-    // const [on, setOn] = React.useState(false)
-    const [el, setEl] = React.useState(null)
+    const [tiles, setTiles] = useState([])
+    const [type, setType] = useState("")
+    const [block, setBlock] = useState(null)
+    const [timer, setTimer] = useState(null)
 
-    React.useEffect(() => {
+    let timerCounter = 0
+
+    useEffect(() => {
         // When viewport changes get info for the new sizes
         setTiles(getTiles(props.viewportWidth))
-        setEl(document.getElementById("block"))
     }, [props.viewportWidth])
 
-    React.useEffect(() => {
+    useEffect(() => {
+        setBlock(document.getElementById("block"))
+    }, [])
+
+    useEffect(() => {
         // When block type changes, change state type
         setType(props.type)
     }, [props.type])
 
-    React.useEffect(() => {
-        // When el changes, change its position
-        if (el) {
-            if (props.type != "I") {
-                el.style.left = (props.viewportWidth / 2 - (props.viewportWidth / 12)) + "px"
-                el.style.bottom = `${props.viewportHeight}px`
-            }
-            else {
-                el.style.left = (props.viewportWidth / 2 - (props.viewportWidth / 12) / 2) + "px"
-                el.style.bottom = `${props.viewportHeight}px`
+    useEffect(() => {
+        try {
+            if (block) {
+                setInitialPosition(block, props.viewportWidth, props.viewportHeight)
+                console.log(props.blockReducer.speed)
+                // setTimer(setInterval(move, 500))
             }
         }
-    }, [el])
+        catch(e) {
+            console.log(e.message)
+        }
+        finally {
+            clearInterval(timer)
+        }
+        
+    }, [block])
+    
+    const move = () => {
+        block.style.bottom = (parseInt(block.style.bottom) - props.blockReducer.speed) + "px"
+        timerCounter++
+        if (timerCounter > 100) {
+            clearInterval(timer)
+        }
+    }
+
+    // React.useEffect(() => {
+    //     if (props.gameReducer.gamePaused) {
+    //         clearInterval(timer)
+    //     }
+    //     else {
+    //         // setTimer(setInterval(move, 500))
+    //     }
+    // }, [props.gameReducer.gamePaused])
+    
 
     return (
         <div id="block" className={"" + type + ""}>
@@ -45,13 +70,7 @@ function Block(props) {
     )
 }
 
-function getTiles(viewportWidth) {
-    let tiles = []
-    for (let i = 0; i < NUM_TILES; i++) {
-        tiles.push(<Tile key={i} id={"tile-" + i} viewportWidth={viewportWidth} />)
-    }
-    return tiles
-}
+
 
 
 const mapStateToProps = state => ({

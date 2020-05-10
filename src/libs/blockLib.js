@@ -1,10 +1,24 @@
 import React from "react";
 import Block from '../components/Block';
-import { blockTypes } from '../globals.js'
+import Tile from '../components/Tile'
+import { blockTypes, NUM_TILES } from '../globals.js'
 
 export function getBlock(viewportWidth, viewportHeight) {
     let blockType = getBlockType();
     return (<Block type={blockType} viewportWidth={viewportWidth} viewportHeight={viewportHeight} />);
+}
+
+export function getTiles(viewportWidth) {
+    let tiles = []
+    for (let i = 0; i < NUM_TILES; i++) {
+        tiles.push(<Tile key={i} id={"tile-" + i} viewportWidth={viewportWidth} />)
+    }
+    return tiles
+}
+
+export const setInitialPosition = (block, viewportWidth, viewportHeight) => {
+    block.style.left = (viewportWidth / 2 - (viewportWidth / 12)) + "px"
+    block.style.bottom = `${viewportHeight}px`
 }
 
 function getBlockType() {
