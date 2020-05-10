@@ -17,8 +17,10 @@ export function getTiles(viewportWidth) {
 }
 
 export const setInitialPosition = (block, viewportWidth, viewportHeight) => {
-    block.style.left = (viewportWidth / 2 - (viewportWidth / 12)) + "px"
-    block.style.bottom = `${viewportHeight}px`
+    if (block) {
+        block.style.left = (viewportWidth / 2 - (viewportWidth / 12)) + "px"
+        block.style.bottom = `${viewportHeight}px`
+    }
 }
 
 function getBlockType() {
