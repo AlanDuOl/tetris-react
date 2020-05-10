@@ -2,6 +2,7 @@ import React from 'react'
 import '../css/Controls.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
+import { blockNewSpeed } from '../libs/blockLib.js'
 
 function Controls(props) {
 
@@ -11,7 +12,7 @@ function Controls(props) {
     }
 
     const blockSpeedUp = () => {
-        props.setBlockState("SET_BLOCK_SPEED_UP", true)
+        props.setBlockState("SET_BLOCK_SPEED", blockNewSpeed(props.blockReducer.speed))
     }
 
     return (
