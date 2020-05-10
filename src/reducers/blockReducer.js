@@ -9,7 +9,8 @@ const initialState = {
     speed: BLOCK_INITIAL_SPEED,
     number: 0,
     position: { left: 0, bottom: 0 },
-    rotation: 0
+    rotation: 0,
+    restart: false
 }
 
 const blockReducer = (state = initialState, action) => {
@@ -34,6 +35,8 @@ const blockReducer = (state = initialState, action) => {
             return Object.assign({}, state, { rotation: action.value })
         case "SET_BLOCK_NUMBER":
             return Object.assign({}, state, { number: action.value })
+        case "SET_BLOCK_RESTART":
+            return Object.assign({}, state, { restart: action.value })
         case "SET_BLOCK":
             return Object.assign({}, state, action.value)
         default:
