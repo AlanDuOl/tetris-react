@@ -19,13 +19,13 @@ function Display(props) {
     }, [])
 
     useEffect(() => {
-        if (props.gameReducer.gameOn) {
+        if (props.gameReducer.gameOn || props.blockReducer.restart) {
             setBlock(getBlock(width, height))
         }
         else {
             setBlock(null)
         }
-    }, [props.gameReducer.gameOn])
+    }, [props.gameReducer.gameOn, props.blockReducer.restart])
 
     return (
         <main id="display">
