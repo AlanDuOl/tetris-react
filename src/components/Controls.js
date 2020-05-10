@@ -10,8 +10,8 @@ function Controls(props) {
         setBlockState("SET_BLOCK_TURN", true)
     }
 
-    const blockOn = () => {
-        props.setBlockState("SET_BLOCK_ON", false)
+    const blockSpeedUp = () => {
+        props.setBlockState("SET_BLOCK_SPEED_UP", true)
     }
 
     return (
@@ -31,7 +31,7 @@ function Controls(props) {
             </div>
             <div id="controls-line-3" className="controls-line">
                 <div className="controls-element">
-                    <button type="button" className="controls-btn" id="controls-down" onClick={blockOn}>&#8595;</button>
+                    <button type="button" className="controls-btn" id="controls-down" onClick={blockSpeedUp}>&#8595;</button>
                 </div>
             </div>
         </section>
