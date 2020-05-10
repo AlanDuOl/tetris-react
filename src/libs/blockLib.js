@@ -39,7 +39,7 @@ export function getTimerSpeed(gameLevel) {
         case 4:
             return timerSpeeds.level4
         default:
-            return timerSpeeds.level4
+            return timerSpeeds.speedUp
     }
 }
 
