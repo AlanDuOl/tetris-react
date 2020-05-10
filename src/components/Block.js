@@ -32,8 +32,7 @@ function Block(props) {
         try {
             if (block) {
                 setInitialPosition(block, props.viewportWidth, props.viewportHeight)
-                console.log(props.blockReducer.speed)
-                // setTimer(setInterval(move, 500))
+                setTimer(setInterval(move, 500))
             }
         }
         catch(e) {
@@ -44,6 +43,15 @@ function Block(props) {
         }
         
     }, [block])
+
+    useEffect(() => {
+        if (props.gameReducer.gamePaused) {
+            clearInterval(timer)
+        }
+        else {
+            setTimer(setInterval(move, 500))
+        }
+    }, [props.gameReducer.gamePaused])
     
     const move = () => {
         block.style.bottom = (parseInt(block.style.bottom) - props.blockReducer.speed) + "px"
@@ -52,16 +60,6 @@ function Block(props) {
             clearInterval(timer)
         }
     }
-
-    // React.useEffect(() => {
-    //     if (props.gameReducer.gamePaused) {
-    //         clearInterval(timer)
-    //     }
-    //     else {
-    //         // setTimer(setInterval(move, 500))
-    //     }
-    // }, [props.gameReducer.gamePaused])
-    
 
     return (
         <div id="block" className={"" + type + ""}>
