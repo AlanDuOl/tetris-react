@@ -1,4 +1,3 @@
-import { BLOCK_INITIAL_SPEED } from '../globals.js'
 
 const initialState = {
     speedUp: false,
@@ -6,7 +5,7 @@ const initialState = {
     moveLeft: false,
     moveRight: false,
     on: true,
-    speed: BLOCK_INITIAL_SPEED,
+    speed: 0,
     number: 0,
     position: { left: 0, bottom: 0 },
     rotation: 0,
