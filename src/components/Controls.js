@@ -12,7 +12,9 @@ function Controls(props) {
     }
 
     const blockSpeedUp = () => {
-        props.setBlockState("SET_BLOCK_SPEED", blockNewSpeed(props.blockReducer.speed))
+        if (props.gameReducer.gameOn) {
+            props.setBlockState("SET_BLOCK_SPEED", blockNewSpeed(props.blockReducer.speed))
+        }
     }
 
     return (
