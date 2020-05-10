@@ -1,0 +1,92 @@
+Component types:
+    - Active: tigger changes (direct interaction by users)
+    - Reactive: react to changes
+
+Reactive component
+Block:
+    actions:
+        - restart
+        - move (down)
+        - check for collision
+        - speed up
+        - stop
+        - turn
+        - move left/right
+
+    - on render:
+        - set type/layout
+        - set tiles/tile size
+        - get self reference
+        - set initial position
+        - set timerSpeed
+    
+    - on store game gamePaused = true:
+        - stop moving:
+            - clear current timer
+    - on store game gamePaused = false:
+        - keep moving:
+            - reset timer with current timerSpeed
+
+    - on store block speed:
+        - set timerSpeed
+
+    - on store game level:
+        - set timerSpeed
+
+    - on local timerSpeed change:
+        - clear current timer
+        - set new timer with new timerSpeed
+    
+
+Active component
+Controls:
+    - down:
+        - set store block speedUp = true
+
+- restart block
+- restart wall       
+
+Reactive component
+Display-viewport:
+    - on mount/render/load:
+        - set viewportWidth
+        - set viewportHeight
+
+    - on store gameOn = true:
+        - restart block
+    - on store block restart = true:
+        - restart block
+
+Reactive component
+Wall:
+    - on store game gameOn = false:
+        - restart
+    - store set gameOn = true:
+        - nothing
+    - store set gamePaused = true | false:
+        - nothing
+
+        - update score
+        - game over
+        - update self
+        - restart block
+
+Active component
+Menu:
+    - Start:
+        - store set gameOn = true
+        - change self btn textContent = Finish
+        
+    - Finish:
+        - command set gameOn = false
+        - change self btn textContent = Start
+        - change Resume btn textContent = Pause
+
+    - Pause:
+        - store set gamePaused = true
+        - change self btn textContent = Resume
+    - Resume:
+        - store set gamePaused = false
+        - change self btn textContent = Pause
+
+

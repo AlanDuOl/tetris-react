@@ -64,8 +64,8 @@ function Block(props) {
         setTimer(setInterval(move, timerSpeed))
     }, [timerSpeed])
     
+    // If block move it downwards with current speed
     function move() {
-        // If block move it downwards with current speed
         if (block) {
             block.style.bottom = (parseInt(block.style.bottom) - props.blockReducer.speed) + "px"
         }
