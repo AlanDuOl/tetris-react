@@ -1,51 +1,64 @@
 Component types:
     - Active: tigger changes (direct interaction by users)
-    - Reactive: react to changes
+    - Reactive: react to changes (reactions can also tigger changes) (indirect interaction by users)
 
 Reactive component
 Block:
     actions:
-        - restart
-        - move (down)
+        - restart (ok)
+        - move (down) (ok)
         - check for collision
-        - speed up
-        - stop
+        - speed up (ok)
+        - stop (ok)
         - turn
         - move left/right
 
     - on render:
+        - set local self reference
+
+    - on local self change:
         - set type/layout
         - set tiles/tile size
-        - set self reference
         - set initial position
         - set initial speed
         - set initial timerSpeed
+        - set store block speed to initial value
     
     - on store game gamePaused = true:
         - stop moving:
             - clear current timer
     - on store game gamePaused = false:
-        - keep moving:
+        - restart moving with the same speed of stop:
             - reset timer with current timerSpeed
 
-    - on store block speed:
-        - set timerSpeed
+    - on store block speed+:
+        - set local speed with current store block speed
 
-    - on store game level+:
-        - set timerSpeed
-
+    - on local speed+:
+        - set timerSpeed with store block speed
+    
     - on local timerSpeed change:
         - clear current timer
         - set new timer with new timerSpeed
     
 
+    - on store game level+:
+        - set timerSpeed with new level
+
+    
+    
+
 Active component
 Controls:
     - down:
-        - set store block speedUp = true
-
-- restart block
-- restart wall       
+        - set store block speed+
+    - left:
+        - set store block turn left
+    - right:
+        - set store block turn right
+    - turn:
+        - set store block turn
+        
 
 Reactive component
 Display-viewport:
@@ -61,7 +74,7 @@ Display-viewport:
 Reactive component
 Wall:
     - on store game gameOn = false:
-        - restart
+        - init
     - store set gameOn = true:
         - nothing
     - store set gamePaused = true | false:
