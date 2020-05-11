@@ -16,9 +16,10 @@ Block:
     - on render:
         - set type/layout
         - set tiles/tile size
-        - get self reference
+        - set self reference
         - set initial position
-        - set timerSpeed
+        - set initial speed
+        - set initial timerSpeed
     
     - on store game gamePaused = true:
         - stop moving:
@@ -30,7 +31,7 @@ Block:
     - on store block speed:
         - set timerSpeed
 
-    - on store game level:
+    - on store game level+:
         - set timerSpeed
 
     - on local timerSpeed change:
@@ -65,6 +66,8 @@ Wall:
         - nothing
     - store set gamePaused = true | false:
         - nothing
+    - on store wall update = true:
+        - 
 
         - update score
         - game over
