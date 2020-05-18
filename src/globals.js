@@ -1,9 +1,10 @@
 
 export const NUM_BLOCK_TYPES = 7
-export const NUM_TILES = 4
+export const BLOCK_NUM_TILES = 4
 export const NUM_TILES_WIDTH = 12
 export const NUM_TILES_HEIGHT = 36
 export const BLOCK_DELTA_SPEED = 5
+export const BLOCK_DELTA_ROTATION = 90
 
 
 export const blockTypes = {
