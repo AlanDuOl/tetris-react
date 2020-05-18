@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../css/Blocks.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
-import { getTiles, setBlockInitialPosition, getTimerSpeed, blockMoveLeft, blockMoveRight } from '../libs/blockLib.js'
+import { getTiles, setBlockInitialPosition, getTimerSpeed, blockMoveLeft, blockMoveRight, checkRotationCollision } from '../libs/blockLib.js'
 import { timerSpeeds, BLOCK_DELTA_SPEED } from '../globals.js'
 
 
@@ -61,6 +61,7 @@ function Block(props) {
         setTimer(setInterval(move, timerSpeed))
     }, [timerSpeed])
 
+    // useEffect without argumets is cached?
     // Move block left/right
     useEffect(() => {
         // Check to move left
@@ -79,6 +80,11 @@ function Block(props) {
     useEffect(() => {
         setRotation(props.blockReducer.rotation)
     }, [props.blockReducer.rotation])
+
+    // Check for collision on rotation
+    useEffect(() => {
+        checkRotationCollision(self, props.viewportWidth)
+    }, [rotation])
 
     // Init local state and reset store state block speed
     function init() {
