@@ -62,8 +62,12 @@ export const checkRotationCollision = (block, viewportWidth) => {
         let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
         let blockRect = block.getBoundingClientRect()
         let blockCurrentRight = parseFloat(block.style.left) + blockRect.width
+        let blockCurrentLeft = parseFloat(block.style.left)
         if (blockCurrentRight > viewportWidth) {
             block.style.left = `${parseFloat(block.style.left) - tileWidth}px`
+        }
+        else if (blockCurrentLeft < 0) {
+            block.style.left = `${parseFloat(block.style.left) + tileWidth}px`
         }
     }
 }
