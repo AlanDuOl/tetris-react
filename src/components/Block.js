@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../css/Blocks.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
-import { getTiles, setInitialPosition, getTimerSpeed, blockMoveLeft, blockMoveRight } from '../libs/blockLib.js'
+import { getTiles, setBlockInitialPosition, getTimerSpeed, blockMoveLeft, blockMoveRight } from '../libs/blockLib.js'
 import { timerSpeeds, BLOCK_DELTA_SPEED } from '../globals.js'
 
 
@@ -77,7 +77,7 @@ function Block(props) {
     function init() {
         setType(props.type)
         setTiles(getTiles(props.viewportWidth))
-        setInitialPosition(self, props.viewportWidth, props.viewportHeight)
+        setBlockInitialPosition(self, props.viewportWidth, props.viewportHeight)
         setTimerSpeed(timerSpeeds.level1)
         setSpeed(BLOCK_DELTA_SPEED)
         setBlockState("SET_BLOCK_SPEED", BLOCK_DELTA_SPEED)

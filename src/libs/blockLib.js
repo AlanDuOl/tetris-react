@@ -16,7 +16,7 @@ export function getTiles(viewportWidth) {
     return tiles
 }
 
-export const setInitialPosition = (block, viewportWidth, viewportHeight) => {
+export const setBlockInitialPosition = (block, viewportWidth, viewportHeight) => {
     if (block) {
         block.style.left = `${viewportWidth / 2 - (viewportWidth / NUM_TILES_WIDTH)}px`
         block.style.bottom = `${viewportHeight}px`
