@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../css/Blocks.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
-import { getTiles, setBlockInitialPosition, getTimerSpeed, blockMoveLeft, blockMoveRight, blockRotate } from '../libs/blockLib.js'
+import { getTiles, setBlockInitialPosition, getTimerSpeed, blockMoveLeft, blockMoveRight } from '../libs/blockLib.js'
 import { timerSpeeds, BLOCK_DELTA_SPEED } from '../globals.js'
 
 
@@ -14,7 +14,7 @@ function Block(props) {
     const [timer, setTimer] = useState(0)
     const [timerSpeed, setTimerSpeed] = useState(0)
     const [speed, setSpeed] = useState(0)
-    // const [displayBottom, setDisplayBottom] = useState(0)
+    const [rotation, setRotation] = useState(0)
 
     // Get block reference on its first render
     useEffect(() => {
@@ -66,6 +66,7 @@ function Block(props) {
         if (props.blockReducer.moveLeft) {
             blockMoveLeft(self, props.viewportWidth)
             props.setBlockState("SET_BLOCK_MOVE_LEFT", false)
+            console.log("left: " + self.offsetWidth)
         }
         // Check to move right
         if (props.blockReducer.moveRight) {
@@ -75,7 +76,7 @@ function Block(props) {
     })
 
     useEffect(() => {
-        blockRotate(self, props.blockReducer.rotation)
+        setRotation(props.blockReducer.rotation)
     }, [props.blockReducer.rotation])
 
     // Init local state and reset store state block speed
@@ -96,7 +97,7 @@ function Block(props) {
     }
 
     return (
-        <div id="block" className={"" + type + ""}>
+        <div id="block" className={`${type}-${rotation}`}>
             {tiles}
         </div>
     )
