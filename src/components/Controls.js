@@ -17,6 +17,18 @@ function Controls(props) {
         }
     }
 
+    const blockMoveLeft = () => {
+        if (props.gameReducer.gameOn) {
+            props.setBlockState("SET_BLOCK_MOVE_LEFT", true)
+        }
+    }
+
+    const blockMoveRight = () => {
+        if (props.gameReducer.gameOn) {
+            props.setBlockState("SET_BLOCK_MOVE_RIGHT", true)
+        }
+    }
+
     return (
         <section id="controls">
             <div id="controls-line-1" className="controls-line">
@@ -26,10 +38,10 @@ function Controls(props) {
             </div>
             <div id="controls-line-2" className="controls-line">
                 <div className="controls-element">
-                    <button type="button" className="controls-btn" id="controls-left">&#8592;</button>
+                    <button type="button" className="controls-btn" id="controls-left" onClick={blockMoveLeft}>&#8592;</button>
                 </div>
                 <div className="controls-element">
-                    <button type="button" className="controls-btn" id="controls-right">&#8594;</button>
+                    <button type="button" className="controls-btn" id="controls-right" onClick={blockMoveRight}>&#8594;</button>
                 </div>
             </div>
             <div id="controls-line-3" className="controls-line">
