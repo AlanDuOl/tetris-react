@@ -14,7 +14,14 @@ function Display(props) {
 
     useEffect(() => {
         let viewport = document.getElementById("display-viewport")
-        setWidth(viewport.offsetWidth)
+        let viewportRect = viewport.getBoundingClientRect()
+        // For new browsers
+        if (viewportRect.width) {
+            setWidth(viewportRect.width)
+        }
+        else {
+            setWidth(viewportRect.right - viewportRect.left)
+        }
         setHeight(viewport.offsetHeight)
     }, [])
 
