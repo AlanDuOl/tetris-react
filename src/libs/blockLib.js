@@ -38,12 +38,6 @@ export const blockMoveRight = (block, viewportWidth) => {
     }
 }
 
-export const blockRotate = (block, rotation) => {
-    if (block) {
-        block.style.transform = `rotate(${rotation}deg)`
-    }
-}
-
 export const blockNewRotation = currentRotation => {
     let rotation = currentRotation
     if (currentRotation >= 270) {
