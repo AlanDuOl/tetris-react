@@ -26,15 +26,22 @@ export const setBlockInitialPosition = (block, viewportWidth, viewportHeight) =>
 
 export const blockMoveLeft = (block, viewportWidth) => {
     if (block) {
-        let tileWidth = viewportWidth / NUM_TILES_WIDTH
-        block.style.left = `${parseFloat(block.style.left) - tileWidth}px`
+        let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
+        let blockNewLeft = parseFloat(block.style.left) - tileWidth
+        if (blockNewLeft > 0) {
+            block.style.left = `${parseFloat(block.style.left) - tileWidth}px`
+        }
     }
 }
 
 export const blockMoveRight = (block, viewportWidth) => {
     if (block) {
-        let tileWidth = viewportWidth / NUM_TILES_WIDTH
-        block.style.left = `${parseFloat(block.style.left) + tileWidth}px`
+        let blockCurrentRight = parseFloat(block.offsetWidth) + parseFloat(block.style.left)
+        let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
+        let blockNewRight = blockCurrentRight + tileWidth
+        if (blockNewRight < viewportWidth) {
+            block.style.left = `${parseFloat(block.style.left) + tileWidth}px`
+        }
     }
 }
 
@@ -47,6 +54,10 @@ export const blockNewRotation = currentRotation => {
         rotation += BLOCK_DELTA_ROTATION
     }
     return rotation
+}
+
+export const checkSideMove = (block, viewportWidth) => {
+    
 }
 
 export function blockNewSpeed(currentSpeed) {
