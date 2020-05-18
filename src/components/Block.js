@@ -15,6 +15,7 @@ function Block(props) {
     const [timerSpeed, setTimerSpeed] = useState(0)
     const [speed, setSpeed] = useState(0)
     const [rotation, setRotation] = useState(0)
+    // const [bottom, setBottom]
 
     // Get block reference on its first render
     useEffect(() => {
@@ -28,7 +29,7 @@ function Block(props) {
         }
     }, [self])
 
-    // When state gamePaused change make block stop or move  
+    // When store state gamePaused change make block stop or move  
     useEffect(() => {
         // Make block stop
         if (props.gameReducer.gamePaused) {

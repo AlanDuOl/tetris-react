@@ -8,7 +8,13 @@ Block:
         - restart (ok)
         - move (down) (ok)
         - check for collision:
-            - sides: use left + block offsetWidth < display offsetWidth
+            - on side move:
+                - use left + block width < viewportWidth
+            - on rotation:
+                - use left + block width > viewportWidth
+                - rotation collision does not happen on left side
+            - on move down:
+                - make bottom go up with another element?
         - speed up (ok)
         - stop (ok)
         - rotate (ok)
