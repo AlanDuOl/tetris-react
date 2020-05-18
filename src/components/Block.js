@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../css/Blocks.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
-import { getTiles, setBlockInitialPosition, getTimerSpeed, blockMoveLeft, blockMoveRight } from '../libs/blockLib.js'
+import { getTiles, setBlockInitialPosition, getTimerSpeed, blockMoveLeft, blockMoveRight, blockRotate } from '../libs/blockLib.js'
 import { timerSpeeds, BLOCK_DELTA_SPEED } from '../globals.js'
 
 
@@ -14,6 +14,7 @@ function Block(props) {
     const [timer, setTimer] = useState(0)
     const [timerSpeed, setTimerSpeed] = useState(0)
     const [speed, setSpeed] = useState(0)
+    // const [displayBottom, setDisplayBottom] = useState(0)
 
     // Get block reference on its first render
     useEffect(() => {
@@ -71,7 +72,11 @@ function Block(props) {
             blockMoveRight(self, props.viewportWidth)
             props.setBlockState("SET_BLOCK_MOVE_RIGHT", false)
         }
-    }, [props.blockReducer.moveLeft, props.blockReducer.moveRight])
+    })
+
+    useEffect(() => {
+        blockRotate(self, props.blockReducer.rotation)
+    }, [props.blockReducer.rotation])
 
     // Init local state and reset store state block speed
     function init() {
@@ -86,7 +91,7 @@ function Block(props) {
     // Move downwards with current speed
     function move() {
         if (self) {
-            self.style.bottom = `${parseInt(self.style.bottom) - speed}px`
+            self.style.bottom = `${parseFloat(self.style.bottom) - speed}px`
         }
     }
 
