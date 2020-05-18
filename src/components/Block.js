@@ -47,6 +47,7 @@ function Block(props) {
 
     // When block speed changes, set timerSpeed
     useEffect(() => {
+        // If speed is not initial speed, change timer speed
         if (speed > BLOCK_DELTA_SPEED) {
             setTimerSpeed(getTimerSpeed(speed))
         }
@@ -66,7 +67,6 @@ function Block(props) {
         if (props.blockReducer.moveLeft) {
             blockMoveLeft(self, props.viewportWidth)
             props.setBlockState("SET_BLOCK_MOVE_LEFT", false)
-            console.log("left: " + self.offsetWidth)
         }
         // Check to move right
         if (props.blockReducer.moveRight) {
@@ -75,6 +75,7 @@ function Block(props) {
         }
     })
 
+    // Set block by rotation
     useEffect(() => {
         setRotation(props.blockReducer.rotation)
     }, [props.blockReducer.rotation])
