@@ -7,11 +7,12 @@ Block:
     actions:
         - restart (ok)
         - move (down) (ok)
-        - check for collision
+        - check for collision:
+            - sides: use left + block offsetWidth < display offsetWidth
         - speed up (ok)
         - stop (ok)
-        - turn
-        - move left/right
+        - rotate (ok)
+        - move left/right (ok)
 
     - on render:
         - set local self reference
