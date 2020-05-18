@@ -1,7 +1,7 @@
 import React from "react";
 import Block from '../components/Block';
 import Tile from '../components/Tile'
-import { blockTypes, NUM_TILES, NUM_TILES_WIDTH, BLOCK_DELTA_SPEED, timerSpeeds } from '../globals.js'
+import { blockTypes, BLOCK_NUM_TILES, NUM_TILES_WIDTH, BLOCK_DELTA_SPEED, timerSpeeds, BLOCK_DELTA_ROTATION } from '../globals.js'
 
 export function getBlock(viewportWidth, viewportHeight) {
     let blockType = getBlockType();
@@ -10,7 +10,7 @@ export function getBlock(viewportWidth, viewportHeight) {
 
 export function getTiles(viewportWidth) {
     let tiles = []
-    for (let i = 0; i < NUM_TILES; i++) {
+    for (let i = 0; i < BLOCK_NUM_TILES; i++) {
         tiles.push(<Tile key={i} id={"tile-" + i} viewportWidth={viewportWidth} />)
     }
     return tiles
@@ -18,7 +18,8 @@ export function getTiles(viewportWidth) {
 
 export const setBlockInitialPosition = (block, viewportWidth, viewportHeight) => {
     if (block) {
-        block.style.left = `${viewportWidth / 2 - (viewportWidth / NUM_TILES_WIDTH)}px`
+        let tileWidth = viewportWidth / NUM_TILES_WIDTH
+        block.style.left = `${tileWidth * NUM_TILES_WIDTH / 2}px`
         block.style.bottom = `${viewportHeight}px`
     }
 }
@@ -26,15 +27,32 @@ export const setBlockInitialPosition = (block, viewportWidth, viewportHeight) =>
 export const blockMoveLeft = (block, viewportWidth) => {
     if (block) {
         let tileWidth = viewportWidth / NUM_TILES_WIDTH
-        block.style.left = `${parseInt(block.style.left) - tileWidth}px`
+        block.style.left = `${parseFloat(block.style.left) - tileWidth}px`
     }
 }
 
 export const blockMoveRight = (block, viewportWidth) => {
     if (block) {
         let tileWidth = viewportWidth / NUM_TILES_WIDTH
-        block.style.left = `${parseInt(block.style.left) + tileWidth}px`
+        block.style.left = `${parseFloat(block.style.left) + tileWidth}px`
     }
+}
+
+export const blockRotate = (block, rotation) => {
+    if (block) {
+        block.style.transform = `rotate(${rotation}deg)`
+    }
+}
+
+export const blockNewRotation = currentRotation => {
+    let rotation = currentRotation
+    if (currentRotation >= 270) {
+        rotation = 0
+    }
+    else {
+        rotation += BLOCK_DELTA_ROTATION
+    }
+    return rotation
 }
 
 export function blockNewSpeed(currentSpeed) {
