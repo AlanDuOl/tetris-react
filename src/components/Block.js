@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../css/Blocks.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
-import { getTiles, setInitialPosition, getTimerSpeed } from '../libs/blockLib.js'
+import { getTiles, setInitialPosition, getTimerSpeed, blockMoveLeft, blockMoveRight } from '../libs/blockLib.js'
 import { timerSpeeds, BLOCK_DELTA_SPEED } from '../globals.js'
 
 
@@ -59,6 +59,20 @@ function Block(props) {
         setTimer(setInterval(move, timerSpeed))
     }, [timerSpeed])
 
+    // Move block left/right
+    useEffect(() => {
+        // Check to move left
+        if (props.blockReducer.moveLeft) {
+            blockMoveLeft(self, props.viewportWidth)
+            props.setBlockState("SET_BLOCK_MOVE_LEFT", false)
+        }
+        // Check to move right
+        if (props.blockReducer.moveRight) {
+            blockMoveRight(self, props.viewportWidth)
+            props.setBlockState("SET_BLOCK_MOVE_RIGHT", false)
+        }
+    }, [props.blockReducer.moveLeft, props.blockReducer.moveRight])
+
     // Init local state and reset store state block speed
     function init() {
         setType(props.type)
@@ -72,7 +86,7 @@ function Block(props) {
     // Move downwards with current speed
     function move() {
         if (self) {
-            self.style.bottom = (parseInt(self.style.bottom) - speed) + "px"
+            self.style.bottom = `${parseInt(self.style.bottom) - speed}px`
         }
     }
 
