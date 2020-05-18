@@ -1,7 +1,7 @@
 import React from "react";
 import Block from '../components/Block';
 import Tile from '../components/Tile'
-import { blockTypes, NUM_TILES, BLOCK_DELTA_SPEED, timerSpeeds } from '../globals.js'
+import { blockTypes, NUM_TILES, NUM_TILES_WIDTH, BLOCK_DELTA_SPEED, timerSpeeds } from '../globals.js'
 
 export function getBlock(viewportWidth, viewportHeight) {
     let blockType = getBlockType();
@@ -18,8 +18,22 @@ export function getTiles(viewportWidth) {
 
 export const setInitialPosition = (block, viewportWidth, viewportHeight) => {
     if (block) {
-        block.style.left = (viewportWidth / 2 - (viewportWidth / 12)) + "px"
+        block.style.left = `${viewportWidth / 2 - (viewportWidth / NUM_TILES_WIDTH)}px`
         block.style.bottom = `${viewportHeight}px`
+    }
+}
+
+export const blockMoveLeft = (block, viewportWidth) => {
+    if (block) {
+        let tileWidth = viewportWidth / NUM_TILES_WIDTH
+        block.style.left = `${parseInt(block.style.left) - tileWidth}px`
+    }
+}
+
+export const blockMoveRight = (block, viewportWidth) => {
+    if (block) {
+        let tileWidth = viewportWidth / NUM_TILES_WIDTH
+        block.style.left = `${parseInt(block.style.left) + tileWidth}px`
     }
 }
 
