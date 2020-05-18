@@ -8,25 +8,25 @@ function Controls(props) {
 
     
     function rotate() {
-        if (props.gameReducer.gameOn) {
+        if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
             props.setBlockState("SET_BLOCK_ROTATION", blockNewRotation(props.blockReducer.rotation))
         }
     }
 
     const blockSpeedUp = () => {
-        if (props.gameReducer.gameOn) {
+        if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
             props.setBlockState("SET_BLOCK_SPEED", blockNewSpeed(props.blockReducer.speed))
         }
     }
 
     const blockMoveLeft = () => {
-        if (props.gameReducer.gameOn) {
+        if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
             props.setBlockState("SET_BLOCK_MOVE_LEFT", true)
         }
     }
 
     const blockMoveRight = () => {
-        if (props.gameReducer.gameOn) {
+        if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
             props.setBlockState("SET_BLOCK_MOVE_RIGHT", true)
         }
     }
