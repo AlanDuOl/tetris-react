@@ -2,13 +2,15 @@ import React from 'react'
 import '../css/Controls.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
-import { blockNewSpeed } from '../libs/blockLib.js'
+import { blockNewSpeed, blockNewRotation } from '../libs/blockLib.js'
 
 function Controls(props) {
 
     
-    function turn() {
-        setBlockState("SET_BLOCK_TURN", true)
+    function rotate() {
+        if (props.gameReducer.gameOn) {
+            props.setBlockState("SET_BLOCK_ROTATION", blockNewRotation(props.blockReducer.rotation))
+        }
     }
 
     const blockSpeedUp = () => {
@@ -33,7 +35,7 @@ function Controls(props) {
         <section id="controls">
             <div id="controls-line-1" className="controls-line">
                 <div className="controls-element">
-                    <button type="button" className="controls-btn" id="controls-turn" onClick={turn}>&#8635;</button>
+                    <button type="button" className="controls-btn" id="controls-turn" onClick={rotate}>&#8635;</button>
                 </div>
             </div>
             <div id="controls-line-2" className="controls-line">
