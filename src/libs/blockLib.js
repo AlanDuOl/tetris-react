@@ -36,8 +36,9 @@ export const blockMoveLeft = (block, viewportWidth) => {
 
 export const blockMoveRight = (block, viewportWidth) => {
     if (block) {
-        let blockCurrentRight = parseFloat(block.offsetWidth) + parseFloat(block.style.left)
+        let blockRect = block.getBoundingClientRect()
         let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
+        let blockCurrentRight = parseFloat(block.style.left) + blockRect.width
         let blockNewRight = blockCurrentRight + tileWidth
         if (blockNewRight < viewportWidth) {
             block.style.left = `${parseFloat(block.style.left) + tileWidth}px`
