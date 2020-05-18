@@ -2,8 +2,6 @@
 export const setBlockState = (actionType, actionValue) => {
     
     switch (actionType) {
-        case "SET_BLOCK_TURN":
-            return { type: "SET_BLOCK_TURN", value: actionValue }
         case "SET_BLOCK_MOVE_LEFT":
             return { type: "SET_BLOCK_MOVE_LEFT", value: actionValue }
         case "SET_BLOCK_MOVE_RIGHT":

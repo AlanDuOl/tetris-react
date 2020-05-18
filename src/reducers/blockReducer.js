@@ -1,12 +1,11 @@
 import { BLOCK_DELTA_SPEED } from '../globals'
 
 const initialState = {
-    turn: false,
     moveLeft: false,
     moveRight: false,
     speed: BLOCK_DELTA_SPEED,
     number: 0,
-    position: { left: 0, bottom: 0 },
+    position: { left: 0, bottom: 0 }, // Set left position relative to tileDim and bottom proportional to to viewportHeight
     rotation: 0
 }
 
@@ -14,8 +13,6 @@ const blockReducer = (state = initialState, action) => {
     // Set the new state based on the action type and value sent through the action
     // Merge objects into the new state
     switch (action.type) {
-        case "SET_BLOCK_TURN":
-            return Object.assign({}, state, { turn: action.value })
         case "SET_BLOCK_MOVE_LEFT":
             return Object.assign({}, state, { moveLeft: action.value })
         case "SET_BLOCK_MOVE_RIGHT":
