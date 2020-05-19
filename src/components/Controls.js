@@ -3,6 +3,7 @@ import '../css/Controls.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
 import { blockNewSpeed, blockNewRotation } from '../libs/blockLib.js'
+import { blockMoveDirections } from '../globals.js'
 
 function Controls(props) {
 
@@ -21,13 +22,13 @@ function Controls(props) {
 
     const blockMoveLeft = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState("SET_BLOCK_MOVE_LEFT", true)
+            props.setBlockState("SET_BLOCK_MOVE", blockMoveDirections.left)
         }
     }
 
     const blockMoveRight = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState("SET_BLOCK_MOVE_RIGHT", true)
+            props.setBlockState("SET_BLOCK_MOVE", blockMoveDirections.right)
         }
     }
 
