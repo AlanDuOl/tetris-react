@@ -73,16 +73,39 @@ export const blockNewRotation = currentRotation => {
 
 // TODO: On I block collition does not work
 export const checkRotationCollision = (block, viewportWidth) => {
+
     if (block) {
+
         let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
+        // Float precision dimensions
         let blockRect = block.getBoundingClientRect()
+        // Block current right ad left positions
         let blockCurrentRight = parseFloat(block.style.left) + blockRect.width
         let blockCurrentLeft = parseFloat(block.style.left)
+
+        // Check if there is an overflow
         if (blockCurrentRight > viewportWidth) {
-            block.style.left = `${parseFloat(block.style.left) - tileWidth}px`
+            // if the difference is more than 2 tiles
+            if (blockCurrentRight > (viewportWidth + tileWidth * 2)) {
+                block.style.left = `${viewportWidth - tileWidth * 4.0}px`
+            }
+            // if the difference is more than 1 tile
+            else if (blockCurrentRight > (viewportWidth + tileWidth)) {
+                block.style.left = `${parseFloat(block.style.left) - tileWidth * 2.0}px`
+            }
+            // All others
+            else {
+                block.style.left = `${parseFloat(block.style.left) - tileWidth}px`
+            }
         }
+        // This is problably not necessary because only left overflow is happening
         else if (blockCurrentLeft < 0) {
-            block.style.left = `${parseFloat(block.style.left) + tileWidth}px`
+            if (blockCurrentLeft < -tileWidth) {
+                block.style.left = `${parseFloat(block.style.left) + tileWidth * 2}px`
+            }
+            else {
+                block.style.left = `${parseFloat(block.style.left) + tileWidth}px`
+            }
         }
     }
 }
