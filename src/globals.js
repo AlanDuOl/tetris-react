@@ -7,6 +7,11 @@ export const BLOCK_INITIAL_SPEED = 5
 export const BLOCK_DELTA_SPEED = 5
 export const BLOCK_DELTA_ROTATION = 90
 
+export const blockMoveDirections = {
+    left: "left",
+    right: "right",
+    none: "none"
+}
 
 export const blockTypes = {
     one: {
