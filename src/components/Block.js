@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import '../css/Blocks.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
-import { getTiles, setBlockInitialPosition, getTimerSpeed, blockMoveLeft, blockMoveRight, checkRotationCollision } from '../libs/blockLib.js'
-import { timerSpeeds, BLOCK_DELTA_SPEED } from '../globals.js'
+import { getTiles, setBlockInitialPosition, getTimerSpeed, blockMove, checkRotationCollision } from '../libs/blockLib.js'
+import { BLOCK_INITIAL_SPEED, blockMoveDirections } from '../globals.js'
 
 
 function Block(props) {
@@ -17,15 +17,18 @@ function Block(props) {
     const [rotation, setRotation] = useState(0)
     // const [bottom, setBottom]
 
-    // Get block reference on its first render
+    // Init stuff that does not need a reference to the block element
     useEffect(() => {
         setSelf(document.getElementById("block"))
+        setType(props.type)
+        setTiles(getTiles(props.viewportWidth))
+        props.setBlockState("SET_BLOCK_SPEED", BLOCK_INITIAL_SPEED)
     }, [])
 
-    // Wnen block reference changes init local state
+    // Init stuff that needs a reference to the block
     useEffect(() => {
         if (self) {
-            init(self)
+            setBlockInitialPosition(self, props.viewportWidth, props.viewportHeight)
         }
     }, [self])
 
@@ -48,9 +51,13 @@ function Block(props) {
 
     // When block speed changes, set timerSpeed
     useEffect(() => {
-        // If speed is not initial speed, change timer speed
-        if (speed > BLOCK_DELTA_SPEED) {
+        // If speed is bigger than initial speed, change timer speed
+        if (speed > BLOCK_INITIAL_SPEED) {
             setTimerSpeed(getTimerSpeed(speed))
+        }
+        // Speed will always change on first render and set timeSpeed to current game level
+        else {
+            setTimerSpeed(getTimerSpeed(props.gameReducer.level))
         }
     }, [speed])
 
@@ -62,20 +69,13 @@ function Block(props) {
         setTimer(setInterval(move, timerSpeed))
     }, [timerSpeed])
 
-    // useEffect without argumets is cached?
-    // Move block left/right
+    // Move block
     useEffect(() => {
-        // Check to move left
-        if (props.blockReducer.moveLeft) {
-            blockMoveLeft(self, props.viewportWidth)
-            props.setBlockState("SET_BLOCK_MOVE_LEFT", false)
+        if (self && props.blockReducer.moveDir !== blockMoveDirections.none) {
+            blockMove(props.blockReducer.moveDir, self, props.viewportWidth)
+            props.setBlockState("SET_BLOCK_MOVE", blockMoveDirections.none)
         }
-        // Check to move right
-        if (props.blockReducer.moveRight) {
-            blockMoveRight(self, props.viewportWidth)
-            props.setBlockState("SET_BLOCK_MOVE_RIGHT", false)
-        }
-    })
+    }, [props.blockReducer.moveDir])
 
     // Set block by rotation
     useEffect(() => {
@@ -86,21 +86,18 @@ function Block(props) {
     useEffect(() => {
         checkRotationCollision(self, props.viewportWidth)
     }, [rotation])
-
-    // Init local state and reset store state block speed
-    function init() {
-        setType(props.type)
-        setTiles(getTiles(props.viewportWidth))
-        setBlockInitialPosition(self, props.viewportWidth, props.viewportHeight)
-        setTimerSpeed(timerSpeeds.level1)
-        setSpeed(BLOCK_DELTA_SPEED)
-        setBlockState("SET_BLOCK_SPEED", BLOCK_DELTA_SPEED)
-    }
     
     // Move downwards with current speed
     function move() {
         if (self) {
-            self.style.bottom = `${parseFloat(self.style.bottom) - speed}px`
+            let currentBottom = parseFloat(self.style.bottom)
+            if (currentBottom > 0) {
+                self.style.bottom = `${parseFloat(self.style.bottom) - speed}px`
+            }
+            else {
+                clearInterval(timer)
+                self.style.bottom = "0px"
+            }
         }
     }
 
