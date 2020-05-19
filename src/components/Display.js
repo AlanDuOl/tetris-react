@@ -19,6 +19,7 @@ function Display(props) {
         if (viewportRect.width) {
             setWidth(viewportRect.width)
         }
+        // For old browsers
         else {
             setWidth(viewportRect.right - viewportRect.left)
         }
@@ -26,13 +27,13 @@ function Display(props) {
     }, [])
 
     useEffect(() => {
-        if (props.gameReducer.gameOn || props.blockReducer.restart) {
+        if (props.gameReducer.gameOn) {
             setBlock(getBlock(width, height))
         }
         else {
             setBlock(null)
         }
-    }, [props.gameReducer.gameOn, props.blockReducer.restart])
+    }, [props.gameReducer.gameOn])
 
     return (
         <main id="display">
