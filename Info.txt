@@ -113,3 +113,9 @@ Menu:
         - change self btn textContent = Pause
 
 
+- Workflow:
+    1. Load app:
+        - At this point only the start button works
+    2. Press start btn:
+        - Reset wall
+        - Reset block
