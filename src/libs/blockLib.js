@@ -1,7 +1,7 @@
 import React from "react";
 import Block from '../components/Block';
 import Tile from '../components/Tile'
-import { blockTypes, BLOCK_NUM_TILES, NUM_TILES_WIDTH, BLOCK_DELTA_SPEED, timerSpeeds, BLOCK_DELTA_ROTATION } from '../globals.js'
+import { blockTypes, BLOCK_NUM_TILES, NUM_TILES_WIDTH, BLOCK_DELTA_SPEED, timerSpeeds, BLOCK_DELTA_ROTATION, blockMoveDirections } from '../globals.js'
 
 export function getBlock(viewportWidth, viewportHeight) {
     let blockType = getBlockType();
@@ -24,7 +24,21 @@ export const setBlockInitialPosition = (block, viewportWidth, viewportHeight) =>
     }
 }
 
-export const blockMoveLeft = (block, viewportWidth) => {
+export const blockMove = (moveDirection, block, viewportWidth) => {
+    switch (moveDirection) {
+        case blockMoveDirections.left:
+            blockMoveLeft(block, viewportWidth)
+            break
+        case blockMoveDirections.right:
+            blockMoveRight(block, viewportWidth)
+            break
+        default:
+            console.log("Unknown move direction")
+            break
+    }
+}
+
+const blockMoveLeft = (block, viewportWidth) => {
     if (block) {
         let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
         let blockNewLeft = parseFloat(block.style.left) - tileWidth
@@ -34,7 +48,7 @@ export const blockMoveLeft = (block, viewportWidth) => {
     }
 }
 
-export const blockMoveRight = (block, viewportWidth) => {
+const blockMoveRight = (block, viewportWidth) => {
     if (block) {
         let blockRect = block.getBoundingClientRect()
         let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
@@ -57,6 +71,7 @@ export const blockNewRotation = currentRotation => {
     return rotation
 }
 
+// TODO: On I block collition does not work
 export const checkRotationCollision = (block, viewportWidth) => {
     if (block) {
         let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
