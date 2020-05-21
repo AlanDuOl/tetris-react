@@ -1,10 +1,10 @@
-import { BLOCK_INITIAL_SPEED, blockMoveDirections } from '../globals'
+import { BLOCK_INITIAL_SPEED, blockMoveDirection } from '../globals'
 
 const initialState = {
-    moveDir: blockMoveDirections.none,
+    moveDir: blockMoveDirection.none,
     speed: BLOCK_INITIAL_SPEED,
     number: 0,
-    position: { left: 0, bottom: 0 }, // Set left position relative to tileDim and bottom proportional to to viewportHeight
+    position: { x: 0, y: 0 }, // Set left position relative to tileDim and bottom proportional to to viewportHeight
     rotation: 0
 }
 
