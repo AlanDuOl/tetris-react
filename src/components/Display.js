@@ -3,20 +3,22 @@ import { connect } from 'react-redux'
 import '../css/Display.css'
 import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
-import { getBlock } from "../libs/blockLib"
-import { NUM_TILES_WIDTH } from '../globals.js'
+import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirections, NUM_TILES_WIDTH } from '../globals.js'
+import { block, game } from '../libs/game.js'
 
 
 function Display(props) {
 
-    // const [width, setWidth] = useState(0)
-    // const [height, setHeight] = useState(0)
-    // const [block, setBlock] = useState(null)
+    const [sideMove, setSideMove] = useState(true)
     const [canvas, setCanvas] = useState(null)
-    const [ctx2D, setctx2D] = useState(null)
-    // const [canvasRect, setCanvasRect] = useState(0)
+    const [ctx2D, setCtx2D] = useState(null)
+    const [tileDim, setTileDim] = useState(0)
     const [timer, setTimer] = useState(0)
     const [position, setPosition] = useState({ x: 0, y: 0 })
+    const [speed, setSpeed] = useState(BLOCK_INITIAL_SPEED)
+    const [startGame, setStartGame] = useState(false)
+    const [reset, setReset] = useState(false)
+    const [wall, setWall] = useState([])
 
     useEffect(() => {
         setCanvas(document.getElementById("display-viewport"))
@@ -24,32 +26,61 @@ function Display(props) {
 
     useEffect(() => {
         if (canvas) {
-            setctx2D(canvas.getContext("2d"))
-            setPosition({ x: canvas.width / 2, y: 0 })
+            setCtx2D(canvas.getContext("2d"))
+            setTileDim(canvas.width / NUM_TILES_WIDTH)
+            block.init(canvas.width, setPosition, setSpeed, props.setBlockState)
         }
     }, [canvas])
 
     useEffect(() => {
-        if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
+        if (props.gameReducer.gameOn) {
             setTimer(setInterval(draw, 50))
         }
         else {
+            block.reset(canvas.width, setPosition, setSpeed, props.setBlockState)
+            game.clearCanvas(ctx2D, canvas.width, canvas.height)
             clearInterval(timer)
         }
-    }, [props.gameReducer.gameOn, props.gameReducer.gamePaused])
+    }, [props.gameReducer.gameOn])
+
+    // Draw
+    useEffect(() => {
+        if (props.gameReducer.gamePaused) {
+            clearInterval(timer)
+        }
+        else {
+            setTimer(setInterval(draw, 50))
+        }
+    }, [props.gameReducer.gamePaused])
+
+    // useEffect(() => {
+
+    // }, [props.blockReducer.rotation])
+
+    // useEffect(() => {
+    //     if (ctx2D) {
+    //         // Remove timer with old speed
+    //         clearInterval(timer)
+    //         // Update speed
+    //         setSpeed(speed + BLOCK_DELTA_SPEED)
+    //     }
+    // }, [props.blockReducer.speed])
 
     const draw = () => {
         if (ctx2D) {
-            ctx2D.clearRect(0, 0, canvas.width, canvas.height)
-            let tileDim = canvas.width / NUM_TILES_WIDTH
-            ctx2D.beginPath()
-            ctx2D.rect(position.x, position.y, tileDim, tileDim)
-            ctx2D.fillStyle = "grba(0, 0, 255, 0.5)"
-            ctx2D.fill()
-            ctx2D.closePath()
-            setPosition({ x: position.x, y: position.y++ })
+            game.clearCanvas(ctx2D, canvas.width, canvas.height)
+            block.draw(ctx2D, position, tileDim)
+            block.moveDown(canvas.height, setPosition, position, tileDim, speed, setNewBlock)
         }
+        console.log("need to clear interval")
     }
+    
+    // Side move
+    // useEffect(() => {
+    //     if (canvas) {
+    //         block.moveSide(canvas.width, props.blockReducer.moveDir, setPosition, position, tileDim, setSideMove, sideMove, timer, setBlockState)
+    //     }
+    // }, [props.blockReducer.moveDir])
 
     return (
         <main id="display">

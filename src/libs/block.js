@@ -1,20 +1,6 @@
 import React from "react"
-import Block from '../components/Block'
-import Tile from '../components/Tile'
 import { blockTypes, BLOCK_NUM_TILES, NUM_TILES_WIDTH, BLOCK_DELTA_SPEED, timerSpeeds, BLOCK_DELTA_ROTATION, blockMoveDirections } from '../globals.js'
 
-export function getBlock(viewportWidth, viewportHeight) {
-    let blockType = getBlockType();
-    return (<Block type={blockType} viewportWidth={viewportWidth} viewportHeight={viewportHeight} />);
-}
-
-export function getTiles(viewportWidth) {
-    let tiles = []
-    for (let i = 0; i < BLOCK_NUM_TILES; i++) {
-        tiles.push(<Tile key={i} id={"tile-" + i} viewportWidth={viewportWidth} />)
-    }
-    return tiles
-}
 
 export const setBlockInitialPosition = (block, viewportWidth, viewportHeight) => {
     if (block) {
