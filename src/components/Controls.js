@@ -2,7 +2,7 @@ import React from 'react'
 import '../css/Controls.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
-import { blockNewSpeed, blockNewRotation } from '../libs/blockLib.js'
+import { blockNewSpeed, blockNewRotation } from '../libs/block.js'
 import { blockMoveDirections } from '../globals.js'
 
 function Controls(props) {
