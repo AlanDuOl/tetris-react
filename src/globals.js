@@ -24,13 +24,34 @@ export const actionType = {
 
 
 export const blockType = {
-    I: "I",
-    S: "S",
-    Z: "Z",
-    T: "T",
-    L: "L",
-    J: "J",
-    O: "O"
+    I: {
+        name: "I",
+        fillStyle: "rgb(0, 255, 0)"
+    },
+    S: {
+        name: "S",
+        fillStyle: "rgb(0, 255, 0)"
+    },
+    Z: {
+        name: "Z",
+        fillStyle: "rgb(0, 255, 0)"
+    },
+    T: {
+        name: "T",
+        fillStyle: "rgb(0, 255, 0)"
+    },
+    L: {
+        name: "L",
+        fillStyle: "rgb(0, 255, 0)"
+    },
+    J: {
+        name: "J",
+        fillStyle: "rgb(0, 255, 0)"
+    },
+    O: {
+        name: "O",
+        fillStyle: "rgb(0, 255, 0)"
+    }
 }
 
 // export const timerSpeeds = {
