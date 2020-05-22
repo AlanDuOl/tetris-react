@@ -4,7 +4,7 @@ import '../css/Display.css'
 import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
 import { BLOCK_INITIAL_SPEED, blockMoveDirection, NUM_TILES_WIDTH } from '../globals.js'
-import { gameStart, gameFinish, gamePause, gameResume, gameUpdate } from '../libs/game.js'
+import { gameStart, gameFinish, gamePause, gameResume, gameUpdate, gamePreventUpdate } from '../libs/game.js'
 import { blockMoveSide, blockSpeedUp, blockStart } from '../libs/block.js'
 
 
@@ -15,6 +15,7 @@ function Display(props) {
     const [ctx2D, setCtx2D] = useState(null)
     const [timer, setTimer] = useState(0)
     const [speedChange, setSpeedChange] = useState(false)
+    const [rotationChange, setRotationChange] = useState(false)
     const [wall, setWall] = useState([])
 
     // Init game props
@@ -31,7 +32,10 @@ function Display(props) {
             gameStart(setTimer, ctx2D, wall, props.blockReducer, canvas, props.setBlockState)
         }
         else {
-            gameFinish(timer, ctx2D, canvas)
+            // To avoid run on first render
+            if (ctx2D) {
+                gameFinish(timer, ctx2D, canvas, props.setBlockState)
+            }
         }
     }, [props.gameReducer.gameOn])
 
@@ -50,17 +54,16 @@ function Display(props) {
     // Update
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            if (sideMove || speedChange) {
+            if (sideMove || speedChange || rotationChange) {
                 gameUpdate(timer, setTimer, ctx2D, wall, props.blockReducer, canvas, props.setBlockState)
-                setSideMove(false)
-                setSpeedChange(false)
+                gamePreventUpdate(setSideMove, setSpeedChange, setRotationChange)
             }
         }
-    }, [sideMove, speedChange])  
+    }, [sideMove, speedChange, rotationChange])
 
-    // useEffect(() => {
-
-    // }, [props.blockReducer.rotation])
+    useEffect(() => {
+        setRotationChange(true)
+    }, [props.blockReducer.rotationAngle])
 
     // Block speed change
     useEffect(() => {
