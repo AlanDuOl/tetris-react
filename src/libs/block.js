@@ -1,20 +1,103 @@
-import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, NUM_TILES_WIDTH } from '../globals.js'
+import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, NUM_TILES_WIDTH, BLOCK_DELTA_ROTATION } from '../globals.js'
 
 
 export function blockStart(canvas, setBlockState) {
-    setBlockState(actionType.blockPosition, { x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH})
+    setBlockState(actionType.blockPosition, { x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH })
     setBlockState(actionType.blockSpeed, BLOCK_INITIAL_SPEED)
     setBlockState(actionType.blockType, getBlockType())
 }
 
 export function blockDraw(ctx2D, currentBlock, tileDim) {
     if (ctx2D) {
+        ctx2D.save()
+        ctx2D.translate(currentBlock.position.x, currentBlock.position.y)
+        ctx2D.rotate((Math.PI / 180) * currentBlock.rotation)
+        ctx2D.translate(- currentBlock.position.x, - currentBlock.position.y)
         ctx2D.beginPath()
-        ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
-        ctx2D.fillStyle = "grba(0, 0, 255, 0.5)"
+        blockDrawShape(ctx2D, currentBlock, tileDim)
         ctx2D.fill()
         ctx2D.closePath()
+        ctx2D.restore()
     }
+}
+
+function blockDrawShape(ctx2D, currentBlock, tileDim) {
+    switch (currentBlock.type.name) {
+        case blockType.I.name:
+            blockDrawI(ctx2D, currentBlock, tileDim)
+            break
+        case blockType.S.name:
+            blockDrawS(ctx2D, currentBlock, tileDim)
+            break
+        case blockType.Z.name:
+            blockDrawZ(ctx2D, currentBlock, tileDim)
+            break
+        case blockType.T.name:
+            blockDrawT(ctx2D, currentBlock, tileDim)
+            break
+        case blockType.L.name:
+            blockDrawL(ctx2D, currentBlock, tileDim)
+            break
+        case blockType.J.name:
+            blockDrawJ(ctx2D, currentBlock, tileDim)
+            break
+        case blockType.O.name:
+            blockDrawO(ctx2D, currentBlock, tileDim)
+            break
+        default:
+            console.log("Unknown block...")
+            break
+    }
+}
+
+function blockDrawI(ctx2D, currentBlock, tileDim) {
+    ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 3, tileDim, tileDim)
+}
+function blockDrawS(ctx2D, currentBlock, tileDim) {
+    ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim * 2, currentBlock.position.y, tileDim, tileDim)
+}
+function blockDrawZ(ctx2D, currentBlock, tileDim) {
+    ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim * 2, currentBlock.position.y + tileDim, tileDim, tileDim)
+}
+function blockDrawT(ctx2D, currentBlock, tileDim) {
+    ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim * 2, currentBlock.position.y, tileDim, tileDim)
+}
+function blockDrawL(ctx2D, currentBlock, tileDim) {
+    ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
+}
+function blockDrawJ(ctx2D, currentBlock, tileDim) {
+    ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
+}
+function blockDrawO(ctx2D, currentBlock, tileDim) {
+    ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
 }
 
 export function finish(ctx2D, canvasWidth, canvasHeight, position, tileDim, timer) {
@@ -25,35 +108,35 @@ export function finish(ctx2D, canvasWidth, canvasHeight, position, tileDim, time
 }
 
 export function blockMoveSide(canvas, setSideMove, currentBlock, setBlockState) {
-        // Movo block to left
-        if (currentBlock.moveDir === blockMoveDirection.left) {
-            if (currentBlock.position.x > 0) {
-                setBlockState(actionType.blockPosition, { x: currentBlock.position.x - canvas.tileDim, y: currentBlock.position.y })
-                setSideMove(true)
-            }
-            setBlockState(actionType.blockMove, blockMoveDirection.none)
+    // Movo block to left
+    if (currentBlock.moveDir === blockMoveDirection.left) {
+        if (currentBlock.position.x > 0) {
+            setBlockState(actionType.blockPosition, { x: currentBlock.position.x - canvas.tileDim, y: currentBlock.position.y })
+            setSideMove(true)
         }
-        // Move block to right
-        else if (currentBlock.moveDir === blockMoveDirection.right) {
-            if (currentBlock.position.x + canvas.tileDim < canvas.width) {
-                setBlockState(actionType.blockPosition, { x: currentBlock.position.x + canvas.tileDim, y: currentBlock.position.y })
-                setSideMove(true)
-            }
-            setBlockState(actionType.blockMove, blockMoveDirection.none)
+        setBlockState(actionType.blockMove, blockMoveDirection.none)
+    }
+    // Move block to right
+    else if (currentBlock.moveDir === blockMoveDirection.right) {
+        if (currentBlock.position.x + canvas.tileDim < canvas.width) {
+            setBlockState(actionType.blockPosition, { x: currentBlock.position.x + canvas.tileDim, y: currentBlock.position.y })
+            setSideMove(true)
         }
+        setBlockState(actionType.blockMove, blockMoveDirection.none)
+    }
 }
 
 export function blockMoveDown(canvas, setBlockState, currentBlock, timer) {
-        if (currentBlock.position.y < canvas.height - canvas.tileDim) {
-            setBlockState(actionType.blockPosition, { x: currentBlock.position.x, y: currentBlock.position.y += currentBlock.speed })
-        }
-        // TODO: check for collision
-        else {
-            // TODO:
-            // - get block info to update wall
-            // - set block position and speed to initial
-            // - update game
-        }
+    if (currentBlock.position.y < canvas.height - canvas.tileDim) {
+        setBlockState(actionType.blockPosition, { x: currentBlock.position.x, y: currentBlock.position.y += currentBlock.speed })
+    }
+    // TODO: check for collision
+    else {
+        // TODO:
+        // - get block info to update wall
+        // - set block position and speed to initial
+        // - update game
+    }
 }
 
 export function blockNewSpeed(currentSpeed) {
@@ -65,13 +148,24 @@ export function blockSpeedUp(setSpeedChange) {
     setSpeedChange(true)
 }
 
+export const blockNewRotation = currentRotation => {
+    let rotation = currentRotation
+    if (currentRotation >= 270) {
+        rotation = 0
+    }
+    else {
+        rotation += BLOCK_DELTA_ROTATION
+    }
+    return rotation
+}
+
 function getBlockType() {
 
     let type = ""
     let blockNumber = getBlockNumber()
 
     // Return the blockType that is going to be used as a css class to define the block layout
-    switch(blockNumber) {
+    switch (blockNumber) {
         case 1:
             type = blockType.I
             return type
@@ -129,16 +223,7 @@ function getBlockNumber() {
 //     }
 // }
 
-// export const blockNewRotation = currentRotation => {
-//     let rotation = currentRotation
-//     if (currentRotation >= 270) {
-//         rotation = 0
-//     }
-//     else {
-//         rotation += BLOCK_DELTA_ROTATION
-//     }
-//     return rotation
-// }
+
 
 // // TODO: On I block collition does not work
 // export const checkRotationCollision = (block, viewportWidth) => {
