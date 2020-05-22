@@ -18,32 +18,19 @@ export const actionType = {
     blockMove: "SET_BLOCK_MOVE",
     blockSpeed: "SET_BLOCK_SPEED",
     blockPosition: "SET_BLOCK_POSITION",
-    blockRotation: "SET_BLOCK_ROTATION"
+    blockRotation: "SET_BLOCK_ROTATION",
+    blockType: "SET_BLOCK_TYPE"
 }
 
 
-export const blockTypes = {
-    one: {
-        name: "I",
-    },
-    two: {
-        name: "S"
-    },
-    three: {
-        name: "Z"
-    },
-    four: {
-        name: "T"
-    },
-    five: {
-        name: "L"
-    },
-    six: {
-        name: "J"
-    },
-    seven: {
-        name: "O"
-    }
+export const blockType = {
+    I: "I",
+    S: "S",
+    Z: "Z",
+    T: "T",
+    L: "L",
+    J: "J",
+    O: "O"
 }
 
 // export const timerSpeeds = {
