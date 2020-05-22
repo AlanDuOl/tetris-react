@@ -10,6 +10,8 @@ export const setBlockState = (actionType, actionValue) => {
             return { type: "SET_BLOCK_POSITION", value: actionValue }
         case "SET_BLOCK_ROTATION":
             return { type: "SET_BLOCK_ROTATION", value: actionValue }
+        case "SET_BLOCK_TYPE":
+            return { type: "SET_BLOCK_TYPE", value: actionValue }
         case "SET_BLOCK_STATE":
             return { type: "SET_BLOCK", value: actionValue }
         default:
