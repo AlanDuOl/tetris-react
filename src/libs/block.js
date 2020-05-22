@@ -1,62 +1,68 @@
-import { BLOCK_INITIAL_SPEED, blockMoveDirection, actionType } from '../globals.js'
+import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType } from '../globals.js'
 
 
-export function start(canvas, setBlockState) {
-        setBlockState(actionType.blockPosition, { x: canvas.width / 2, y: 0})
-        setBlockState(actionType.blockSpeed, BLOCK_INITIAL_SPEED)
+export function start(canvas, currentBlock, setBlockState) {
+    setBlockState(actionType.blockPosition, { x: currentBlock.position.x, y: currentBlock.position.y})
+    setBlockState(actionType.blockSpeed, BLOCK_INITIAL_SPEED)
 }
 
 export function draw(ctx2D, currentBlock, tileDim) {
-        if (ctx2D) {
-            ctx2D.beginPath()
-            ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
-            ctx2D.fillStyle = "grba(0, 0, 255, 0.5)"
-            ctx2D.fill()
-            ctx2D.closePath()
-        }
+    if (ctx2D) {
+        ctx2D.beginPath()
+        ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
+        ctx2D.fillStyle = "grba(0, 0, 255, 0.5)"
+        ctx2D.fill()
+        ctx2D.closePath()
+    }
 }
 
 export function finish(ctx2D, canvasWidth, canvasHeight, position, tileDim, timer) {
-        clearInterval(timer)
-        // game.clearCanvas(ctx2D, canvasWidth, canvasHeight)
-        // TODO: correct collision
-        this.draw(ctx2D, position, tileDim)
+    clearInterval(timer)
+    // game.clearCanvas(ctx2D, canvasWidth, canvasHeight)
+    // TODO: correct collision
+    this.draw(ctx2D, position, tileDim)
 }
 
-export function moveSide(canvasWidth, moveDir, setPosition, position, tileDim, setSideMove, sideMove, timer, blockReducer) {
+export function blockMoveSide(canvas, setSideMove, currentBlock, setBlockState) {
         // Movo block to left
-        if (moveDir === blockMoveDirection.left) {
-            if (position.x > 0) {
-                setPosition({ x: position.x - tileDim, y: position.y })
-                setSideMove(!sideMove)
-                // Remove timer with old position reference
-                clearInterval(timer)
+        if (currentBlock.moveDir === blockMoveDirection.left) {
+            if (currentBlock.position.x > 0) {
+                setBlockState(actionType.blockPosition, { x: currentBlock.position.x - canvas.tileDim, y: currentBlock.position.y })
+                setSideMove(true)
             }
-            blockReducer("SET_BLOCK_MOVE", blockMoveDirection.none)
+            setBlockState(actionType.blockMove, blockMoveDirection.none)
         }
         // Move block to right
-        else if (moveDir === blockMoveDirection.right) {
-            if (position.x + tileDim < canvasWidth) {
-                setPosition({ x: position.x + tileDim, y: position.y })
-                setSideMove(!sideMove)
-                // Remove timer with old position reference
-                clearInterval(timer)
+        else if (currentBlock.moveDir === blockMoveDirection.right) {
+            if (currentBlock.position.x + canvas.tileDim < canvas.width) {
+                setBlockState(actionType.blockPosition, { x: currentBlock.position.x + canvas.tileDim, y: currentBlock.position.y })
+                setSideMove(true)
             }
-            blockReducer("SET_BLOCK_MOVE", blockMoveDirection.none)
+            setBlockState(actionType.blockMove, blockMoveDirection.none)
         }
 }
 
-export function moveDown(canvasHeight, setPosition, position, tileDim, speed, setNewBlock) {
-        if (position.y < canvasHeight - tileDim) {
-            setPosition({ x: position.x, y: position.y += speed })
+export function moveDown(canvas, setBlockState, currentBlock, timer) {
+        if (currentBlock.position.y < canvas.height - canvas.tileDim) {
+            setBlockState(actionType.blockPosition, { x: currentBlock.position.x, y: currentBlock.position.y += currentBlock.speed })
         }
         // TODO: check for collision
         else {
-            // setPosition({ x: position.x, y: canvasHeight - tileDim })
-            setNewBlock(true)
+            // TODO:
+            // - get block info to update wall
+            // - set block position and speed to initial
+            // - update game
         }
 }
 
+export function blockNewSpeed(currentSpeed) {
+    let newSpeed = currentSpeed + BLOCK_DELTA_SPEED
+    return newSpeed
+}
+
+export function blockSpeedUp(setSpeedChange) {
+    setSpeedChange(true)
+}
 
 
 // export const setBlockInitialPosition = (block, viewportWidth, viewportHeight) => {
@@ -78,28 +84,6 @@ export function moveDown(canvasHeight, setPosition, position, tileDim, speed, se
 //         default:
 //             console.log("Unknown move direction")
 //             break
-//     }
-// }
-
-// const blockMoveLeft = (block, viewportWidth) => {
-//     if (block) {
-//         let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
-//         let blockNewLeft = parseFloat(block.style.left) - tileWidth
-//         if (blockNewLeft > 0) {
-//             block.style.left = `${parseFloat(block.style.left) - tileWidth}px`
-//         }
-//     }
-// }
-
-// const blockMoveRight = (block, viewportWidth) => {
-//     if (block) {
-//         let blockRect = block.getBoundingClientRect()
-//         let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
-//         let blockCurrentRight = parseFloat(block.style.left) + blockRect.width
-//         let blockNewRight = blockCurrentRight + tileWidth
-//         if (blockNewRight < viewportWidth) {
-//             block.style.left = `${parseFloat(block.style.left) + tileWidth}px`
-//         }
 //     }
 // }
 
@@ -153,10 +137,7 @@ export function moveDown(canvasHeight, setPosition, position, tileDim, speed, se
 //     }
 // }
 
-// export function blockNewSpeed(currentSpeed) {
-//     let newSpeed = currentSpeed + BLOCK_DELTA_SPEED
-//     return newSpeed
-// }
+
 
 // export function getTimerSpeed(gameLevel) {
 //     switch (gameLevel) {

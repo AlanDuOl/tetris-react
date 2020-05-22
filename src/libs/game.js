@@ -1,19 +1,30 @@
-import { start as blockStart, draw as blockDraw } from './block.js'
+import { start as blockStart, draw as blockDraw, moveDown as blockMoveDown } from './block.js'
 import { TIMER_SPEED } from '../globals.js'
-import { setBlockState } from '../actions/blockActions.js'
 
-export function start(setTimer, ctx2D, wall, currentBlock, canvas, tileDim) {
-    blockStart(canvas, setBlockState)
-    setTimer(setInterval(draw.bind(null, ctx2D, wall, currentBlock, canvas, tileDim), TIMER_SPEED))
+export function gameStart(setTimer, ctx2D, wall, currentBlock, canvas, setBlockState) {
+    blockStart(canvas, currentBlock, setBlockState)
+    setTimer(setInterval(draw.bind(null, ctx2D, wall, currentBlock, canvas, setBlockState), TIMER_SPEED))
 }
 
-export function draw(ctx2D, wall, currentBlock, canvas, tileDim) {
-    clearCanvas(ctx2D, canvas.width, canvas.height)
-    blockDraw(ctx2D, currentBlock, tileDim)
-    // block.moveDown(canvas.height, setPosition, position, tileDim, speed, setNewBlock)
+function draw(ctx2D, wall, currentBlock, canvas, setBlockState) {
+    clearCanvas(ctx2D, canvas)
+    blockDraw(ctx2D, currentBlock, canvas.tileDim)
+    blockMoveDown(canvas, setBlockState, currentBlock)
     console.log("need to clear interval")
 }
 
+export function gameUpdate(timer, setTimer, ctx2D, wall, currentBlock, canvas, setBlockState) {
+    clearInterval(timer)
+    setTimer(setInterval(draw.bind(null, ctx2D, wall, currentBlock, canvas, setBlockState), TIMER_SPEED))
+}
+
+export function gamePause(timer) {
+    clearInterval(timer)
+}
+
+export function gameResume(setTimer, ctx2D, wall, currentBlock, canvas, setBlockState) {
+    setTimer(setInterval(draw.bind(null, ctx2D, wall, currentBlock, canvas, setBlockState), TIMER_SPEED))
+}
 // drawWall: function(blocks, position, tileDim) {
 //     for (block in blocks) {
 //         ctx2D.beginPath()
@@ -30,12 +41,8 @@ export function clearCanvas(ctx2D, canvas) {
     }
 }
 
-export function update() {
 
-}
-
-
-export function finish(timer, ctx2D, canvas) {
+export function gameFinish(timer, ctx2D, canvas) {
     clearInterval(timer)
     clearCanvas(ctx2D, canvas)
 }
