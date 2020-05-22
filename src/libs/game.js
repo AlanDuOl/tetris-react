@@ -1,8 +1,8 @@
-import { start as blockStart, draw as blockDraw, moveDown as blockMoveDown } from './block.js'
+import { blockDraw, blockMoveDown } from './block.js'
 import { TIMER_SPEED } from '../globals.js'
 
 export function gameStart(setTimer, ctx2D, wall, currentBlock, canvas, setBlockState) {
-    blockStart(canvas, currentBlock, setBlockState)
+    // blockStart(canvas, currentBlock, setBlockState)
     setTimer(setInterval(draw.bind(null, ctx2D, wall, currentBlock, canvas, setBlockState), TIMER_SPEED))
 }
 

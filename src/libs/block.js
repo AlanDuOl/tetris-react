@@ -1,12 +1,13 @@
-import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType } from '../globals.js'
+import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, NUM_TILES_WIDTH } from '../globals.js'
 
 
-export function start(canvas, currentBlock, setBlockState) {
-    setBlockState(actionType.blockPosition, { x: currentBlock.position.x, y: currentBlock.position.y})
+export function blockStart(canvas, setBlockState) {
+    setBlockState(actionType.blockPosition, { x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH})
     setBlockState(actionType.blockSpeed, BLOCK_INITIAL_SPEED)
+    setBlockState(actionType.blockType, getBlockType())
 }
 
-export function draw(ctx2D, currentBlock, tileDim) {
+export function blockDraw(ctx2D, currentBlock, tileDim) {
     if (ctx2D) {
         ctx2D.beginPath()
         ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
@@ -42,7 +43,7 @@ export function blockMoveSide(canvas, setSideMove, currentBlock, setBlockState) 
         }
 }
 
-export function moveDown(canvas, setBlockState, currentBlock, timer) {
+export function blockMoveDown(canvas, setBlockState, currentBlock, timer) {
         if (currentBlock.position.y < canvas.height - canvas.tileDim) {
             setBlockState(actionType.blockPosition, { x: currentBlock.position.x, y: currentBlock.position.y += currentBlock.speed })
         }
@@ -62,6 +63,47 @@ export function blockNewSpeed(currentSpeed) {
 
 export function blockSpeedUp(setSpeedChange) {
     setSpeedChange(true)
+}
+
+function getBlockType() {
+
+    let type = ""
+    let blockNumber = getBlockNumber()
+
+    // Return the blockType that is going to be used as a css class to define the block layout
+    switch(blockNumber) {
+        case 1:
+            type = blockType.I
+            return type
+        case 2:
+            type = blockType.S
+            return type
+        case 3:
+            type = blockType.Z
+            return type
+        case 4:
+            type = blockType.T
+            return type
+        case 5:
+            type = blockType.L
+            return type
+        case 6:
+            type = blockType.J
+            return type
+        case 7:
+            type = blockType.O
+            return type
+        default:
+            console.log("Unknown block number: " + blockNumber)
+            break
+    }
+}
+
+// Return the block number used to define the block type
+function getBlockNumber() {
+    const min = 1, max = 7
+    let blockNum = Math.round(Math.random() * (max - min)) + min
+    return blockNum
 }
 
 
@@ -135,62 +177,4 @@ export function blockSpeedUp(setSpeedChange) {
 //             }
 //         }
 //     }
-// }
-
-
-
-// export function getTimerSpeed(gameLevel) {
-//     switch (gameLevel) {
-//         case 1:
-//             return timerSpeeds.level1
-//         case 2:
-//             return timerSpeeds.level2
-//         case 3:
-//             return timerSpeeds.level3
-//         case 4:
-//             return timerSpeeds.level4
-//         default:
-//             return timerSpeeds.speedUp
-//     }
-// }
-
-// function getBlockType() {
-
-//     let blockType = ""
-//     let blockNumber = getBlockNumber()
-
-//     // Return the blockType that is going to be used as a css class to define the block layout
-//     switch(blockNumber) {
-//         case 1:
-//             blockType = blockTypes.one.name
-//             return blockType
-//         case 2:
-//             blockType = blockTypes.two.name
-//             return blockType
-//         case 3:
-//             blockType = blockTypes.three.name
-//             return blockType
-//         case 4:
-//             blockType = blockTypes.four.name
-//             return blockType
-//         case 5:
-//             blockType = blockTypes.five.name
-//             return blockType
-//         case 6:
-//             blockType = blockTypes.six.name
-//             return blockType
-//         case 7:
-//             blockType = blockTypes.seven.name
-//             return blockType
-//         default:
-//             console.log("Unknown block number: " + blockNumber)
-//             break
-//     }
-// }
-
-// // Return the block number used to define the block type
-// function getBlockNumber() {
-//     const min = 1, max = 6
-//     let blockNum = Math.round(Math.random() * max) + min
-//     return blockNum
 // }
