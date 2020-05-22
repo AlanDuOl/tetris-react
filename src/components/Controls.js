@@ -9,9 +9,9 @@ function Controls(props) {
 
     
     function rotate() {
-        // if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-        //     props.setBlockState("SET_BLOCK_ROTATION", blockNewRotation(props.blockReducer.rotation))
-        // }
+        if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
+            props.setBlockState(actionType.blockRotation, blockNewRotation(props.blockReducer.rotation))
+        }
     }
 
     const blockSpeedUp = () => {
