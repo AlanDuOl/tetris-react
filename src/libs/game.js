@@ -1,4 +1,4 @@
-import { blockDraw, blockMoveDown } from './block.js'
+import { blockDraw, blockMoveDown, blockStart } from './block.js'
 import { TIMER_SPEED } from '../globals.js'
 
 export function gameStart(setTimer, ctx2D, wall, currentBlock, canvas, setBlockState) {
@@ -16,6 +16,12 @@ function draw(ctx2D, wall, currentBlock, canvas, setBlockState) {
 export function gameUpdate(timer, setTimer, ctx2D, wall, currentBlock, canvas, setBlockState) {
     clearInterval(timer)
     setTimer(setInterval(draw.bind(null, ctx2D, wall, currentBlock, canvas, setBlockState), TIMER_SPEED))
+}
+
+export function gamePreventUpdate(setSideMove, setSpeedChange, setRotationChange) {
+    setSideMove(false)
+    setSpeedChange(false)
+    setRotationChange(false)
 }
 
 export function gamePause(timer) {
@@ -42,7 +48,8 @@ export function clearCanvas(ctx2D, canvas) {
 }
 
 
-export function gameFinish(timer, ctx2D, canvas) {
+export function gameFinish(timer, ctx2D, canvas, setBlockState) {
     clearInterval(timer)
     clearCanvas(ctx2D, canvas)
+    blockStart(canvas, setBlockState)
 }
