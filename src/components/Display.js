@@ -3,75 +3,84 @@ import { connect } from 'react-redux'
 import '../css/Display.css'
 import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
-import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, NUM_TILES_WIDTH } from '../globals.js'
-import { start as gameStart, finish as gameFinish } from '../libs/game.js'
+import { BLOCK_INITIAL_SPEED, blockMoveDirection, NUM_TILES_WIDTH } from '../globals.js'
+import { gameStart, gameFinish, gamePause, gameResume, gameUpdate } from '../libs/game.js'
+import { blockMoveSide, blockSpeedUp } from '../libs/block.js'
 
 
 function Display(props) {
 
-    const [sideMove, setSideMove] = useState(true)
-    const [canvas, setCanvas] = useState({ width: 0, height: 0 })
+    const [sideMove, setSideMove] = useState(false)
+    const [canvas, setCanvas] = useState({ width: 0, height: 0, tileDim: 0 })
     const [ctx2D, setCtx2D] = useState(null)
-    const [tileDim, setTileDim] = useState(0)
     const [timer, setTimer] = useState(0)
-    const [position, setPosition] = useState({ x: 0, y: 0 })
-    const [speed, setSpeed] = useState(BLOCK_INITIAL_SPEED)
-    const [startGame, setStartGame] = useState(false)
-    const [reset, setReset] = useState(false)
+    const [initialBlock, setInitialBlock] = useState({ })
+    const [speedChange, setSpeedChange] = useState(false)
     const [wall, setWall] = useState([])
 
+    // Init game props
     useEffect(() => {
         let canvas = document.getElementById("display-viewport")
-        setCanvas({ width: canvas.width, height: canvas.height })
+        setCanvas({ width: canvas.width, height: canvas.height, tileDim: canvas.width / NUM_TILES_WIDTH })
         setCtx2D(canvas.getContext("2d"))
-        setTileDim(canvas.width / NUM_TILES_WIDTH)
+        setInitialBlock({ position: { x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH }, speed: BLOCK_INITIAL_SPEED })
     }, [])
 
+    // Start/End
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            gameStart(setTimer, ctx2D, wall, props.blockReducer, canvas, tileDim)
+            gameStart(setTimer, ctx2D, wall, initialBlock, canvas, props.setBlockState)
         }
         else {
             gameFinish(timer, ctx2D, canvas)
         }
     }, [props.gameReducer.gameOn])
 
-    // Draw
-    // useEffect(() => {
-    //     if (props.gameReducer.gamePaused) {
-    //         clearInterval(timer)
-    //     }
-    //     else {
-    //         setTimer(setInterval(draw, 50))
-    //     }
-    // }, [props.gameReducer.gamePaused])
+    // Pause/Resume
+    useEffect(() => {
+        if (props.gameReducer.gameOn) {
+            if (props.gameReducer.gamePaused) {
+                gamePause(timer)
+            }
+            else {
+                gameResume(setTimer, ctx2D, wall, props.blockReducer, canvas, props.setBlockState)
+            }
+        }
+    }, [props.gameReducer.gamePaused])
+
+    // Update
+    useEffect(() => {
+        if (props.gameReducer.gameOn) {
+            if (sideMove || speedChange) {
+                gameUpdate(timer, setTimer, ctx2D, wall, props.blockReducer, canvas, props.setBlockState)
+                setSideMove(false)
+                setSpeedChange(false)
+            }
+        }
+    }, [sideMove, speedChange])  
 
     // useEffect(() => {
 
     // }, [props.blockReducer.rotation])
 
-    // useEffect(() => {
-    //     if (ctx2D) {
-    //         // Remove timer with old speed
-    //         clearInterval(timer)
-    //         // Update speed
-    //         setSpeed(speed + BLOCK_DELTA_SPEED)
-    //     }
-    // }, [props.blockReducer.speed])
+    // Block speed change
+    useEffect(() => {
+        if (props.gameReducer.gameOn) {
+            blockSpeedUp(setSpeedChange)
+        }
+    }, [props.blockReducer.speed])
 
-    
-    
-    // Side move
-    // useEffect(() => {
-    //     if (canvas) {
-    //         block.moveSide(canvas.width, props.blockReducer.moveDir, setPosition, position, tileDim, setSideMove, sideMove, timer, setBlockState)
-    //     }
-    // }, [props.blockReducer.moveDir])
+    // Block side move
+    useEffect(() => {
+        if (props.gameReducer.gameOn) {
+            blockMoveSide(canvas, setSideMove, props.blockReducer, props.setBlockState)
+        }
+    }, [props.blockReducer.moveDir])
 
     return (
         <main id="display">
             <canvas id="display-viewport" width="200" height="300">
-                Element not suported by this browser
+                Browser version does not support the game
             </canvas>
         </main>
     )
