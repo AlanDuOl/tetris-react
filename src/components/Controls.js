@@ -3,7 +3,7 @@ import '../css/Controls.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
 import { blockNewSpeed, blockNewRotation } from '../libs/block.js'
-import { blockMoveDirection } from '../globals.js'
+import { blockMoveDirection, actionType } from '../globals.js'
 
 function Controls(props) {
 
@@ -15,20 +15,20 @@ function Controls(props) {
     }
 
     const blockSpeedUp = () => {
-        // if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-        //     props.setBlockState("SET_BLOCK_SPEED", blockNewSpeed(props.blockReducer.speed))
-        // }
+        if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
+            props.setBlockState(actionType.blockSpeed, blockNewSpeed(props.blockReducer.speed))
+        }
     }
 
     const blockMoveLeft = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState("SET_BLOCK_MOVE", blockMoveDirection.left)
+            props.setBlockState(actionType.blockMove, blockMoveDirection.left)
         }
     }
 
     const blockMoveRight = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState("SET_BLOCK_MOVE", blockMoveDirection.right)
+            props.setBlockState(actionType.blockMove, blockMoveDirection.right)
         }
     }
 
