@@ -3,9 +3,9 @@ import { BLOCK_INITIAL_SPEED, blockMoveDirection } from '../globals'
 const initialState = {
     moveDir: blockMoveDirection.none,
     speed: BLOCK_INITIAL_SPEED,
-    type: "",
+    type: { name: "", fillStyle: "" },
     position: { x: 0, y: 0 }, // Set left position relative to tileDim and bottom proportional to to viewportHeight
-    rotation: 0
+    rotationAngle: 0
 }
 
 const blockReducer = (state = initialState, action) => {
@@ -19,7 +19,7 @@ const blockReducer = (state = initialState, action) => {
         case "SET_BLOCK_POSITION":
             return Object.assign({}, state, { position: action.value })
         case "SET_BLOCK_ROTATION":
-            return Object.assign({}, state, { rotation: action.value })
+            return Object.assign({}, state, { rotationAngle: action.value })
         case "SET_BLOCK_TYPE":
             return Object.assign({}, state, { type: action.value })
         case "SET_BLOCK":
