@@ -20,7 +20,8 @@ export const actionType = {
     blockSpeed: "SET_BLOCK_SPEED",
     blockPosition: "SET_BLOCK_POSITION",
     blockRotation: "SET_BLOCK_ROTATION",
-    blockType: "SET_BLOCK_TYPE"
+    blockType: "SET_BLOCK_TYPE",
+    blockTiles: "SET_BLOCK_TILES"
 }
 
 
