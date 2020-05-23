@@ -4,6 +4,7 @@ export const BLOCK_NUM_TILES = 4
 export const NUM_TILES_WIDTH = 10
 export const NUM_TILES_HEIGHT = 36
 export const BLOCK_INITIAL_SPEED = 1
+export const BLOCK_INITIAL_ROTATION_ANGLE = 0
 export const BLOCK_DELTA_SPEED = 5
 export const BLOCK_DELTA_ROTATION = 90
 export const TIMER_SPEED = 50
