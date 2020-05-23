@@ -62,7 +62,9 @@ function Display(props) {
     }, [sideMove, speedChange, rotationChange])
 
     useEffect(() => {
-        setRotationChange(true)
+        if (props.gameReducer.gameOn) {
+            setRotationChange(true)
+        }
     }, [props.blockReducer.rotationAngle])
 
     // Block speed change
