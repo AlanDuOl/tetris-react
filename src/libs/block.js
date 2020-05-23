@@ -8,37 +8,39 @@ export function blockStart(canvas, setBlockState) {
     setBlockState(actionType.blockRotation, BLOCK_INITIAL_ROTATION_ANGLE)
 }
 
-export function blockDraw(ctx2D, currentBlock, tileDim) {
+export function blockDraw(ctx2D, currentBlock, tileDim, setBlockState) {
     if (ctx2D) {
         ctx2D.save()
-        blockDrawShape(ctx2D, currentBlock, tileDim)
+        let tiles = blockSetTiles(currentBlock, tileDim, setBlockState)
+        blockDrawShape(ctx2D, tiles, currentBlock, tileDim)
         ctx2D.restore()
     }
 }
 
-function blockDrawShape(ctx2D, currentBlock, tileDim) {
+function blockSetTiles(currentBlock, tileDim, setBlockState) {
+    let tiles = null
     switch (currentBlock.type.name) {
         case blockType.I.name:
-            blockDrawI(ctx2D, currentBlock, tileDim)
-            break
+            tiles = blockSetI(currentBlock, tileDim, setBlockState)
+            return tiles
         case blockType.S.name:
-            blockDrawS(ctx2D, currentBlock, tileDim)
-            break
+            tiles = blockSetS(currentBlock, tileDim, setBlockState)
+            return tiles
         case blockType.Z.name:
-            blockDrawZ(ctx2D, currentBlock, tileDim)
-            break
+            tiles = blockSetZ(currentBlock, tileDim, setBlockState)
+            return tiles
         case blockType.T.name:
-            blockDrawT(ctx2D, currentBlock, tileDim)
-            break
+            tiles = blockSetT(currentBlock, tileDim, setBlockState)
+            return tiles
         case blockType.L.name:
-            blockDrawL(ctx2D, currentBlock, tileDim)
-            break
+            tiles = blockSetL(currentBlock, tileDim, setBlockState)
+            return tiles
         case blockType.J.name:
-            blockDrawJ(ctx2D, currentBlock, tileDim)
-            break
+            tiles = blockSetJ(currentBlock, tileDim, setBlockState)
+            return tiles
         case blockType.O.name:
-            blockDrawO(ctx2D, currentBlock, tileDim)
-            break
+            tiles = blockSetO(currentBlock, tileDim, setBlockState)
+            return tiles
         default:
             console.log("Unknown block...")
             break
@@ -51,75 +53,92 @@ function blockRotateCanvas(ctx2D, translateX, translateY, rotationAngle) {
     ctx2D.translate(- translateX, - translateY)
 }
 
-function blockDrawI(ctx2D, currentBlock, tileDim) {
-    blockRotateCanvas(ctx2D, currentBlock.position.x, currentBlock.position.y + tileDim * 2, currentBlock.rotationAngle)
-    ctx2D.fillStyle = currentBlock.type.fillStyle
-    ctx2D.beginPath()
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 3, tileDim, tileDim)
-    ctx2D.fill()
+function blockDrawShape(ctx2D, tiles, currentBlock, tileDim) {
+    if (tiles) {
+        // Tiles.tile3 is the rotation point
+        blockRotateCanvas(ctx2D, tiles.tile3.x, tiles.tile3.y, currentBlock.rotationAngle)
+        ctx2D.fillStyle = currentBlock.type.fillStyle
+        ctx2D.beginPath()
+        ctx2D.rect(tiles.tile1.x, tiles.tile1.y, tileDim, tileDim)
+        ctx2D.rect(tiles.tile2.x, tiles.tile2.y, tileDim, tileDim)
+        ctx2D.rect(tiles.tile3.x, tiles.tile3.y, tileDim, tileDim)
+        ctx2D.rect(tiles.tile4.x, tiles.tile4.y, tileDim, tileDim)
+        ctx2D.fill()
+    }
+    else {
+        console.log("No tiles found...")
+    }
 }
-function blockDrawS(ctx2D, currentBlock, tileDim) {
-    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, currentBlock.rotationAngle)
-    ctx2D.fillStyle = currentBlock.type.fillStyle
-    ctx2D.beginPath()
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim * 2, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.fill()
+
+function blockSetI(currentBlock, tileDim, setBlockState) {
+    let tiles = {
+        tile1: { x: currentBlock.position.x, y: currentBlock.position.y },
+        tile2: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim },
+        tile3: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim * 2 },
+        tile4: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim * 3 }
+    }
+    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
+    return tiles
 }
-function blockDrawZ(ctx2D, currentBlock, tileDim) {
-    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, currentBlock.rotationAngle)
-    ctx2D.fillStyle = currentBlock.type.fillStyle
-    ctx2D.beginPath()
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim * 2, currentBlock.position.y + tileDim, tileDim, tileDim)
-    ctx2D.fill()
+function blockSetS(currentBlock, tileDim, setBlockState) {
+    let tiles = {
+        tile1: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim },
+        tile2: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y },
+        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim },
+        tile4: { x: currentBlock.position.x + tileDim * 2, y: currentBlock.position.y }
+    }
+    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
+    return tiles
 }
-function blockDrawT(ctx2D, currentBlock, tileDim) {
-    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, currentBlock.rotationAngle)
-    ctx2D.fillStyle = currentBlock.type.fillStyle
-    ctx2D.beginPath()
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim * 2, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.fill()
+function blockSetZ(currentBlock, tileDim, setBlockState) {
+    let tiles = {
+        tile1: { x: currentBlock.position.x, y: currentBlock.position.y },
+        tile2: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y },
+        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim },
+        tile4: { x: currentBlock.position.x + tileDim * 2, y: currentBlock.position.y + tileDim }
+    }
+    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
+    return tiles
 }
-function blockDrawL(ctx2D, currentBlock, tileDim) {
-    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim * 2, currentBlock.rotationAngle)
-    ctx2D.fillStyle = currentBlock.type.fillStyle
-    ctx2D.beginPath()
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
-    ctx2D.fill()
+function blockSetT(currentBlock, tileDim, setBlockState) {
+    let tiles = {
+        tile1: { x: currentBlock.position.x, y: currentBlock.position.y },
+        tile2: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y },
+        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim },
+        tile4: { x: currentBlock.position.x + tileDim * 2, y: currentBlock.position.y }
+    }
+    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
+    return tiles
 }
-function blockDrawJ(ctx2D, currentBlock, tileDim) {
-    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim * 2, currentBlock.rotationAngle)
-    ctx2D.fillStyle = currentBlock.type.fillStyle
-    ctx2D.beginPath()
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
-    ctx2D.fill()
+function blockSetL(currentBlock, tileDim, setBlockState) {
+    let tiles = {
+        tile1: { x: currentBlock.position.x, y: currentBlock.position.y },
+        tile2: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim},
+        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim * 2 },
+        tile4: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim * 2 }
+    }
+    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
+    return tiles
 }
-function blockDrawO(ctx2D, currentBlock, tileDim) {
-    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, currentBlock.rotationAngle)
-    ctx2D.fillStyle = currentBlock.type.fillStyle
-    ctx2D.beginPath()
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
-    ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
-    ctx2D.fill()
+function blockSetJ(currentBlock, tileDim, setBlockState) {
+    let tiles = {
+        tile1: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim * 2 },
+        tile2: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y},
+        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim * 2},
+        tile4: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim}
+    }
+    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
+    return tiles
+}
+function blockSetO(currentBlock, tileDim, setBlockState) {
+    let tiles = {
+        tile1: { x: currentBlock.position.x, y: currentBlock.position.y },
+        tile2: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y},
+        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim},
+        tile4: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim}
+    }
+    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
+    return tiles
 }
 
 export function finish(ctx2D, canvasWidth, canvasHeight, position, tileDim, timer) {
