@@ -10,7 +10,7 @@ function Controls(props) {
     
     function rotate() {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState(actionType.blockRotation, blockNewRotation(props.blockReducer.rotation))
+            props.setBlockState(actionType.blockRotation, blockNewRotation(props.blockReducer.rotationAngle))
         }
     }
 
