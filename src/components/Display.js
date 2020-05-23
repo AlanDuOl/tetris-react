@@ -17,6 +17,7 @@ function Display(props) {
     const [speedChange, setSpeedChange] = useState(false)
     const [rotationChange, setRotationChange] = useState(false)
     const [wall, setWall] = useState([])
+    const [tiles, setTiles] = useState([])
 
     // Init game props
     useEffect(() => {

@@ -8,7 +8,7 @@ export function gameStart(setTimer, ctx2D, wall, currentBlock, canvas, setBlockS
 
 function draw(ctx2D, wall, currentBlock, canvas, setBlockState) {
     clearCanvas(ctx2D, canvas)
-    blockDraw(ctx2D, currentBlock, canvas.tileDim)
+    blockDraw(ctx2D, currentBlock, canvas.tileDim, setBlockState)
     blockMoveDown(canvas, setBlockState, currentBlock)
     console.log("need to clear interval")
 }
