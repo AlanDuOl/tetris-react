@@ -1,22 +1,17 @@
-import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, NUM_TILES_WIDTH, BLOCK_DELTA_ROTATION } from '../globals.js'
+import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, NUM_TILES_WIDTH, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION_ANGLE } from '../globals.js'
 
 
 export function blockStart(canvas, setBlockState) {
     setBlockState(actionType.blockPosition, { x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH })
     setBlockState(actionType.blockSpeed, BLOCK_INITIAL_SPEED)
     setBlockState(actionType.blockType, getBlockType())
+    setBlockState(actionType.blockRotation, BLOCK_INITIAL_ROTATION_ANGLE)
 }
 
 export function blockDraw(ctx2D, currentBlock, tileDim) {
     if (ctx2D) {
         ctx2D.save()
-        ctx2D.translate(currentBlock.position.x, currentBlock.position.y)
-        ctx2D.rotate((Math.PI / 180) * currentBlock.rotation)
-        ctx2D.translate(- currentBlock.position.x, - currentBlock.position.y)
-        ctx2D.beginPath()
         blockDrawShape(ctx2D, currentBlock, tileDim)
-        ctx2D.fill()
-        ctx2D.closePath()
         ctx2D.restore()
     }
 }
@@ -50,54 +45,81 @@ function blockDrawShape(ctx2D, currentBlock, tileDim) {
     }
 }
 
+function blockRotateCanvas(ctx2D, translateX, translateY, rotationAngle) {
+    ctx2D.translate(translateX, translateY)
+    ctx2D.rotate((Math.PI / 180) * rotationAngle)
+    ctx2D.translate(- translateX, - translateY)
+}
+
 function blockDrawI(ctx2D, currentBlock, tileDim) {
+    blockRotateCanvas(ctx2D, currentBlock.position.x, currentBlock.position.y + tileDim * 2, currentBlock.rotationAngle)
     ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.beginPath()
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 3, tileDim, tileDim)
+    ctx2D.fill()
 }
 function blockDrawS(ctx2D, currentBlock, tileDim) {
+    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, currentBlock.rotationAngle)
     ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.beginPath()
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim * 2, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.fill()
 }
 function blockDrawZ(ctx2D, currentBlock, tileDim) {
+    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, currentBlock.rotationAngle)
     ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.beginPath()
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim * 2, currentBlock.position.y + tileDim, tileDim, tileDim)
+    ctx2D.fill()
 }
 function blockDrawT(ctx2D, currentBlock, tileDim) {
+    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, currentBlock.rotationAngle)
     ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.beginPath()
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim * 2, currentBlock.position.y, tileDim, tileDim)
+    ctx2D.fill()
 }
 function blockDrawL(ctx2D, currentBlock, tileDim) {
+    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim * 2, currentBlock.rotationAngle)
     ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.beginPath()
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
+    ctx2D.fill()
 }
 function blockDrawJ(ctx2D, currentBlock, tileDim) {
+    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim * 2, currentBlock.rotationAngle)
     ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.beginPath()
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim * 2, tileDim, tileDim)
+    ctx2D.fill()
 }
 function blockDrawO(ctx2D, currentBlock, tileDim) {
+    blockRotateCanvas(ctx2D, currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, currentBlock.rotationAngle)
     ctx2D.fillStyle = currentBlock.type.fillStyle
+    ctx2D.beginPath()
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x, currentBlock.position.y + tileDim, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y, tileDim, tileDim)
     ctx2D.rect(currentBlock.position.x + tileDim, currentBlock.position.y + tileDim, tileDim, tileDim)
+    ctx2D.fill()
 }
 
 export function finish(ctx2D, canvasWidth, canvasHeight, position, tileDim, timer) {
