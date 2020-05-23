@@ -1,11 +1,11 @@
-import { BLOCK_INITIAL_SPEED, blockMoveDirection } from '../globals'
+import { BLOCK_INITIAL_SPEED, blockMoveDirection, BLOCK_INITIAL_ROTATION_ANGLE } from '../globals'
 
 const initialState = {
     moveDir: blockMoveDirection.none,
     speed: BLOCK_INITIAL_SPEED,
     type: { name: "", fillStyle: "" },
     position: { x: 0, y: 0 }, // Set left position relative to tileDim and bottom proportional to to viewportHeight
-    rotationAngle: 0
+    rotationAngle: BLOCK_INITIAL_ROTATION_ANGLE
 }
 
 const blockReducer = (state = initialState, action) => {
