@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import '../css/Display.css'
 import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
-import { BLOCK_INITIAL_SPEED, blockMoveDirection, NUM_TILES_WIDTH } from '../globals.js'
+import { NUM_TILES_WIDTH } from '../globals.js'
 import { gameStart, gameFinish, gamePause, gameResume, gameUpdate, gamePreventUpdate } from '../libs/game.js'
 import { blockMoveSide, blockSpeedUp, blockStart } from '../libs/block.js'
 
@@ -17,14 +17,16 @@ function Display(props) {
     const [speedChange, setSpeedChange] = useState(false)
     const [rotationChange, setRotationChange] = useState(false)
     const [wall, setWall] = useState([])
-    const [tiles, setTiles] = useState([])
+    // const [tiles, setTiles] = useState([])
+    const [blockInitialPos, setBlockInitialPos] = useState({ x: 0, y: 0 })
 
     // Init game props
     useEffect(() => {
         let canvas = document.getElementById("display-viewport")
         setCanvas({ width: canvas.width, height: canvas.height, tileDim: canvas.width / NUM_TILES_WIDTH })
         setCtx2D(canvas.getContext("2d"))
-        blockStart(canvas, props.setBlockState)
+        setBlockInitialPos({ x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH })
+        blockStart({ x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH }, props.setBlockState, canvas.width / NUM_TILES_WIDTH)
     }, [])
 
     // Start/End
@@ -35,7 +37,7 @@ function Display(props) {
         else {
             // To avoid run on first render
             if (ctx2D) {
-                gameFinish(timer, ctx2D, canvas, props.setBlockState)
+                gameFinish(timer, ctx2D, canvas, props.setBlockState, blockInitialPos)
             }
         }
     }, [props.gameReducer.gameOn])

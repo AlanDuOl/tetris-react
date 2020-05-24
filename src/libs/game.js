@@ -48,8 +48,8 @@ export function clearCanvas(ctx2D, canvas) {
 }
 
 
-export function gameFinish(timer, ctx2D, canvas, setBlockState) {
+export function gameFinish(timer, ctx2D, canvas, setBlockState, blockInitialPos) {
     clearInterval(timer)
     clearCanvas(ctx2D, canvas)
-    blockStart(canvas, setBlockState)
+    blockStart(blockInitialPos, setBlockState, canvas.tileDim)
 }

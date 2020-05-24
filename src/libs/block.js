@@ -1,45 +1,87 @@
 import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, NUM_TILES_WIDTH, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION_ANGLE } from '../globals.js'
 
 
-export function blockStart(canvas, setBlockState) {
-    setBlockState(actionType.blockPosition, { x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH })
+export function blockStart(blockInitialPos, setBlockState, tileDim) {
+    setBlockState(actionType.blockPosition, blockInitialPos)
     setBlockState(actionType.blockSpeed, BLOCK_INITIAL_SPEED)
-    setBlockState(actionType.blockType, getBlockType())
     setBlockState(actionType.blockRotation, BLOCK_INITIAL_ROTATION_ANGLE)
+    blockSet(blockInitialPos, setBlockState, tileDim)
+}
+
+function blockSet(blockInitialPos, setBlockState, tileDim) {
+    let type = blockGetType()
+    let tiles = blockSetTiles(blockInitialPos, type, tileDim)
+    setBlockState(actionType.blockType, type)
+    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
 }
 
 export function blockDraw(ctx2D, currentBlock, tileDim, setBlockState) {
     if (ctx2D) {
         ctx2D.save()
-        let tiles = blockSetTiles(currentBlock, tileDim, setBlockState)
-        blockDrawShape(ctx2D, tiles, currentBlock, tileDim)
+        blockDrawShape(ctx2D, currentBlock, tileDim)
         ctx2D.restore()
     }
 }
 
-function blockSetTiles(currentBlock, tileDim, setBlockState) {
+export function blockMoveDown(canvas, setBlockState, currentBlock) {
+    // if (currentBlock.position.y < canvas.height - canvas.tileDim) {
+    //     setBlockState(actionType.blockPosition, { x: currentBlock.position.x, y: currentBlock.position.y += currentBlock.speed })
+    // }
+    let tiles = []
+    currentBlock.tiles.forEach(tile => {
+        tile.y = tile.y += currentBlock.speed
+        tiles.push(tile)
+    });
+    setBlockState(actionType.blockTiles, tiles)
+    // TODO: check for collision
+    // else {
+        // TODO:
+        // - get block info to update wall
+        // - set block position and speed to initial
+        // - update game
+    // }
+}
+
+function blockDrawShape(ctx2D, currentBlock, tileDim) {
+    if (currentBlock.tiles[0].x) {
+        // Tiles.tile3 is the rotation point
+        blockRotateCanvas(ctx2D, currentBlock.tiles[2].x, currentBlock.tiles[3].y, currentBlock.rotationAngle)
+        ctx2D.fillStyle = currentBlock.type.fillStyle
+        ctx2D.beginPath()
+        ctx2D.rect(currentBlock.tiles[0].x, currentBlock.tiles[0].y, tileDim, tileDim)
+        ctx2D.rect(currentBlock.tiles[1].x, currentBlock.tiles[1].y, tileDim, tileDim)
+        ctx2D.rect(currentBlock.tiles[2].x, currentBlock.tiles[2].y, tileDim, tileDim)
+        ctx2D.rect(currentBlock.tiles[3].x, currentBlock.tiles[3].y, tileDim, tileDim)
+        ctx2D.fill()
+    }
+    else {
+        console.log("Error in tiles...")
+    }
+}
+
+function blockSetTiles(blockInitialPos, type, tileDim) {
     let tiles = null
-    switch (currentBlock.type.name) {
+    switch (type.name) {
         case blockType.I.name:
-            tiles = blockSetI(currentBlock, tileDim, setBlockState)
+            tiles = blockSetI(blockInitialPos, tileDim)
             return tiles
         case blockType.S.name:
-            tiles = blockSetS(currentBlock, tileDim, setBlockState)
+            tiles = blockSetS(blockInitialPos, tileDim)
             return tiles
         case blockType.Z.name:
-            tiles = blockSetZ(currentBlock, tileDim, setBlockState)
+            tiles = blockSetZ(blockInitialPos, tileDim)
             return tiles
         case blockType.T.name:
-            tiles = blockSetT(currentBlock, tileDim, setBlockState)
+            tiles = blockSetT(blockInitialPos, tileDim)
             return tiles
         case blockType.L.name:
-            tiles = blockSetL(currentBlock, tileDim, setBlockState)
+            tiles = blockSetL(blockInitialPos, tileDim)
             return tiles
         case blockType.J.name:
-            tiles = blockSetJ(currentBlock, tileDim, setBlockState)
+            tiles = blockSetJ(blockInitialPos, tileDim)
             return tiles
         case blockType.O.name:
-            tiles = blockSetO(currentBlock, tileDim, setBlockState)
+            tiles = blockSetO(blockInitialPos, tileDim)
             return tiles
         default:
             console.log("Unknown block...")
@@ -53,91 +95,67 @@ function blockRotateCanvas(ctx2D, translateX, translateY, rotationAngle) {
     ctx2D.translate(- translateX, - translateY)
 }
 
-function blockDrawShape(ctx2D, tiles, currentBlock, tileDim) {
-    if (tiles) {
-        // Tiles.tile3 is the rotation point
-        blockRotateCanvas(ctx2D, tiles.tile3.x, tiles.tile3.y, currentBlock.rotationAngle)
-        ctx2D.fillStyle = currentBlock.type.fillStyle
-        ctx2D.beginPath()
-        ctx2D.rect(tiles.tile1.x, tiles.tile1.y, tileDim, tileDim)
-        ctx2D.rect(tiles.tile2.x, tiles.tile2.y, tileDim, tileDim)
-        ctx2D.rect(tiles.tile3.x, tiles.tile3.y, tileDim, tileDim)
-        ctx2D.rect(tiles.tile4.x, tiles.tile4.y, tileDim, tileDim)
-        ctx2D.fill()
-    }
-    else {
-        console.log("No tiles found...")
-    }
-}
-
-function blockSetI(currentBlock, tileDim, setBlockState) {
+function blockSetI(blockInitialPos, tileDim) {
     let tiles = {
-        tile1: { x: currentBlock.position.x, y: currentBlock.position.y },
-        tile2: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim },
-        tile3: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim * 2 },
-        tile4: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim * 3 }
+        tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
+        tile2: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim },
+        tile3: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim * 2 },
+        tile4: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim * 3 }
     }
-    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
     return tiles
 }
-function blockSetS(currentBlock, tileDim, setBlockState) {
+function blockSetS(blockInitialPos, tileDim) {
     let tiles = {
-        tile1: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim },
-        tile2: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y },
-        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim },
-        tile4: { x: currentBlock.position.x + tileDim * 2, y: currentBlock.position.y }
+        tile1: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim },
+        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y },
+        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim },
+        tile4: { x: blockInitialPos.x + tileDim * 2, y: blockInitialPos.y }
     }
-    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
     return tiles
 }
-function blockSetZ(currentBlock, tileDim, setBlockState) {
+function blockSetZ(blockInitialPos, tileDim) {
     let tiles = {
-        tile1: { x: currentBlock.position.x, y: currentBlock.position.y },
-        tile2: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y },
-        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim },
-        tile4: { x: currentBlock.position.x + tileDim * 2, y: currentBlock.position.y + tileDim }
+        tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
+        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y },
+        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim },
+        tile4: { x: blockInitialPos.x + tileDim * 2, y: blockInitialPos.y + tileDim }
     }
-    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
     return tiles
 }
-function blockSetT(currentBlock, tileDim, setBlockState) {
+function blockSetT(blockInitialPos, tileDim) {
     let tiles = {
-        tile1: { x: currentBlock.position.x, y: currentBlock.position.y },
-        tile2: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y },
-        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim },
-        tile4: { x: currentBlock.position.x + tileDim * 2, y: currentBlock.position.y }
+        tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
+        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y },
+        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim },
+        tile4: { x: blockInitialPos.x + tileDim * 2, y: blockInitialPos.y }
     }
-    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
     return tiles
 }
-function blockSetL(currentBlock, tileDim, setBlockState) {
+function blockSetL(blockInitialPos, tileDim) {
     let tiles = {
-        tile1: { x: currentBlock.position.x, y: currentBlock.position.y },
-        tile2: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim},
-        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim * 2 },
-        tile4: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim * 2 }
+        tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
+        tile2: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim},
+        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim * 2 },
+        tile4: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim * 2 }
     }
-    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
     return tiles
 }
-function blockSetJ(currentBlock, tileDim, setBlockState) {
+function blockSetJ(blockInitialPos, tileDim) {
     let tiles = {
-        tile1: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim * 2 },
-        tile2: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y},
-        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim * 2},
-        tile4: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim}
+        tile1: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim * 2 },
+        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y},
+        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim * 2},
+        tile4: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim}
     }
-    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
     return tiles
 }
-function blockSetO(currentBlock, tileDim, setBlockState) {
+function blockSetO(blockInitialPos, tileDim) {
     let tiles = {
-        tile1: { x: currentBlock.position.x, y: currentBlock.position.y },
-        tile2: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y},
-        tile3: { x: currentBlock.position.x + tileDim, y: currentBlock.position.y + tileDim},
-        tile4: { x: currentBlock.position.x, y: currentBlock.position.y + tileDim}
+        tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
+        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y},
+        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim},
+        tile4: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim}
     }
-    setBlockState(actionType.blockTiles, [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4])
     return tiles
 }
 
@@ -167,19 +185,6 @@ export function blockMoveSide(canvas, setSideMove, currentBlock, setBlockState) 
     }
 }
 
-export function blockMoveDown(canvas, setBlockState, currentBlock, timer) {
-    if (currentBlock.position.y < canvas.height - canvas.tileDim) {
-        setBlockState(actionType.blockPosition, { x: currentBlock.position.x, y: currentBlock.position.y += currentBlock.speed })
-    }
-    // TODO: check for collision
-    else {
-        // TODO:
-        // - get block info to update wall
-        // - set block position and speed to initial
-        // - update game
-    }
-}
-
 export function blockNewSpeed(currentSpeed) {
     let newSpeed = currentSpeed + BLOCK_DELTA_SPEED
     return newSpeed
@@ -200,10 +205,10 @@ export const blockNewRotation = currentRotation => {
     return rotation
 }
 
-function getBlockType() {
+function blockGetType() {
 
     let type = ""
-    let blockNumber = getBlockNumber()
+    let blockNumber = blockGetNumber()
 
     // Return the blockType that is going to be used as a css class to define the block layout
     switch (blockNumber) {
@@ -235,7 +240,7 @@ function getBlockType() {
 }
 
 // Return the block number used to define the block type
-function getBlockNumber() {
+function blockGetNumber() {
     const min = 1, max = 7
     let blockNum = Math.round(Math.random() * (max - min)) + min
     return blockNum
