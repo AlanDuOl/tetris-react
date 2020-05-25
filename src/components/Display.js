@@ -66,12 +66,13 @@ function Display(props) {
 
     // Update
     //does not need to update in side move because the tile is an object and is passed by reference
-    useEffect(() => {
-        if (props.gameReducer.gameOn && update) {
-            gameUpdate(timer, setTimer, ctx2D, canvas, wall, setWall, block, setBlock)
-        }
-        setUpdate(false)
-    }, [update])
+    // useEffect(() => {
+    //     if (props.gameReducer.gameOn && update) {
+    //         gameUpdate(timer, setTimer, ctx2D, canvas, wall, setWall, block, setBlock)
+    //     }
+    //     setUpdate(false)
+    //     console.log("updating")
+    // }, [update])
 
     useEffect(() => {
         if (props.gameReducer.gameOn) {
@@ -90,7 +91,7 @@ function Display(props) {
     useEffect(() => {
         if (props.gameReducer.gameOn) {
             // Side move must be done here because it depends on canvas dimentions unlike rotationAngle and speed that depends only on the
-            blockMove(canvas, block, setBlock, props.setBlockState)
+            blockMove(canvas, block, setBlock, props.setBlockState, props.blockReducer.moveDir)
         }
     }, [props.blockReducer.moveDir])
 

@@ -57,23 +57,33 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
     }
 }
 
-export function blockMove(canvas, currentBlock, setBlock, setBlockState) {
+export function blockMove(canvas, currentBlock, setBlock, setBlockState, moveDir) {
     // Movo block to left
-    if (currentBlock.moveDir === blockMoveDirection.left) {
-        if (currentBlock.tiles[0].x > 0 && currentBlock.tiles[1].x > 0 && currentBlock.tiles[2].x > 0 && currentBlock.tiles[3].x > 0) {
-            currentBlock.tiles.forEach(currentTile => {
-                currentTile.x -= canvas.tileDim
-            })
+    try {
+        if (moveDir === blockMoveDirection.left) {
+            let newBlock = currentBlock
+            if (newBlock.tiles[0].x > 0 && newBlock.tiles[1].x > 0 && newBlock.tiles[2].x > 0 && newBlock.tiles[3].x > 0) {
+                newBlock.tiles.forEach(currentTile => {
+                    currentTile.x -= canvas.tileDim
+                })
+                setBlock(newBlock)
+            }
         }
-        setBlockState(actionType.blockMove, blockMoveDirection.none)
+        // Move block to right
+        else if (moveDir === blockMoveDirection.right) {
+            let newBlock = currentBlock
+            if (newBlock.tiles[0].x + canvas.tileDim < canvas.width && newBlock.tiles[1].x + canvas.tileDim < canvas.width && newBlock.tiles[2].x + canvas.tileDim < canvas.width && newBlock.tiles[3].x + canvas.tileDim < canvas.width) {
+                newBlock.tiles.forEach(currentTile => {
+                    currentTile.x += canvas.tileDim
+                })
+                setBlock(newBlock)
+            }
+        }
     }
-    // Move block to right
-    else if (currentBlock.moveDir === blockMoveDirection.right) {
-        if (currentBlock.tiles[0].x + canvas.tileDim < canvas.width && currentBlock.tiles[1].x + canvas.tileDim < canvas.width && currentBlock.tiles[2].x + canvas.tileDim < canvas.width && currentBlock.tiles[3].x + canvas.tileDim < canvas.width) {
-            currentBlock.tiles.forEach(currentTile => {
-                currentTile.x += canvas.tileDim
-            });
-        }
+    catch(e) {
+        console.log(e.message)
+    }
+    finally {
         setBlockState(actionType.blockMove, blockMoveDirection.none)
     }
 }
