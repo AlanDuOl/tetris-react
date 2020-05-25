@@ -5,7 +5,7 @@ import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
 import { NUM_TILES_WIDTH } from '../globals.js'
 import { gameStart, gameFinish, gamePause, gameResume, gameUpdate, gamePreventUpdate } from '../libs/game.js'
-import { blockMoveSide, blockSpeedUp, blockStart } from '../libs/block.js'
+import { blockMove, blockSpeedUp, blockStart } from '../libs/block.js'
 
 
 function Display(props) {
@@ -55,14 +55,15 @@ function Display(props) {
     }, [props.gameReducer.gamePaused])
 
     // Update
+    //does not need to update in side move because the tile is an object and is passed by reference
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            if (sideMove || speedChange || rotationChange) {
+            if (speedChange || rotationChange) {
                 gameUpdate(timer, setTimer, ctx2D, wall, props.blockReducer, canvas, props.setBlockState)
-                gamePreventUpdate(setSideMove, setSpeedChange, setRotationChange)
+                gamePreventUpdate(setSpeedChange, setRotationChange)
             }
         }
-    }, [sideMove, speedChange, rotationChange])
+    }, [speedChange, rotationChange])
 
     useEffect(() => {
         if (props.gameReducer.gameOn) {
@@ -71,16 +72,17 @@ function Display(props) {
     }, [props.blockReducer.rotationAngle])
 
     // Block speed change
-    useEffect(() => {
-        if (props.gameReducer.gameOn) {
-            blockSpeedUp(setSpeedChange)
-        }
-    }, [props.blockReducer.speed])
+    // useEffect(() => {
+    //     if (props.gameReducer.gameOn) {
+    //         blockSpeedUp(setSpeedChange)
+    //     }
+    // }, [props.blockReducer.speed])
 
     // Block side move
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            blockMoveSide(canvas, setSideMove, props.blockReducer, props.setBlockState)
+            // Side move must be done here because it depends on canvas dimentions unlike rotationAngle and speed that depends only on the
+            blockMove(canvas, props.blockReducer, props.setBlockState)
         }
     }, [props.blockReducer.moveDir])
 
