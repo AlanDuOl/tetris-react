@@ -9,7 +9,7 @@ export function gameStart(setTimer, ctx2D, wall, currentBlock, canvas, setBlockS
 function draw(ctx2D, wall, currentBlock, canvas, setBlockState) {
     clearCanvas(ctx2D, canvas)
     blockDraw(ctx2D, currentBlock, canvas.tileDim, setBlockState)
-    blockMoveDown(canvas, setBlockState, currentBlock)
+    blockMoveDown(currentBlock)
     console.log("need to clear interval")
 }
 
@@ -18,8 +18,7 @@ export function gameUpdate(timer, setTimer, ctx2D, wall, currentBlock, canvas, s
     setTimer(setInterval(draw.bind(null, ctx2D, wall, currentBlock, canvas, setBlockState), TIMER_SPEED))
 }
 
-export function gamePreventUpdate(setSideMove, setSpeedChange, setRotationChange) {
-    setSideMove(false)
+export function gamePreventUpdate(setSpeedChange, setRotationChange) {
     setSpeedChange(false)
     setRotationChange(false)
 }
