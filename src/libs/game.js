@@ -1,54 +1,39 @@
-import { blockDraw, blockMoveDown, blockStart } from './block.js'
+import { blockLoop, blockStart } from './block.js'
+import { wallStart, wallLoop } from './wall.js'
 import { TIMER_SPEED } from '../globals.js'
 
-export function gameStart(setTimer, ctx2D, wall, currentBlock, canvas, setBlockState) {
-    // blockStart(canvas, currentBlock, setBlockState)
-    setTimer(setInterval(draw.bind(null, ctx2D, wall, currentBlock, canvas, setBlockState), TIMER_SPEED))
+export function gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setBlockRestart) {
+    // blockStart(canvas, currentBlock)
+    setTimer(setInterval(gameLoop.bind(null, ctx2D, canvas, wall, setWall, block, setBlock, setBlockRestart), TIMER_SPEED))
 }
 
-function draw(ctx2D, wall, currentBlock, canvas, setBlockState) {
-    clearCanvas(ctx2D, canvas)
-    blockDraw(ctx2D, currentBlock, canvas.tileDim, setBlockState)
-    blockMoveDown(currentBlock)
-    console.log("need to clear interval")
-}
-
-export function gameUpdate(timer, setTimer, ctx2D, wall, currentBlock, canvas, setBlockState) {
+export function gameUpdate(timer, setTimer, ctx2D, wall, setWall, setBlockRestart, currentBlock, canvas) {
     clearInterval(timer)
-    setTimer(setInterval(draw.bind(null, ctx2D, wall, currentBlock, canvas, setBlockState), TIMER_SPEED))
-}
-
-export function gamePreventUpdate(setSpeedChange, setRotationChange) {
-    setSpeedChange(false)
-    setRotationChange(false)
+    setTimer(setInterval(gameLoop.bind(null, ctx2D, wall, setWall, setBlockRestart, currentBlock, canvas), TIMER_SPEED))
 }
 
 export function gamePause(timer) {
     clearInterval(timer)
 }
 
-export function gameResume(setTimer, ctx2D, wall, currentBlock, canvas, setBlockState) {
-    setTimer(setInterval(draw.bind(null, ctx2D, wall, currentBlock, canvas, setBlockState), TIMER_SPEED))
+export function gameFinish(timer, ctx2D, canvas, blockInitialPos, setWall) {
+    clearInterval(timer)
+    clearCanvas(ctx2D, canvas)
+    blockStart(blockInitialPos, canvas.tileDim)
+    wallStart(setWall)
 }
-// drawWall: function(blocks, position, tileDim) {
-//     for (block in blocks) {
-//         ctx2D.beginPath()
-//         ctx2D.rect(position.x, position.y, tileDim, tileDim)
-//         ctx2D.fillStyle = "grba(0, 0, 255, 0.5)"
-//         ctx2D.fill()
-//         ctx2D.closePath()
-//     }
-// },
+
+function gameLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, setBlockRestart) {
+    if (ctx2D) {
+        clearCanvas(ctx2D, canvas)
+        blockLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, setBlockRestart)
+        wallLoop(ctx2D, wall, canvas.tileDim)
+    }
+    console.log("need to clear interval")
+}
 
 export function clearCanvas(ctx2D, canvas) {
     if (ctx2D) {
         ctx2D.clearRect(0, 0, canvas.width, canvas.height)
     }
-}
-
-
-export function gameFinish(timer, ctx2D, canvas, setBlockState, blockInitialPos) {
-    clearInterval(timer)
-    clearCanvas(ctx2D, canvas)
-    blockStart(blockInitialPos, setBlockState, canvas.tileDim)
 }

@@ -16,8 +16,7 @@ function Controls(props) {
 
     const blockSpeedUp = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            // Change directly because changes inside the canvas don't need to tigger re-render ? (In rotation angle caused bugs)
-            blockNewSpeed(props.blockReducer)
+            props.setBlockState(actionType.blockSpeed, blockNewSpeed(props.blockReducer.speed))
         }
     }
 

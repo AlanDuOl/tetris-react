@@ -1,9 +1,8 @@
-import { NUM_TILES_WIDTH, NUM_TILES_HEIGHT } from '../globals.js'
 
 const initialState = {
     level: 1,
     score: 0,
-    wall: new Array([NUM_TILES_WIDTH][NUM_TILES_HEIGHT]),
+    wall: [],
     gameOn: false,
     gamePaused: false
 }
