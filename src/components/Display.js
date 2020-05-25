@@ -4,21 +4,18 @@ import '../css/Display.css'
 import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
 import { NUM_TILES_WIDTH } from '../globals.js'
-import { gameStart, gameFinish, gamePause, gameUpdate, gamePreventUpdate } from '../libs/game.js'
+import { gameStart, gameFinish, gamePause } from '../libs/game.js'
 import { blockMove, blockNewSpeed, blockStart, blockNewRotation } from '../libs/block.js'
 import { wallStart } from '../libs/wall.js'
 
 
 function Display(props) {
 
-    const [sideMove, setSideMove] = useState(false)
     const [canvas, setCanvas] = useState({ width: 0, height: 0, tileDim: 0 })
     const [ctx2D, setCtx2D] = useState(null)
     const [timer, setTimer] = useState(0)
-    const [update, setUpdate] = useState(false)
     const [wall, setWall] = useState(null)
     const [blockInitialPos, setBlockInitialPos] = useState({ x: 0, y: 0 })
-    const [blockRestart, setBlockRestart] = useState(false)
     const [block, setBlock] = useState({
         speed: 0,
         type: { name: "", fillStyle: "" },
@@ -34,7 +31,6 @@ function Display(props) {
         setCanvas({ width: canvas.width, height: canvas.height, tileDim: canvas.width / NUM_TILES_WIDTH })
         setCtx2D(canvas.getContext("2d"))
         setBlockInitialPos({ x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH })
-        // blockStart({ x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH }, props.setBlockState, canvas.width / NUM_TILES_WIDTH)
         blockStart(block, setBlock, { x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH }, canvas.width / NUM_TILES_WIDTH)
         wallStart(setWall)
     }, [])

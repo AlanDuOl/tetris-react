@@ -1,4 +1,4 @@
-import { BLOCK_INITIAL_SPEED, blockMoveDirection, BLOCK_INITIAL_ROTATION_ANGLE, actionType } from '../globals'
+import { blockMoveDirection, actionType } from '../globals'
 
 const initialState = {
     moveDir: blockMoveDirection.none,
