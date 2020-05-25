@@ -2,7 +2,6 @@ import React from 'react'
 import '../css/Controls.scss'
 import { connect } from 'react-redux'
 import { setBlockState } from '../actions/blockActions.js'
-import { blockNewSpeed, blockNewRotation } from '../libs/block.js'
 import { blockMoveDirection, actionType } from '../globals.js'
 
 function Controls(props) {
@@ -10,13 +9,13 @@ function Controls(props) {
     
     function rotate() {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState(actionType.blockRotation, blockNewRotation(props.blockReducer.rotationAngle))
+            props.setBlockState(actionType.blockRotation, !props.blockReducer.rotate)
         }
     }
 
     const blockSpeedUp = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState(actionType.blockSpeed, blockNewSpeed(props.blockReducer.speed))
+            props.setBlockState(actionType.blockSpeed, !props.blockReducer.speedUp)
         }
     }
 

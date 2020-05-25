@@ -5,7 +5,7 @@ import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
 import { NUM_TILES_WIDTH } from '../globals.js'
 import { gameStart, gameFinish, gamePause, gameUpdate, gamePreventUpdate } from '../libs/game.js'
-import { blockMove, blockSpeedUp, blockStart } from '../libs/block.js'
+import { blockMove, blockNewSpeed, blockStart, blockNewRotation } from '../libs/block.js'
 import { wallStart } from '../libs/wall.js'
 
 
@@ -22,6 +22,7 @@ function Display(props) {
     const [block, setBlock] = useState({
         speed: 0,
         type: { name: "", fillStyle: "" },
+        initialPos: { x: 0, y: 0},
         position: { x: 0, y: 0 },
         rotationAngle: 0,
         tiles: []
@@ -34,27 +35,19 @@ function Display(props) {
         setCtx2D(canvas.getContext("2d"))
         setBlockInitialPos({ x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH })
         // blockStart({ x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH }, props.setBlockState, canvas.width / NUM_TILES_WIDTH)
-        blockStart(setBlock, block, { x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH }, canvas.width / NUM_TILES_WIDTH)
+        blockStart(block, setBlock, { x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH }, canvas.width / NUM_TILES_WIDTH)
         wallStart(setWall)
     }, [])
-    // Restart block
-    useEffect(() => {
-        if (props.gameReducer.gameOn && blockRestart) {
-            blockStart(setBlock, block, blockInitialPos, canvas.tileDim)
-            setBlockRestart(false)
-            setUpdate(true)
-        }
-    }, [blockRestart])
 
     // Start/End
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setBlockRestart)
+            gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock)
         }
         else {
             // To avoid run on first render
             if (ctx2D) {
-                gameFinish(timer, ctx2D, canvas, blockInitialPos, setBlock, setWall)
+                gameFinish(timer, ctx2D, canvas, block, setBlock, blockInitialPos, setWall)
             }
         }
     }, [props.gameReducer.gameOn])
@@ -66,7 +59,7 @@ function Display(props) {
                 gamePause(timer)
             }
             else {
-                gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setBlockRestart)
+                gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock)
             }
         }
     }, [props.gameReducer.gamePaused])
@@ -75,23 +68,23 @@ function Display(props) {
     //does not need to update in side move because the tile is an object and is passed by reference
     useEffect(() => {
         if (props.gameReducer.gameOn && update) {
-            gameUpdate(timer, setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setBlockRestart)
-            setUpdate(false)
+            gameUpdate(timer, setTimer, ctx2D, canvas, wall, setWall, block, setBlock)
         }
+        setUpdate(false)
     }, [update])
 
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            setUpdate(true)
+            blockNewRotation(block, setBlock)
         }
-    }, [props.blockReducer.rotationAngle])
+    }, [props.blockReducer.rotate])
 
     // Block speed change
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            blockSpeedUp(block, setBlock, setUpdate, props.blockReducer.speed)
+            blockNewSpeed(block, setBlock)
         }
-    }, [props.blockReducer.speed])
+    }, [props.blockReducer.speedUp])
 
     // Block side move
     useEffect(() => {

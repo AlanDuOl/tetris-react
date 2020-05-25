@@ -2,10 +2,10 @@ import { BLOCK_INITIAL_SPEED, blockMoveDirection, BLOCK_INITIAL_ROTATION_ANGLE, 
 
 const initialState = {
     moveDir: blockMoveDirection.none,
-    speed: BLOCK_INITIAL_SPEED,
+    speedUp: false,
     type: { name: "", fillStyle: "" },
     position: { x: 0, y: 0 }, // Set left position relative to tileDim and bottom proportional to to viewportHeight
-    rotationAngle: BLOCK_INITIAL_ROTATION_ANGLE,
+    rotate: false,
     tiles: []
 }
 
@@ -16,11 +16,11 @@ const blockReducer = (state = initialState, action) => {
         case actionType.blockMove:
             return Object.assign({}, state, { moveDir: action.value })
         case actionType.blockSpeed:
-            return Object.assign({}, state, { speed: action.value })
+            return Object.assign({}, state, { speedUp: action.value })
         case actionType.blockPosition:
             return Object.assign({}, state, { position: action.value })
         case actionType.blockRotation:
-            return Object.assign({}, state, { rotationAngle: action.value })
+            return Object.assign({}, state, { rotate: action.value })
         case actionType.blockType:
             return Object.assign({}, state, { type: action.value })
         case actionType.blockTiles:
