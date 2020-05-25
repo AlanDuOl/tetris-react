@@ -32,9 +32,11 @@ function blockDraw(ctx2D, tileDim, currentBlock) {
 }
 
 function blockMoveDown(currentBlock, setBlock) {
-    currentBlock.tiles.forEach(currentTile => {
-        currentTile.y += currentBlock.speed
-    });
+    let newBlock = currentBlock
+    newBlock.tiles.forEach(currentTile => {
+        currentTile.y += newBlock.speed
+    })
+    setBlock(newBlock)
 }
 
 function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock) {
