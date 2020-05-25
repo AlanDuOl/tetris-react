@@ -1,4 +1,7 @@
-import { BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, NUM_TILES_WIDTH, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION_ANGLE } from '../globals.js'
+import {
+    BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType,
+    NUM_TILES_WIDTH, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION_ANGLE, BLOCK_NUM_TILES
+} from '../globals.js'
 
 
 export function blockStart(blockInitialPos, setBlockState, tileDim) {
@@ -23,29 +26,53 @@ export function blockDraw(ctx2D, currentBlock, tileDim, setBlockState) {
     }
 }
 
-export function blockMoveDown(canvas, setBlockState, currentBlock) {
-    // if (currentBlock.position.y < canvas.height - canvas.tileDim) {
-    //     setBlockState(actionType.blockPosition, { x: currentBlock.position.x, y: currentBlock.position.y += currentBlock.speed })
-    // }
-    let tiles = []
-    currentBlock.tiles.forEach(tile => {
-        tile.y = tile.y += currentBlock.speed
-        tiles.push(tile)
+export function blockMoveDown(currentBlock) {
+    currentBlock.tiles.forEach(currentTile => {
+        currentTile.y += currentBlock.speed
     });
-    setBlockState(actionType.blockTiles, tiles)
+    // setBlockState(actionType.blockTiles, tiles)
     // TODO: check for collision
     // else {
-        // TODO:
-        // - get block info to update wall
-        // - set block position and speed to initial
-        // - update game
+    // TODO:
+    // - get block info to update wall
+    // - set block position and speed to initial
+    // - update game
     // }
 }
 
+export function blockMove(canvas, currentBlock, setBlockState) {
+    // Movo block to left
+    if (currentBlock.moveDir === blockMoveDirection.left) {
+        if (currentBlock.tiles[0].x > 0 && currentBlock.tiles[1].x > 0 && currentBlock.tiles[2].x > 0 && currentBlock.tiles[3].x > 0) {
+            currentBlock.tiles.forEach(currentTile => {
+                currentTile.x -= canvas.tileDim
+            });
+        }
+        setBlockState(actionType.blockMove, blockMoveDirection.none)
+    }
+    // Move block to right
+    else if (currentBlock.moveDir === blockMoveDirection.right) {
+        if (currentBlock.tiles[0].x + canvas.tileDim < canvas.width && currentBlock.tiles[1].x + canvas.tileDim < canvas.width && currentBlock.tiles[2].x + canvas.tileDim < canvas.width && currentBlock.tiles[3].x + canvas.tileDim < canvas.width) {
+            currentBlock.tiles.forEach(currentTile => {
+                currentTile.x += canvas.tileDim
+            });
+        }
+        setBlockState(actionType.blockMove, blockMoveDirection.none)
+    }
+}
+
+export function blockSpeedUp(setSpeedChange) {
+    setSpeedChange(true)
+}
+
+export function blockChangeRotation(currentBlock) {
+    
+}
+
 function blockDrawShape(ctx2D, currentBlock, tileDim) {
-    if (currentBlock.tiles[0].x) {
+    if (currentBlock.tiles) {
         // Tiles.tile3 is the rotation point
-        blockRotateCanvas(ctx2D, currentBlock.tiles[2].x, currentBlock.tiles[3].y, currentBlock.rotationAngle)
+        blockRotateCanvas(ctx2D, currentBlock.tiles[2].x, currentBlock.tiles[2].y, currentBlock.rotationAngle)
         ctx2D.fillStyle = currentBlock.type.fillStyle
         ctx2D.beginPath()
         ctx2D.rect(currentBlock.tiles[0].x, currentBlock.tiles[0].y, tileDim, tileDim)
@@ -57,6 +84,12 @@ function blockDrawShape(ctx2D, currentBlock, tileDim) {
     else {
         console.log("Error in tiles...")
     }
+}
+
+function blockRotateCanvas(ctx2D, translateX, translateY, rotationAngle) {
+    ctx2D.translate(translateX, translateY)
+    ctx2D.rotate((Math.PI / 180) * rotationAngle)
+    ctx2D.translate(- translateX, - translateY)
 }
 
 function blockSetTiles(blockInitialPos, type, tileDim) {
@@ -87,12 +120,6 @@ function blockSetTiles(blockInitialPos, type, tileDim) {
             console.log("Unknown block...")
             break
     }
-}
-
-function blockRotateCanvas(ctx2D, translateX, translateY, rotationAngle) {
-    ctx2D.translate(translateX, translateY)
-    ctx2D.rotate((Math.PI / 180) * rotationAngle)
-    ctx2D.translate(- translateX, - translateY)
 }
 
 function blockSetI(blockInitialPos, tileDim) {
@@ -134,7 +161,7 @@ function blockSetT(blockInitialPos, tileDim) {
 function blockSetL(blockInitialPos, tileDim) {
     let tiles = {
         tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
-        tile2: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim},
+        tile2: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim },
         tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim * 2 },
         tile4: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim * 2 }
     }
@@ -143,18 +170,18 @@ function blockSetL(blockInitialPos, tileDim) {
 function blockSetJ(blockInitialPos, tileDim) {
     let tiles = {
         tile1: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim * 2 },
-        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y},
-        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim * 2},
-        tile4: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim}
+        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y },
+        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim * 2 },
+        tile4: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim }
     }
     return tiles
 }
 function blockSetO(blockInitialPos, tileDim) {
     let tiles = {
         tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
-        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y},
-        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim},
-        tile4: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim}
+        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y },
+        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim },
+        tile4: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim }
     }
     return tiles
 }
@@ -166,32 +193,10 @@ export function finish(ctx2D, canvasWidth, canvasHeight, position, tileDim, time
     this.draw(ctx2D, position, tileDim)
 }
 
-export function blockMoveSide(canvas, setSideMove, currentBlock, setBlockState) {
-    // Movo block to left
-    if (currentBlock.moveDir === blockMoveDirection.left) {
-        if (currentBlock.position.x > 0) {
-            setBlockState(actionType.blockPosition, { x: currentBlock.position.x - canvas.tileDim, y: currentBlock.position.y })
-            setSideMove(true)
-        }
-        setBlockState(actionType.blockMove, blockMoveDirection.none)
-    }
-    // Move block to right
-    else if (currentBlock.moveDir === blockMoveDirection.right) {
-        if (currentBlock.position.x + canvas.tileDim < canvas.width) {
-            setBlockState(actionType.blockPosition, { x: currentBlock.position.x + canvas.tileDim, y: currentBlock.position.y })
-            setSideMove(true)
-        }
-        setBlockState(actionType.blockMove, blockMoveDirection.none)
-    }
-}
-
-export function blockNewSpeed(currentSpeed) {
-    let newSpeed = currentSpeed + BLOCK_DELTA_SPEED
-    return newSpeed
-}
-
-export function blockSpeedUp(setSpeedChange) {
-    setSpeedChange(true)
+export function blockNewSpeed(currentBlock) {
+    // props.setBlockState(actionType.blockSpeed, blockNewSpeed(props.blockReducer.speed))
+    currentBlock.speed += BLOCK_DELTA_SPEED
+    // return newSpeed
 }
 
 export const blockNewRotation = currentRotation => {
@@ -235,7 +240,7 @@ function blockGetType() {
             return type
         default:
             console.log("Unknown block number: " + blockNumber)
-            break
+            return type
     }
 }
 
