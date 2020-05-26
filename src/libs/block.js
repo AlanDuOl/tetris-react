@@ -22,9 +22,7 @@ export function blockLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock) 
 
 function blockDraw(ctx2D, currentBlock, tileDim) {
     if (ctx2D) {
-        // ctx2D.save()
         blockDrawShape(ctx2D, currentBlock, tileDim)
-        // ctx2D.restore()
     }
 }
 

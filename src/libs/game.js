@@ -3,7 +3,6 @@ import { wallStart, wallLoop } from './wall.js'
 import { TIMER_SPEED } from '../globals.js'
 
 export function gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock) {
-    // blockStart(canvas, currentBlock)
     setTimer(setInterval(gameLoop.bind(null, ctx2D, canvas, wall, setWall, block, setBlock), TIMER_SPEED))
 }
 
