@@ -1,5 +1,5 @@
 import {
-    BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION_ANGLE
+    BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION
 } from '../globals.js'
 import { wallSetTiles } from './wall.js'
 
@@ -11,23 +11,23 @@ export function blockStart(block, setBlock, blockInitialPos, tileDim) {
     newBlock.position = blockInitialPos
     newBlock.initialPos = blockInitialPos
     newBlock.speed = BLOCK_INITIAL_SPEED
-    newBlock.rotationAngle = BLOCK_INITIAL_ROTATION_ANGLE
+    newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
     newBlock.type = type
     newBlock.tiles = [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4]
     setBlock(newBlock)
 }
 
 export function blockLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock) {
-    blockDraw(ctx2D, canvas.tileDim, currentBlock)
+    blockDraw(ctx2D, currentBlock, canvas.tileDim)
     blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock)
     blockMoveDown(currentBlock, setBlock)
 }
 
-function blockDraw(ctx2D, tileDim, currentBlock) {
+function blockDraw(ctx2D, currentBlock, tileDim) {
     if (ctx2D) {
-        ctx2D.save()
+        // ctx2D.save()
         blockDrawShape(ctx2D, currentBlock, tileDim)
-        ctx2D.restore()
+        // ctx2D.restore()
     }
 }
 
@@ -54,7 +54,7 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
             }
         })
     }
-    catch(e) {
+    catch (e) {
         console.log(e.message)
     }
 }
@@ -82,7 +82,7 @@ export function blockMove(canvas, currentBlock, setBlock, setBlockState, moveDir
             }
         }
     }
-    catch(e) {
+    catch (e) {
         console.log(e.message)
     }
     finally {
@@ -96,15 +96,12 @@ export function blockNewSpeed(currentBlock, setBlock) {
     setBlock(newBlock)
 }
 
-export function blockNewRotation(currentBlock, setBlock) {
-    let newBlock = currentBlock
-    if (newBlock.rotationAngle >= 270) {
-        newBlock.rotationAngle = 0
+export function blockRotate(currentBlock, setBlock) {
+    if (currentBlock.type.name !== "O") {
+        let newBlock = currentBlock
+        newBlock.tiles = blockGetRotateTiles(currentBlock.tiles, BLOCK_DELTA_ROTATION)
+        setBlock(newBlock)
     }
-    else {
-        newBlock.rotationAngle += BLOCK_DELTA_ROTATION
-    }
-    setBlock(newBlock)
 }
 
 export function blockReset(currentBlock, setBlock, tileDim) {
@@ -113,33 +110,43 @@ export function blockReset(currentBlock, setBlock, tileDim) {
     let tiles = blockSetTiles(newBlock.initialPos, type, tileDim)
     newBlock.position = newBlock.initialPos
     newBlock.speed = BLOCK_INITIAL_SPEED
-    newBlock.rotationAngle = BLOCK_INITIAL_ROTATION_ANGLE
     newBlock.type = type
     newBlock.tiles = [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4]
     setBlock(newBlock)
 }
 
 function blockDrawShape(ctx2D, currentBlock, tileDim) {
-    if (currentBlock.tiles) {
-        // Tiles.tile3 is the rotation point
-        blockRotateCanvas(ctx2D, currentBlock.tiles[2].x, currentBlock.tiles[2].y, currentBlock.rotationAngle)
+    try {
         ctx2D.fillStyle = currentBlock.type.fillStyle
         ctx2D.beginPath()
-        ctx2D.rect(currentBlock.tiles[0].x, currentBlock.tiles[0].y, tileDim, tileDim)
-        ctx2D.rect(currentBlock.tiles[1].x, currentBlock.tiles[1].y, tileDim, tileDim)
-        ctx2D.rect(currentBlock.tiles[2].x, currentBlock.tiles[2].y, tileDim, tileDim)
-        ctx2D.rect(currentBlock.tiles[3].x, currentBlock.tiles[3].y, tileDim, tileDim)
+        currentBlock.tiles.forEach(tile => {
+            ctx2D.rect(tile.x, tile.y, tileDim, tileDim)
+        })
         ctx2D.fill()
     }
-    else {
-        console.log("Error in tiles...")
+    catch (e) {
+        console.log(e.message)
     }
 }
 
-function blockRotateCanvas(ctx2D, translateX, translateY, rotationAngle) {
-    ctx2D.translate(translateX, translateY)
-    ctx2D.rotate((Math.PI / 180) * rotationAngle)
-    ctx2D.translate(- translateX, - translateY)
+function blockGetRotateTiles(tiles, rotationAngle) {
+    let newTiles = []
+    try {
+        let centerTile = tiles[2]
+        let angle = (Math.PI / 180) * rotationAngle
+        tiles.forEach(tile => {
+            let newTile = {}
+            newTile.x = Math.cos(angle) * (tile.x - centerTile.x) - Math.sin(angle) * (tile.y - centerTile.y) + centerTile.x
+            newTile.y = Math.sin(angle) * (tile.x - centerTile.x) - Math.cos(angle) * (tile.y - centerTile.y) + centerTile.y
+            newTiles.push(newTile)
+        })
+    }
+    catch (e) {
+        console.log(e.message)
+    }
+    finally {
+        return newTiles
+    }
 }
 
 function blockSetTiles(blockInitialPos, type, tileDim) {
@@ -276,23 +283,6 @@ function blockGetNumber() {
     let blockNum = Math.round(Math.random() * (max - min)) + min
     return blockNum
 }
-
-
-// export const blockMove = (moveDirection, block, viewportWidth) => {
-//     switch (moveDirection) {
-//         case blockMoveDirection.left:
-//             blockMoveLeft(block, viewportWidth)
-//             break
-//         case blockMoveDirections.right:
-//             blockMoveRight(block, viewportWidth)
-//             break
-//         default:
-//             console.log("Unknown move direction")
-//             break
-//     }
-// }
-
-
 
 // // TODO: On I block collition does not work
 // export const checkRotationCollision = (block, viewportWidth) => {

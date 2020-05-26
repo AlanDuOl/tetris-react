@@ -5,7 +5,7 @@ import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
 import { NUM_TILES_WIDTH } from '../globals.js'
 import { gameStart, gameFinish, gamePause } from '../libs/game.js'
-import { blockMove, blockNewSpeed, blockStart, blockNewRotation } from '../libs/block.js'
+import { blockMove, blockNewSpeed, blockStart, blockRotate } from '../libs/block.js'
 import { wallStart } from '../libs/wall.js'
 
 
@@ -72,7 +72,7 @@ function Display(props) {
 
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            blockNewRotation(block, setBlock)
+            blockRotate(block, setBlock)
         }
     }, [props.blockReducer.rotate])
 

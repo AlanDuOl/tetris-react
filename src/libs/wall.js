@@ -20,7 +20,7 @@ export function wallSetTiles(tiles, wall, setWall, tileDim) {
             let col = Math.floor(tile.x / tileDim)
             let row = Math.floor(tile.y / tileDim)
             // Set the tile position
-            if (col < 15) {
+            if (col < NUM_TILES_WIDTH && row < NUM_TILES_HEIGHT) {
                 localWall[row][col] = { x: col * tileDim, y: row * tileDim }
             }
         })
@@ -42,8 +42,8 @@ function wallDraw(ctx2D, wall, tileDim) {
             for (let col = 0; col < wall[0].length; col++) {
                 if (wall[row][col].x && wall[row][col].y) {
                     ctx2D.beginPath()
-                    ctx2D.rect(wall[row][col].x, wall[row][col].y, tileDim, tileDim)
                     ctx2D.fillStyle = "grba(0, 0, 255, 1)"
+                    ctx2D.rect(wall[row][col].x, wall[row][col].y, tileDim, tileDim)
                     ctx2D.fill()
                 }
             }
