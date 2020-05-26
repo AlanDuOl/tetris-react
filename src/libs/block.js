@@ -4,16 +4,13 @@ import {
 import { wallSetTiles } from './wall.js'
 
 
-export function blockStart(block, setBlock, blockInitialPos, tileDim) {
+export function blockStart(canvas, block, setBlock) {
     let newBlock = block
-    let type = blockGetType()
-    let tiles = blockSetTiles(blockInitialPos, type, tileDim)
-    newBlock.position = blockInitialPos
-    newBlock.initialPos = blockInitialPos
+    let blockType = blockGetType()
     newBlock.speed = BLOCK_INITIAL_SPEED
     newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
-    newBlock.type = type
-    newBlock.tiles = [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4]
+    newBlock.type = blockType
+    newBlock.tiles = blockSetTiles(canvas, blockType)
     setBlock(newBlock)
 }
 
@@ -47,7 +44,7 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
                     if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                         currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
                         wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim)
-                        blockReset(currentBlock, setBlock, canvas.tileDim)
+                        blockReset(canvas, currentBlock, setBlock)
                         return
                     }
                 }
@@ -104,14 +101,12 @@ export function blockRotate(currentBlock, setBlock) {
     }
 }
 
-export function blockReset(currentBlock, setBlock, tileDim) {
+export function blockReset(canvas, currentBlock, setBlock) {
     let newBlock = currentBlock
     let type = blockGetType()
-    let tiles = blockSetTiles(newBlock.initialPos, type, tileDim)
-    newBlock.position = newBlock.initialPos
     newBlock.speed = BLOCK_INITIAL_SPEED
     newBlock.type = type
-    newBlock.tiles = [tiles.tile1, tiles.tile2, tiles.tile3, tiles.tile4]
+    newBlock.tiles = blockSetTiles(canvas, type)
     setBlock(newBlock)
 }
 
@@ -149,29 +144,29 @@ function blockGetRotateTiles(tiles, rotationAngle) {
     }
 }
 
-function blockSetTiles(blockInitialPos, type, tileDim) {
+function blockSetTiles(canvas, type) {
     let tiles = null
     switch (type.name) {
         case blockType.I.name:
-            tiles = blockSetI(blockInitialPos, tileDim)
+            tiles = blockSetI(canvas)
             return tiles
         case blockType.S.name:
-            tiles = blockSetS(blockInitialPos, tileDim)
+            tiles = blockSetS(canvas)
             return tiles
         case blockType.Z.name:
-            tiles = blockSetZ(blockInitialPos, tileDim)
+            tiles = blockSetZ(canvas)
             return tiles
         case blockType.T.name:
-            tiles = blockSetT(blockInitialPos, tileDim)
+            tiles = blockSetT(canvas)
             return tiles
         case blockType.L.name:
-            tiles = blockSetL(blockInitialPos, tileDim)
+            tiles = blockSetL(canvas)
             return tiles
         case blockType.J.name:
-            tiles = blockSetJ(blockInitialPos, tileDim)
+            tiles = blockSetJ(canvas)
             return tiles
         case blockType.O.name:
-            tiles = blockSetO(blockInitialPos, tileDim)
+            tiles = blockSetO(canvas)
             return tiles
         default:
             console.log("Unknown block...")
@@ -179,67 +174,67 @@ function blockSetTiles(blockInitialPos, type, tileDim) {
     }
 }
 
-function blockSetI(blockInitialPos, tileDim) {
-    let tiles = {
-        tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
-        tile2: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim },
-        tile3: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim * 2 },
-        tile4: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim * 3 }
-    }
+function blockSetI(canvas) {
+    let leftMostX = canvas.width / 2
+    let tiles = []
+    tiles.push( { x: leftMostX, y: - canvas.tileDim * 4 } )
+    tiles.push( { x: leftMostX, y: - canvas.tileDim * 3 } )
+    tiles.push( { x: leftMostX, y: - canvas.tileDim * 2 } )
+    tiles.push( { x: leftMostX, y: - canvas.tileDim } )
     return tiles
 }
-function blockSetS(blockInitialPos, tileDim) {
-    let tiles = {
-        tile1: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim },
-        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y },
-        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim },
-        tile4: { x: blockInitialPos.x + tileDim * 2, y: blockInitialPos.y }
-    }
+function blockSetS(canvas) {
+    let leftMostX = canvas.width / 2 - canvas.tileDim
+    let tiles = []
+    tiles.push( { x: leftMostX, y: - canvas.tileDim } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim } )
+    tiles.push( { x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim * 2 } )
     return tiles
 }
-function blockSetZ(blockInitialPos, tileDim) {
-    let tiles = {
-        tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
-        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y },
-        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim },
-        tile4: { x: blockInitialPos.x + tileDim * 2, y: blockInitialPos.y + tileDim }
-    }
+function blockSetZ(canvas) {
+    let leftMostX = canvas.width / 2 - canvas.tileDim
+    let tiles = []
+    tiles.push( { x: leftMostX, y: - canvas.tileDim * 2 } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim } )
+    tiles.push( { x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim } )
     return tiles
 }
-function blockSetT(blockInitialPos, tileDim) {
-    let tiles = {
-        tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
-        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y },
-        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim },
-        tile4: { x: blockInitialPos.x + tileDim * 2, y: blockInitialPos.y }
-    }
+function blockSetT(canvas) {
+    let leftMostX = canvas.width / 2 - canvas.tileDim
+    let tiles = []
+    tiles.push( { x: leftMostX, y: - canvas.tileDim * 2 } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim } )
+    tiles.push( { x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim * 2 } )
     return tiles
 }
-function blockSetL(blockInitialPos, tileDim) {
-    let tiles = {
-        tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
-        tile2: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim },
-        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim * 2 },
-        tile4: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim * 2 }
-    }
+function blockSetL(canvas) {
+    let leftMostX = canvas.width / 2 - canvas.tileDim
+    let tiles = []
+    tiles.push( { x: leftMostX, y: - canvas.tileDim * 3 } )
+    tiles.push( { x: leftMostX, y: - canvas.tileDim * 2 } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim } )
+    tiles.push( { x: leftMostX, y: - canvas.tileDim } )
     return tiles
 }
-function blockSetJ(blockInitialPos, tileDim) {
-    let tiles = {
-        tile1: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim * 2 },
-        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y },
-        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim * 2 },
-        tile4: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim }
-    }
+function blockSetJ(canvas) {
+    let leftMostX = canvas.width / 2 - canvas.tileDim
+    let tiles = []
+    tiles.push( { x: leftMostX, y: - canvas.tileDim } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 3 } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 } )
     return tiles
 }
-function blockSetO(blockInitialPos, tileDim) {
-    let tiles = {
-        tile1: { x: blockInitialPos.x, y: blockInitialPos.y },
-        tile2: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y },
-        tile3: { x: blockInitialPos.x + tileDim, y: blockInitialPos.y + tileDim },
-        tile4: { x: blockInitialPos.x, y: blockInitialPos.y + tileDim }
-    }
+function blockSetO(canvas) {
+    let leftMostX = canvas.width / 2 - canvas.tileDim
+    let tiles = []
+    tiles.push( { x: leftMostX, y: - canvas.tileDim * 2 } )
+    tiles.push( { x: leftMostX, y: - canvas.tileDim * 1 } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 1 } )
+    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 } )
     return tiles
 }
 

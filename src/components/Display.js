@@ -15,12 +15,12 @@ function Display(props) {
     const [ctx2D, setCtx2D] = useState(null)
     const [timer, setTimer] = useState(0)
     const [wall, setWall] = useState(null)
-    const [blockInitialPos, setBlockInitialPos] = useState({ x: 0, y: 0 })
+    // const [blockInitialPos, setBlockInitialPos] = useState({ x: 0, y: 0 })
     const [block, setBlock] = useState({
         speed: 0,
         type: { name: "", fillStyle: "" },
-        initialPos: { x: 0, y: 0},
-        position: { x: 0, y: 0 },
+        // initialPos: { x: 0, y: 0},
+        // position: { x: 0, y: 0 },
         rotationAngle: 0,
         tiles: []
     })
@@ -30,8 +30,8 @@ function Display(props) {
         let canvas = document.getElementById("display-viewport")
         setCanvas({ width: canvas.width, height: canvas.height, tileDim: canvas.width / NUM_TILES_WIDTH })
         setCtx2D(canvas.getContext("2d"))
-        setBlockInitialPos({ x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH })
-        blockStart(block, setBlock, { x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH }, canvas.width / NUM_TILES_WIDTH)
+        // setBlockInitialPos({ x: canvas.width / 2, y: - canvas.width / NUM_TILES_WIDTH })
+        blockStart({ width: canvas.width, height: canvas.height, tileDim: canvas.width / NUM_TILES_WIDTH }, block, setBlock)
         wallStart(setWall)
     }, [])
 
@@ -43,7 +43,7 @@ function Display(props) {
         else {
             // To avoid run on first render
             if (ctx2D) {
-                gameFinish(timer, ctx2D, canvas, block, setBlock, blockInitialPos, setWall)
+                gameFinish(timer, ctx2D, canvas, block, setBlock, setWall)
             }
         }
     }, [props.gameReducer.gameOn])

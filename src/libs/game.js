@@ -16,10 +16,10 @@ export function gamePause(timer) {
     clearInterval(timer)
 }
 
-export function gameFinish(timer, ctx2D, canvas, block, setBlock, blockInitialPos, setWall) {
+export function gameFinish(timer, ctx2D, canvas, block, setBlock, setWall) {
     clearInterval(timer)
     clearCanvas(ctx2D, canvas)
-    blockStart(block, setBlock, blockInitialPos, canvas.tileDim)
+    blockStart(canvas, block, setBlock)
     wallStart(setWall)
 }
 
