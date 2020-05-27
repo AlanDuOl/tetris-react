@@ -36,17 +36,23 @@ function blockMoveDown(currentBlock, setBlock) {
 
 function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock) {
     try {
+        let collision = false
         currentBlock.tiles.forEach(currentTile => {
-            for (let row = 0; row < wall.length; row++) {
-                for (let col = 0; col < wall[0].length; col++) {
-                    if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
-                        currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
-                        wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim)
-                        blockReset(canvas, currentBlock, setBlock)
-                        return
+            if (!collision) {
+                loop1:
+                for (let row = 0; row < wall.length; row++) {
+                    for (let col = 0; col < wall[0].length; col++) {
+                        if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
+                            currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
+                            wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim)
+                            blockReset(canvas, currentBlock, setBlock)
+                            collision = true
+                            break loop1
+                        }
                     }
                 }
             }
+            
         })
     }
     catch (e) {
@@ -175,64 +181,64 @@ function blockSetTiles(canvas, type) {
 function blockSetI(canvas) {
     let leftMostX = canvas.width / 2
     let tiles = []
-    tiles.push( { x: leftMostX, y: - canvas.tileDim * 4 } )
-    tiles.push( { x: leftMostX, y: - canvas.tileDim * 3 } )
-    tiles.push( { x: leftMostX, y: - canvas.tileDim * 2 } )
-    tiles.push( { x: leftMostX, y: - canvas.tileDim } )
+    tiles.push({ x: leftMostX, y: - canvas.tileDim * 4 })
+    tiles.push({ x: leftMostX, y: - canvas.tileDim * 3 })
+    tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
+    tiles.push({ x: leftMostX, y: - canvas.tileDim })
     return tiles
 }
 function blockSetS(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let tiles = []
-    tiles.push( { x: leftMostX, y: - canvas.tileDim } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim } )
-    tiles.push( { x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim * 2 } )
+    tiles.push({ x: leftMostX, y: - canvas.tileDim })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
+    tiles.push({ x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim * 2 })
     return tiles
 }
 function blockSetZ(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let tiles = []
-    tiles.push( { x: leftMostX, y: - canvas.tileDim * 2 } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim } )
-    tiles.push( { x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim } )
+    tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
+    tiles.push({ x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim })
     return tiles
 }
 function blockSetT(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let tiles = []
-    tiles.push( { x: leftMostX, y: - canvas.tileDim * 2 } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim } )
-    tiles.push( { x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim * 2 } )
+    tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
+    tiles.push({ x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim * 2 })
     return tiles
 }
 function blockSetL(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let tiles = []
-    tiles.push( { x: leftMostX, y: - canvas.tileDim * 3 } )
-    tiles.push( { x: leftMostX, y: - canvas.tileDim * 2 } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim } )
-    tiles.push( { x: leftMostX, y: - canvas.tileDim } )
+    tiles.push({ x: leftMostX, y: - canvas.tileDim * 3 })
+    tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
+    tiles.push({ x: leftMostX, y: - canvas.tileDim })
     return tiles
 }
 function blockSetJ(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let tiles = []
-    tiles.push( { x: leftMostX, y: - canvas.tileDim } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 3 } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 } )
+    tiles.push({ x: leftMostX, y: - canvas.tileDim })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 3 })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
     return tiles
 }
 function blockSetO(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let tiles = []
-    tiles.push( { x: leftMostX, y: - canvas.tileDim * 2 } )
-    tiles.push( { x: leftMostX, y: - canvas.tileDim * 1 } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 1 } )
-    tiles.push( { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 } )
+    tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
+    tiles.push({ x: leftMostX, y: - canvas.tileDim * 1 })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 1 })
+    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
     return tiles
 }
 
