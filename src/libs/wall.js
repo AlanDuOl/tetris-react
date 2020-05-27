@@ -30,7 +30,6 @@ export function wallSetTiles(tiles, wall, setWall, tileDim) {
     catch (e) {
         console.log(e.message)
     }
-
 }
 
 export function wallLoop(ctx2D, wall, setWall, tileDim) {
@@ -58,6 +57,7 @@ function wallDraw(ctx2D, wall, tileDim) {
 function wallUpdate(wall, tileDim) {
     try {
         let newWall = wall
+        // Loop backwards in row
         for (let row = NUM_TILES_HEIGHT - 1; row >= 0; row--) {
             let rowLength = 0
             for (let col = 0; col < NUM_TILES_WIDTH; col++) {
@@ -97,12 +97,14 @@ function wallRemoveRow(wall, row) {
 function wallMoveTilesDown(wall, startRow, tileDim) {
     try {
         let newWall = wall
+        // Loop backwards in rows
         for (let row = startRow; row >= 0; row--) {
             for (let col = 0; col < NUM_TILES_WIDTH; col++) {
                 if ((wall[row][col].x || wall[row][col].x === 0) && (wall[row][col].y || wall[row][col].y === 0)) {
                     newWall[row][col].y += tileDim
                 }
             }
+            newWall[row + 1] = newWall[row]
         }
         return newWall
     }

@@ -38,6 +38,7 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
     try {
         let collision = false
         currentBlock.tiles.forEach(currentTile => {
+            // If condition to avoid overchecking because one collition is enouth to get the tiles position
             if (!collision) {
                 loop1:
                 for (let row = 0; row < wall.length; row++) {
@@ -52,7 +53,6 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
                     }
                 }
             }
-            
         })
     }
     catch (e) {
