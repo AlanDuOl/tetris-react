@@ -26,7 +26,7 @@ function gameLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock) {
     if (ctx2D) {
         clearCanvas(ctx2D, canvas)
         blockLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock)
-        wallLoop(ctx2D, wall, setWall, canvas.tileDim)
+        wallLoop(ctx2D, wall, canvas.tileDim)
     }
     console.log("need to clear interval")
 }

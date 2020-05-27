@@ -32,7 +32,7 @@ export function wallSetTiles(tiles, wall, setWall, tileDim) {
     }
 }
 
-export function wallLoop(ctx2D, wall, setWall, tileDim) {
+export function wallLoop(ctx2D, wall, tileDim) {
     wallDraw(ctx2D, wall, tileDim)
 }
 
@@ -57,7 +57,7 @@ function wallDraw(ctx2D, wall, tileDim) {
 function wallUpdate(wall, tileDim) {
     try {
         let newWall = wall
-        // Loop backwards in row
+        // Loop in rows from bottom to top
         for (let row = NUM_TILES_HEIGHT - 1; row >= 0; row--) {
             let rowLength = 0
             for (let col = 0; col < NUM_TILES_WIDTH; col++) {
@@ -68,7 +68,7 @@ function wallUpdate(wall, tileDim) {
                         newWall = wallRemoveRow(newWall, row)
                         // Move down tiles above the emptied row
                         newWall = wallMoveTilesDown(newWall, row - 1, tileDim)
-                        // Recall self
+                        // Recall self with updated wall
                         wallUpdate(newWall, tileDim)
                     }
                 }
@@ -97,18 +97,38 @@ function wallRemoveRow(wall, row) {
 function wallMoveTilesDown(wall, startRow, tileDim) {
     try {
         let newWall = wall
-        // Loop backwards in rows
+        let emptyRow = wallGetEmptyRow()
+        // Loop in rows from bottom to top
         for (let row = startRow; row >= 0; row--) {
+            // Loop in the columns and and increase y postion by tileDim where the tile is not empty
             for (let col = 0; col < NUM_TILES_WIDTH; col++) {
                 if ((wall[row][col].x || wall[row][col].x === 0) && (wall[row][col].y || wall[row][col].y === 0)) {
                     newWall[row][col].y += tileDim
                 }
             }
+            // Make the bellow row be equal to the current row
             newWall[row + 1] = newWall[row]
+            // Make the current row be equal to an empty row
+            newWall[row] = emptyRow
         }
         return newWall
     }
     catch (e) {
         console.log(e.message)
+    }
+}
+
+function wallGetEmptyRow() {
+    let wallRow = []
+    for (let col = 0; col < NUM_TILES_WIDTH; col++) {
+        let emptyTile = {}
+        wallRow.push(emptyTile)
+    }
+
+    if (wallRow.length === NUM_TILES_WIDTH) {
+        return wallRow
+    }
+    else {
+        console.log("Error creating empty row")
     }
 }
