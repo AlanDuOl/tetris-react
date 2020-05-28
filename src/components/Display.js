@@ -19,6 +19,7 @@ function Display(props) {
         speed: 0,
         type: { name: "", fillStyle: "" },
         rotationAngle: 0,
+        rotationPoint: { x:0, Y:0 },
         tiles: []
     })
 
@@ -68,7 +69,7 @@ function Display(props) {
 
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            blockRotate(block, setBlock)
+            blockRotate(block, setBlock, canvas.tileDim)
         }
     }, [props.blockReducer.rotate])
 
