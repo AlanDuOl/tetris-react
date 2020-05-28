@@ -6,7 +6,7 @@ export const NUM_TILES_HEIGHT = 15
 export const BLOCK_INITIAL_SPEED = 1
 export const BLOCK_DELTA_SPEED = 5
 export const BLOCK_DELTA_ROTATION = 90
-export const BLOCK_INITIAL_ROTATION = 90
+export const BLOCK_INITIAL_ROTATION = 0
 export const TIMER_SPEED = 50
 
 export const blockMoveDirection = {

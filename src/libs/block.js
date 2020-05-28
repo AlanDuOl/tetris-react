@@ -186,6 +186,8 @@ export function blockNewSpeed(currentBlock, setBlock) {
 export function blockRotate(currentBlock, setBlock) {
     if (currentBlock.type.name !== "O") {
         let newBlock = currentBlock
+        // If the current angle is 90 or 270 there is no need to check for available space
+        let checkSpace = blockCheckSpace(newBlock)
         newBlock.tiles = blockGetRotateTiles(newBlock.tiles, BLOCK_DELTA_ROTATION)
         newBlock.rotationAngle = blockGetRotationAngle(newBlock)
         setBlock(newBlock)
@@ -198,7 +200,17 @@ export function blockReset(canvas, currentBlock, setBlock) {
     newBlock.speed = BLOCK_INITIAL_SPEED
     newBlock.type = type
     newBlock.tiles = blockSetTiles(canvas, type)
+    newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
     setBlock(newBlock)
+}
+
+function blockCheckSpace() {
+    if (newBlock.rotationAngle === 90 || newBlock.rotationAngle === 270) {
+        return false
+    }
+    else {
+        return true
+    }
 }
 
 function blockDrawShape(ctx2D, currentBlock, tileDim) {
