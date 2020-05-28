@@ -187,10 +187,19 @@ export function blockRotate(currentBlock, setBlock) {
     if (currentBlock.type.name !== "O") {
         let newBlock = currentBlock
         // If the current angle is 90 or 270 there is no need to check for available space
+        let canRotate = true
         let checkSpace = blockCheckSpace(newBlock)
-        newBlock.tiles = blockGetRotateTiles(newBlock.tiles, BLOCK_DELTA_ROTATION)
-        newBlock.rotationAngle = blockGetRotationAngle(newBlock)
-        setBlock(newBlock)
+        if (checkSpace) {
+            // check available space
+            // if there is no available space set canRotate = false
+        }
+        if (canRotate) {
+            // rotate tiles
+            newBlock.tiles = blockGetRotatedTiles(newBlock.tiles, BLOCK_DELTA_ROTATION)
+            newBlock.rotationAngle = blockGetNewRotationAngle(newBlock)
+            // TODO: Check for collision
+            setBlock(newBlock)
+        }
     }
 }
 
@@ -227,7 +236,7 @@ function blockDrawShape(ctx2D, currentBlock, tileDim) {
     }
 }
 
-function blockGetRotateTiles(tiles, rotationAngle) {
+function blockGetRotatedTiles(tiles, rotationAngle) {
     let newTiles = []
     try {
         let centerTile = tiles[2]
@@ -247,7 +256,7 @@ function blockGetRotateTiles(tiles, rotationAngle) {
     }
 }
 
-function blockGetRotationAngle(block) {
+function blockGetNewRotationAngle(block) {
     let newAngle = block.rotationAngle
     if (newAngle >= 270) {
         newAngle = 0
