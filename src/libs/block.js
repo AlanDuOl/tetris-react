@@ -1,5 +1,6 @@
 import {
-    BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION
+    BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
+    NUM_TILES_WIDTH, NUM_TILES_HEIGHT
 } from '../globals.js'
 import { wallSetTiles } from './wall.js'
 
@@ -41,8 +42,8 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
             // If condition to avoid overchecking because one collition is enouth to get the tiles position
             if (!collision) {
                 loop1:
-                for (let row = 0; row < wall.length; row++) {
-                    for (let col = 0; col < wall[0].length; col++) {
+                for (let row = 0; row < NUM_TILES_HEIGHT; row++) {
+                    for (let col = 0; col < NUM_TILES_WIDTH; col++) {
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
                             wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim)
@@ -60,34 +61,77 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
     }
 }
 
-export function blockMove(canvas, currentBlock, setBlock, setBlockState, moveDir) {
-    // Movo block to left
+export function blockMoveSide(canvas, wall, block, setBlock, setBlockState, moveDir) {
+    // Move block to left
+    if (moveDir === blockMoveDirection.left) {
+        blockMoveLeft(canvas, wall, block, setBlock)
+    }
+    // Move block to right
+    else if (moveDir === blockMoveDirection.right) {
+        blockMoveRight(canvas, wall, block, setBlock)
+    }
+    setBlockState(actionType.blockMove, blockMoveDirection.none)
+}
+
+function blockMoveLeft(canvas, wall, block, setBlock) {
+    let newBlock = block
+    let blockCanMove = blockCanMoveLeft(canvas, wall, block)
+
+    // If block can move move left
+    if (blockCanMove) {
+        newBlock.tiles.forEach(currentTile => {
+            currentTile.x -= canvas.tileDim
+        })
+        setBlock(newBlock)
+    }
+}
+
+function blockCanMoveLeft(canvas, wall, block) {
+    let blockCanMove = true
+    let keepLooping = true
+    // Check if there is a tile that can't move
     try {
-        if (moveDir === blockMoveDirection.left) {
-            let newBlock = currentBlock
-            if (newBlock.tiles[0].x > 0 && newBlock.tiles[1].x > 0 && newBlock.tiles[2].x > 0 && newBlock.tiles[3].x > 0) {
-                newBlock.tiles.forEach(currentTile => {
-                    currentTile.x -= canvas.tileDim
-                })
-                setBlock(newBlock)
+        block.tiles.forEach(currentTile => {
+            if (keepLooping) {
+                let tileRow = Math.floor(currentTile.y / canvas.tileDim)
+                let tileCol = Math.floor(currentTile.x / canvas.tileDim)
+                if (tileCol > 0) {
+                    loop1:
+                    for (let row = 0; row < NUM_TILES_HEIGHT; row++) {
+                        for (let col = 0; col < NUM_TILES_WIDTH; col++) {
+                            if (Object.keys(wall[row][col]).length === 2) {
+                                // If blockTileCol is bigger than wallTileCol + 1 there is no need to check with that wallTile
+                                if (tileCol === col + 1 && tileRow >= row - 1 && tileRow <= row + 1) {
+                                    blockCanMove = false
+                                    keepLooping = false
+                                    break loop1
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    blockCanMove = false
+                    keepLooping = false
+                }
             }
-        }
-        // Move block to right
-        else if (moveDir === blockMoveDirection.right) {
-            let newBlock = currentBlock
-            if (newBlock.tiles[0].x + canvas.tileDim < canvas.width && newBlock.tiles[1].x + canvas.tileDim < canvas.width && newBlock.tiles[2].x + canvas.tileDim < canvas.width && newBlock.tiles[3].x + canvas.tileDim < canvas.width) {
-                newBlock.tiles.forEach(currentTile => {
-                    currentTile.x += canvas.tileDim
-                })
-                setBlock(newBlock)
-            }
-        }
+        })
     }
     catch (e) {
         console.log(e.message)
     }
     finally {
-        setBlockState(actionType.blockMove, blockMoveDirection.none)
+        return blockCanMove
+    }
+}
+
+function blockMoveRight(canvas, wall, block, setBlock) {
+    let newBlock = block
+    if (newBlock.tiles[0].x + canvas.tileDim < canvas.width && newBlock.tiles[1].x + canvas.tileDim < canvas.width && newBlock.tiles[2].x + canvas.tileDim < canvas.width && newBlock.tiles[3].x + canvas.tileDim < canvas.width) {
+        newBlock.tiles.forEach(currentTile => {
+            currentTile.x += canvas.tileDim
+        })
+        setBlock(newBlock)
     }
 }
 
