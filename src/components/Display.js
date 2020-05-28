@@ -5,7 +5,7 @@ import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
 import { NUM_TILES_WIDTH } from '../globals.js'
 import { gameStart, gameFinish, gamePause } from '../libs/game.js'
-import { blockMove, blockNewSpeed, blockStart, blockRotate } from '../libs/block.js'
+import { blockMoveSide, blockNewSpeed, blockStart, blockRotate } from '../libs/block.js'
 import { wallStart } from '../libs/wall.js'
 
 
@@ -83,7 +83,7 @@ function Display(props) {
     useEffect(() => {
         if (props.gameReducer.gameOn) {
             // Side move must be done here because it depends on canvas dimentions unlike rotationAngle and speed that depends only on the
-            blockMove(canvas, block, setBlock, props.setBlockState, props.blockReducer.moveDir)
+            blockMoveSide(canvas, wall, block, setBlock, props.setBlockState, props.blockReducer.moveDir)
         }
     }, [props.blockReducer.moveDir])
 
