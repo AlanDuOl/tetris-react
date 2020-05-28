@@ -40,7 +40,7 @@ function wallDraw(ctx2D, wall, tileDim) {
     try {
         for (let row = 0; row < NUM_TILES_HEIGHT; row++) {
             for (let col = 0; col < NUM_TILES_WIDTH; col++) {
-                if ((wall[row][col].x || wall[row][col].x === 0) && (wall[row][col].y || wall[row][col].y === 0)) {
+                if (Object.keys(wall[row][col]).length === 2) {
                     ctx2D.beginPath()
                     ctx2D.fillStyle = "grba(0, 0, 255, 1)"
                     ctx2D.rect(wall[row][col].x, wall[row][col].y, tileDim, tileDim)
