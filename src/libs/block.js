@@ -213,8 +213,8 @@ export function blockReset(canvas, currentBlock, setBlock) {
     setBlock(newBlock)
 }
 
-function blockCheckSpace() {
-    if (newBlock.rotationAngle === 90 || newBlock.rotationAngle === 270) {
+function blockCheckSpace(block) {
+    if (block.rotationAngle === 90 || block.rotationAngle === 270) {
         return false
     }
     else {
@@ -327,10 +327,10 @@ function blockSetZ(canvas) {
 function blockSetT(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let tiles = []
+    tiles.push({ x: leftMostX, y: - canvas.tileDim * 3 })
     tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
     tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
-    tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
-    tiles.push({ x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim * 2 })
+    tiles.push({ x: leftMostX, y: - canvas.tileDim })
     return tiles
 }
 function blockSetL(canvas) {
