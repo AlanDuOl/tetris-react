@@ -188,7 +188,7 @@ export function blockNewSpeed(currentBlock, setBlock) {
     setBlock(newBlock)
 }
 
-export function blockRotate(currentBlock, setBlock, tileDim) {
+export function blockRotate(currentBlock, setBlock, wall, canvas) {
     if (currentBlock.type.name !== "O") {
         let newBlock = currentBlock
         // If the current angle is 90 or 270 there is no need to check for available space
@@ -197,15 +197,23 @@ export function blockRotate(currentBlock, setBlock, tileDim) {
         if (checkSpace) {
             // check available space
             // if there is no available space set canRotate = false
+            canRotate = blockCheckAvailableSpace(newBlock, wall, canvas)
         }
         if (canRotate) {
             // rotate tiles
-            newBlock.tiles = blockGetRotatedTiles(newBlock, BLOCK_DELTA_ROTATION, tileDim)
+            newBlock.tiles = blockGetRotatedTiles(newBlock, BLOCK_DELTA_ROTATION, canvas.tileDim)
             newBlock.rotationAngle = blockGetNewRotationAngle(newBlock)
             // TODO: Check for collision
             setBlock(newBlock)
         }
     }
+}
+
+function blockCheckAvailableSpace(block, wall, canvas) {
+    let isThereEnoughSpace = true
+    block.tiles.forEach(tile => {
+
+    })
 }
 
 export function blockReset(canvas, currentBlock, setBlock) {
@@ -318,20 +326,20 @@ function blockSetI(canvas) {
 function blockSetS(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let block = { tiles: [], rotationPoint: {} }
-    block.tiles.push({ x: leftMostX, y: - canvas.tileDim })
+    block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 3 })
+    block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
     block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
     block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
-    block.tiles.push({ x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim * 2 })
     block.rotationPoint = { x: leftMostX + canvas.tileDim * 1.5, y: - canvas.tileDim }
     return block
 }
 function blockSetZ(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let block = { tiles: [], rotationPoint: {} }
-    block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
+    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 3 })
     block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
-    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
-    block.tiles.push({ x: leftMostX + canvas.tileDim * 2, y: - canvas.tileDim })
+    block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
+    block.tiles.push({ x: leftMostX, y: - canvas.tileDim })
     block.rotationPoint = { x: leftMostX + canvas.tileDim * 1.5, y: - canvas.tileDim }
     return block
 }

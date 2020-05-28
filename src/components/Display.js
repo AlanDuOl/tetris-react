@@ -69,7 +69,7 @@ function Display(props) {
 
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            blockRotate(block, setBlock, canvas.tileDim)
+            blockRotate(block, setBlock, wall, canvas)
         }
     }, [props.blockReducer.rotate])
 
