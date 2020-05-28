@@ -75,7 +75,7 @@ export function blockMoveSide(canvas, wall, block, setBlock, setBlockState, move
 
 function blockMoveLeft(canvas, wall, block, setBlock) {
     let newBlock = block
-    let blockCanMove = blockCanMoveLeft(canvas, wall, block)
+    let blockCanMove = blockCheckMoveLeft(canvas, wall, block)
 
     // If block can move move left
     if (blockCanMove) {
@@ -86,7 +86,20 @@ function blockMoveLeft(canvas, wall, block, setBlock) {
     }
 }
 
-function blockCanMoveLeft(canvas, wall, block) {
+function blockMoveRight(canvas, wall, block, setBlock) {
+    let newBlock = block
+    let blockCanMove = blockCheckMoveRight(canvas, wall, block)
+
+    // If block can move move right
+    if (blockCanMove) {
+        newBlock.tiles.forEach(currentTile => {
+            currentTile.x += canvas.tileDim
+        })
+        setBlock(newBlock)
+    }
+}
+
+function blockCheckMoveLeft(canvas, wall, block) {
     let blockCanMove = true
     let keepLooping = true
     // Check if there is a tile that can't move
@@ -125,13 +138,42 @@ function blockCanMoveLeft(canvas, wall, block) {
     }
 }
 
-function blockMoveRight(canvas, wall, block, setBlock) {
-    let newBlock = block
-    if (newBlock.tiles[0].x + canvas.tileDim < canvas.width && newBlock.tiles[1].x + canvas.tileDim < canvas.width && newBlock.tiles[2].x + canvas.tileDim < canvas.width && newBlock.tiles[3].x + canvas.tileDim < canvas.width) {
-        newBlock.tiles.forEach(currentTile => {
-            currentTile.x += canvas.tileDim
+function blockCheckMoveRight(canvas, wall, block) {
+    let blockCanMove = true
+    let keepLooping = true
+    // Check if there is a tile that can't move
+    try {
+        block.tiles.forEach(currentTile => {
+            if (keepLooping) {
+                let tileRow = Math.floor(currentTile.y / canvas.tileDim)
+                let tileCol = Math.floor(currentTile.x / canvas.tileDim)
+                if (tileCol < NUM_TILES_WIDTH - 1) {
+                    loop1:
+                    for (let row = 0; row < NUM_TILES_HEIGHT; row++) {
+                        for (let col = 0; col < NUM_TILES_WIDTH; col++) {
+                            if (Object.keys(wall[row][col]).length === 2) {
+                                // If blockTileCol is bigger than wallTileCol + 1 there is no need to check with that wallTile
+                                if (tileCol === col - 1 && tileRow >= row - 1 && tileRow <= row + 1) {
+                                    blockCanMove = false
+                                    keepLooping = false
+                                    break loop1
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    blockCanMove = false
+                    keepLooping = false
+                }
+            }
         })
-        setBlock(newBlock)
+    }
+    catch (e) {
+        console.log(e.message)
+    }
+    finally {
+        return blockCanMove
     }
 }
 
@@ -144,7 +186,8 @@ export function blockNewSpeed(currentBlock, setBlock) {
 export function blockRotate(currentBlock, setBlock) {
     if (currentBlock.type.name !== "O") {
         let newBlock = currentBlock
-        newBlock.tiles = blockGetRotateTiles(currentBlock.tiles, BLOCK_DELTA_ROTATION)
+        newBlock.tiles = blockGetRotateTiles(newBlock.tiles, BLOCK_DELTA_ROTATION)
+        newBlock.rotationAngle = blockGetRotationAngle(newBlock)
         setBlock(newBlock)
     }
 }
@@ -190,6 +233,17 @@ function blockGetRotateTiles(tiles, rotationAngle) {
     finally {
         return newTiles
     }
+}
+
+function blockGetRotationAngle(block) {
+    let newAngle = block.rotationAngle
+    if (newAngle >= 270) {
+        newAngle = 0
+    }
+    else {
+        newAngle += BLOCK_DELTA_ROTATION
+    }
+    return newAngle
 }
 
 function blockSetTiles(canvas, type) {
@@ -326,42 +380,3 @@ function blockGetNumber() {
     let blockNum = Math.round(Math.random() * (max - min)) + min
     return blockNum
 }
-
-// // TODO: On I block collition does not work
-// export const checkRotationCollision = (block, viewportWidth) => {
-
-//     if (block) {
-
-//         let tileWidth = parseFloat(viewportWidth / NUM_TILES_WIDTH)
-//         // Float precision dimensions
-//         let blockRect = block.getBoundingClientRect()
-//         // Block current right ad left positions
-//         let blockCurrentRight = parseFloat(block.style.left) + blockRect.width
-//         let blockCurrentLeft = parseFloat(block.style.left)
-
-//         // Check if there is an overflow
-//         if (blockCurrentRight > viewportWidth) {
-//             // if the difference is more than 2 tiles
-//             if (blockCurrentRight > (viewportWidth + tileWidth * 2)) {
-//                 block.style.left = `${viewportWidth - tileWidth * 4.0}px`
-//             }
-//             // if the difference is more than 1 tile
-//             else if (blockCurrentRight > (viewportWidth + tileWidth)) {
-//                 block.style.left = `${parseFloat(block.style.left) - tileWidth * 2.0}px`
-//             }
-//             // All others
-//             else {
-//                 block.style.left = `${parseFloat(block.style.left) - tileWidth}px`
-//             }
-//         }
-//         // This is problably not necessary because only left overflow is happening
-//         else if (blockCurrentLeft < 0) {
-//             if (blockCurrentLeft < -tileWidth) {
-//                 block.style.left = `${parseFloat(block.style.left) + tileWidth * 2}px`
-//             }
-//             else {
-//                 block.style.left = `${parseFloat(block.style.left) + tileWidth}px`
-//             }
-//         }
-//     }
-// }
