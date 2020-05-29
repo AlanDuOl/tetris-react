@@ -338,7 +338,7 @@ function blockSetI(canvas) {
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 3 })
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim })
-    block.rotationPoint = { x: leftMostX + canvas.tileDim / 2, y: - canvas.tileDim * 2 }
+    block.rotationPoint = block.tiles[3]
     return block
 }
 function blockSetS(canvas) {
@@ -348,17 +348,17 @@ function blockSetS(canvas) {
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
     block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
     block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
-    block.rotationPoint = { x: leftMostX + canvas.tileDim * 1.5, y: - canvas.tileDim }
+    block.rotationPoint = block.tiles[3]
     return block
 }
 function blockSetZ(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let block = { tiles: [], rotationPoint: {} }
-    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 3 })
-    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim })
-    block.rotationPoint = { x: leftMostX + canvas.tileDim * 1.5, y: - canvas.tileDim }
+    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 3 })
+    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
+    block.rotationPoint = { x: block.tiles[3].x, y: block.tiles[3].y + tileDim }
     return block
 }
 function blockSetT(canvas) {
@@ -366,9 +366,9 @@ function blockSetT(canvas) {
     let block = { tiles: [], rotationPoint: {} }
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 3 })
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
-    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim })
-    block.rotationPoint = { x: leftMostX + canvas.tileDim / 2, y: - canvas.tileDim * 1.5 }
+    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
+    block.rotationPoint = { x: block.tiles[3].x, y: block.tiles[3].y + tileDim }
     return block
 }
 function blockSetL(canvas) {
@@ -378,7 +378,7 @@ function blockSetL(canvas) {
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim })
     block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
-    block.rotationPoint = { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 1.5 }
+    block.rotationPoint = block.tiles[3]
     return block
 }
 function blockSetJ(canvas) {
@@ -386,19 +386,19 @@ function blockSetJ(canvas) {
     let block = { tiles: [], rotationPoint: {} }
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim })
     block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 3 })
-    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
     block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
-    block.rotationPoint = { x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 1.5 }
+    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
+    block.rotationPoint = block.tiles[3]
     return block
 }
 function blockSetO(canvas) {
     let leftMostX = canvas.width / 2 - canvas.tileDim
     let block = { tiles: [], rotationPoint: {} }
     block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
-    block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 1 })
-    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 1 })
+    block.tiles.push({ x: leftMostX, y: - canvas.tileDim })
     block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim * 2 })
-    block.rotationPoint = { x: leftMostX + canvas.tileDim, y: - canvas.tileDim }
+    block.tiles.push({ x: leftMostX + canvas.tileDim, y: - canvas.tileDim })
+    block.rotationPoint = block.tiles[3]
     return block
 }
 

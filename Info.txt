@@ -1,101 +1,24 @@
-Component types:
-    - Active: tigger changes (direct interaction by users)
-    - Reactive: react to changes (reactions can also tigger changes) (indirect interaction by users)
+Block rotations:
+    - Central point is equal to tile 4 point and a fake point for Z and T
 
-Reactive component
-Block:
-    actions:
-        - restart (ok)
-        - move (down) (ok)
-        - check for collision:
-            - on side move:
-                - use left + block width < viewportWidth
-            - on rotation:
-                - use left + block width > viewportWidth
-                - rotation collision does not happen on left side
-            - on move down:
-                - make bottom go up with another element?
-        - speed up (ok)
-        - stop (ok)
-        - rotate (ok)
-        - move left/right (ok)
+    - Position correction after rotate points    
+        - L, J, S, Z and T:
+            - 0º:
+                = x - tileDim
+                = y + tileDim
+            - 90º:
+                = x - tileDim
+            - 180º:
+                = y - tileDim * 2
+            - 270º:
+                = x + tileDim * 2
+                = y + tileDim
+        - I:
+            - Rotate clockwise for 90º and 270º
+            - Rotate anti-clockwise for 0º and 180º
 
-    - on render:
-        - set local self reference
-
-    
-    
-
-Active component
-Controls:
-    - down:
-        - set store block speed+
-    - left:
-        - set store block turn left
-    - right:
-        - set store block turn right
-    - turn:
-        - set store block turn
-        
-
-Reactive component
-Display-viewport:
-    - on mount/render/load:
-        - set viewportWidth
-        - set viewportHeight
-
-    - on store gameOn = true:
-        - restart block
-    - on store block restart = true:
-        - restart block
-
-Reactive component
-Wall:
-    - on store game gameOn = false:
-        - init
-    - store set gameOn = true:
-        - nothing
-    - store set gamePaused = true | false:
-        - nothing
-    - on store wall update = true:
-        - 
-
-        - update score
-        - game over
-        - update self
-        - restart block
-
-Active component
-Menu:
-    - Start:
-        - store set gameOn = true
-        - change self btn textContent = Finish
-        
-    - Finish:
-        - command set gameOn = false
-        - change self btn textContent = Start
-        - change Resume btn textContent = Pause
-
-    - Pause:
-        - store set gamePaused = true
-        - change self btn textContent = Resume
-    - Resume:
-        - store set gamePaused = false
-        - change self btn textContent = Pause
-
-
-- Workflow:
-    1. Load app:
-        - At this point only the start button works
-    2. Press start btn:
-        - Reset wall
-        - Reset block
-
-- Game update:
-    - block change:
-        - move side
-        - speed up
-        - rotate
-    - wall change:
-        - add block
-        - remove line
+    - Fake central point for Z and T:
+        - 0º: p4.y + tileDim
+        - 90º p4.x - tileDim
+        - 180º: p4.y - tileDim
+        - 270º: p4.x + tileDim
