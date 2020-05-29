@@ -189,24 +189,26 @@ export function blockNewSpeed(currentBlock, setBlock) {
 }
 
 export function blockRotate(currentBlock, setBlock, wall, canvas) {
-    // if (currentBlock.type.name !== "O") {
-    //     let newBlock = currentBlock
-    //     // If the current angle is 90 or 270 there is no need to check for available space
-    //     let canRotate = true
-    //     let checkSpace = blockNeedToCheckSpace(newBlock)
-    //     if (checkSpace) {
-    //         // check available space
-    //         // if there is no available space set canRotate = false
-    //         canRotate = blockCheckAvailableSpace(newBlock, wall, canvas)
-    //     }
-    //     if (canRotate) {
-    //         // rotate tiles
-    //         newBlock.tiles = blockGetRotatedTiles(newBlock, BLOCK_DELTA_ROTATION, canvas.tileDim)
-    //         newBlock.rotationAngle = blockGetNewRotationAngle(newBlock)
-    //         // TODO: Check for collision
-    //         setBlock(newBlock)
-    //     }
-    // }
+    if (currentBlock.type.name !== "O") {
+        let newBlock = currentBlock
+        // If the current angle is 90 or 270 there is no need to check for available space
+        let canRotate = true
+        // let checkSpace = blockNeedToCheckSpace(newBlock)
+        // if (checkSpace) {
+            // check available space
+            // if there is no available space set canRotate = false
+            // canRotate = blockCheckAvailableSpace(newBlock, wall, canvas)
+        // }
+        if (canRotate) {
+            // rotate tiles
+            newBlock.rotationAngle = blockGetNewRotationAngle(newBlock.rotationAngle)
+            newBlock = blockGetRotated(newBlock, BLOCK_DELTA_ROTATION, canvas.tileDim)
+            // newBlock.tiles = blockGetRotatedTiles(newBlock, BLOCK_DELTA_ROTATION, canvas.tileDim)
+            // newBlock.rotationPoint = blockUpdateRotationPoint()
+            // TODO: Check for collision
+            setBlock(newBlock)
+        }
+    }
 }
 
 // function blockCheckAvailableSpace(block, wall, canvas) {
@@ -269,15 +271,28 @@ function blockDrawShape(ctx2D, currentBlock, tileDim) {
     }
 }
 
-function blockGetRotatedTiles(block, rotationAngle, tileDim) {
+function blockGetRotated(block, BLOCK_DELTA_ROTATION, tileDim) {
+    // TODO:
+        // - rotate the points around the rotation point
+        // - correct the points and the rotation point positions
+        // - take in account the block type and rotation angle
+    let newBlock = block
+    let rotatedPoints = blockGetRotatedPoints(newBlock, BLOCK_DELTA_ROTATION)
+    newBlock = blockCorrectPositions(block, rotatedPoints, tileDim)
+}
+
+function blockGetRotatedPoints(block, rotationAngle) {
     let newTiles = []
     try {
         let rotationPoint = block.rotationPoint
-        console.log(block)
+        // if block is I, it will rotate clockwise in 90 and 270 deg and anti-clockwise in 0 and 180 deg
+        if (block.type.name === "I" && (block.rotationAngle === 0 || block.rotationAngle === 180)) {
+            rotationAngle = - rotationAngle
+        }
         let angle = (Math.PI / 180) * rotationAngle
         block.tiles.forEach(tile => {
             let newTile = {}
-            newTile.x = Math.cos(angle) * (tile.x - rotationPoint.x) - Math.sin(angle) * (tile.y - rotationPoint.y) + rotationPoint.x - tileDim
+            newTile.x = Math.cos(angle) * (tile.x - rotationPoint.x) - Math.sin(angle) * (tile.y - rotationPoint.y) + rotationPoint.x
             newTile.y = Math.sin(angle) * (tile.x - rotationPoint.x) - Math.cos(angle) * (tile.y - rotationPoint.y) + rotationPoint.y
             newTiles.push(newTile)
         })
@@ -290,8 +305,64 @@ function blockGetRotatedTiles(block, rotationAngle, tileDim) {
     }
 }
 
-function blockGetNewRotationAngle(block) {
-    let newAngle = block.rotationAngle
+function blockCorrectPositions(block, rotatedTiles, tileDim) {
+    let newBlock = block
+    let newTiles = rotatedTiles
+    newBlock.tiles = blockSetTilesPoints(newBlock, newTiles)
+    newBlock.rotationPoint = blockSetRotationPoint(newBlock)
+}
+
+function blockSetTilesPoints(block, tiles) {
+    let newTiles = tiles
+    // Only blocks L, J, Z, S and T need to correct rotated points position
+    if (block.type.name !== "I" && block.type.name !== "O") {
+        newTiles.forEach(tile => {
+            switch (block.rotationAngle) {
+                case 0:
+                    tile.x -= tileDim
+                    tile.y += tileDim
+                case 90:
+                    tile.x -= tileDim
+                case 180:
+                    tile.y -= tileDim * 2
+                case 270:
+                    tile.x += tileDim * 2
+                    tile.y += tileDim
+                default:
+                    console.log("Unknown angle...")
+            }
+        })
+    }
+    return newTiles
+}
+
+function blockSetRotationPoint(block) {
+    let tiles = block.tiles
+    let newRotationPoint = block.rotationPoint
+    // If the block is L, J, Z, S or T it's point 4 + fixes
+    if (block.type.name === "L" || block.type.name === "J" || block.type.name === "Z" || block.type.name === "S" || block.type.name === "T") {
+        switch (block.rotationAngle) {
+            case 0:
+                newRotationPoint = { x: tiles[3].x, y: tiles[3].y + tileDim }
+            case 90:
+                newRotationPoint = { x: tiles[3].x - tileDim, y: tiles[3].y }
+            case 180:
+                newRotationPoint = { x: tiles[3].x, y: tiles[3].y - tileDim }
+            case 270:
+                newRotationPoint = { x: tiles[3].x + tileDim, y: tiles[3].y }
+            default:
+                console.log("Unknown angle...")
+        }
+    }
+    // If the block is I it's always the point 4
+    else {
+        newRotationPoint = tiles[3]
+    }
+    return newRotationPoint
+}
+
+function blockGetNewRotationAngle(currentAngle) {
+    let newAngle = currentAngle
     if (newAngle >= 270) {
         newAngle = 0
     }
