@@ -189,32 +189,59 @@ export function blockNewSpeed(currentBlock, setBlock) {
 }
 
 export function blockRotate(currentBlock, setBlock, wall, canvas) {
-    if (currentBlock.type.name !== "O") {
-        let newBlock = currentBlock
-        // If the current angle is 90 or 270 there is no need to check for available space
-        let canRotate = true
-        let checkSpace = blockCheckSpace(newBlock)
-        if (checkSpace) {
-            // check available space
-            // if there is no available space set canRotate = false
-            canRotate = blockCheckAvailableSpace(newBlock, wall, canvas)
-        }
-        if (canRotate) {
-            // rotate tiles
-            newBlock.tiles = blockGetRotatedTiles(newBlock, BLOCK_DELTA_ROTATION, canvas.tileDim)
-            newBlock.rotationAngle = blockGetNewRotationAngle(newBlock)
-            // TODO: Check for collision
-            setBlock(newBlock)
-        }
-    }
+    // if (currentBlock.type.name !== "O") {
+    //     let newBlock = currentBlock
+    //     // If the current angle is 90 or 270 there is no need to check for available space
+    //     let canRotate = true
+    //     let checkSpace = blockNeedToCheckSpace(newBlock)
+    //     if (checkSpace) {
+    //         // check available space
+    //         // if there is no available space set canRotate = false
+    //         canRotate = blockCheckAvailableSpace(newBlock, wall, canvas)
+    //     }
+    //     if (canRotate) {
+    //         // rotate tiles
+    //         newBlock.tiles = blockGetRotatedTiles(newBlock, BLOCK_DELTA_ROTATION, canvas.tileDim)
+    //         newBlock.rotationAngle = blockGetNewRotationAngle(newBlock)
+    //         // TODO: Check for collision
+    //         setBlock(newBlock)
+    //     }
+    // }
 }
 
-function blockCheckAvailableSpace(block, wall, canvas) {
-    let isThereEnoughSpace = true
-    block.tiles.forEach(tile => {
+// function blockCheckAvailableSpace(block, wall, canvas) {
+//     let isThereEnoughSpace = true
+//     let tilesRows = blockGetTilesRows(block.tiles) 
+//     // Check if canvas.width - tileX + tileX - wallTileX >= 3 * canvas.tileDim
+//     block.tiles.forEach(tile => {
+//         // Loop in the wall only on needed rows
+//         for (let row = tilesRows[0]; row < tilesRows[0].length; row--) {
 
-    })
-}
+//         }
+
+//     })
+//     return isThereEnoughSpace
+// }
+
+// function blockGetTilesRows(tiles) {
+//     let tilesRows = []
+//     tiles.forEach(tile => {
+//         let row = Math.floor(tile.y / canvas.tileDim)
+//         tilesRows.push(row)
+//     })
+//     tilesRows.sort((a, b) => b - a)
+//     let finalRows = [ ...new Set(tilesRows) ]
+//     return finalRows
+// }
+
+// function blockNeedToCheckSpace(block) {
+//     if (block.rotationAngle === 90 || block.rotationAngle === 270) {
+//         return false
+//     }
+//     else {
+//         return true
+//     }
+// }
 
 export function blockReset(canvas, currentBlock, setBlock) {
     let newBlock = currentBlock
@@ -226,15 +253,6 @@ export function blockReset(canvas, currentBlock, setBlock) {
     newBlock.rotationPoint = tempBlock.rotationPoint
     newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
     setBlock(newBlock)
-}
-
-function blockCheckSpace(block) {
-    if (block.rotationAngle === 90 || block.rotationAngle === 270) {
-        return false
-    }
-    else {
-        return true
-    }
 }
 
 function blockDrawShape(ctx2D, currentBlock, tileDim) {
