@@ -14,8 +14,15 @@ Block rotations:
                 = x + tileDim * 2
                 = y + tileDim
         - I:
-            - Rotate clockwise for 90º and 270º
-            - Rotate anti-clockwise for 0º and 180º
+            - 0º:
+                = x - tileDim * 3
+            - 90º:
+                = nothing
+            - 180º:
+                = y - tileDim * 3
+            - 270º:
+                = x + tileDim * 3
+                = y + tileDim * 3
 
     - Fake central point for Z and T:
         - 0º: p4.y + tileDim
