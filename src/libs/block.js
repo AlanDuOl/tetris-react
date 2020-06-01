@@ -1,6 +1,6 @@
 import {
     BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
-    NUM_TILES_WIDTH, NUM_TILES_HEIGHT
+    WALL_TILES_WIDTH, WALL_TILES_HEIGHT
 } from '../globals.js'
 import { wallSetTiles } from './wall.js'
 
@@ -44,8 +44,8 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
             // If condition to avoid overchecking because one collition is enouth to get the tiles position
             if (!collision) {
                 loop1:
-                for (let row = 0; row < NUM_TILES_HEIGHT; row++) {
-                    for (let col = 0; col < NUM_TILES_WIDTH; col++) {
+                for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
+                    for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
                             wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim)
@@ -114,8 +114,8 @@ function blockCheckMoveLeft(canvas, wall, block) {
                 let tileCol = Math.floor(currentTile.x / canvas.tileDim)
                 if (tileCol > 0) {
                     loop1:
-                    for (let row = 0; row < NUM_TILES_HEIGHT; row++) {
-                        for (let col = 0; col < NUM_TILES_WIDTH; col++) {
+                    for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
+                        for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                             if (Object.keys(wall[row][col]).length === 2) {
                                 // If blockTileCol is bigger than wallTileCol + 1 there is no need to check with that wallTile
                                 if (tileCol === col + 1 && tileRow >= row - 1 && tileRow <= row + 1) {
@@ -151,10 +151,10 @@ function blockCheckMoveRight(canvas, wall, block) {
             if (keepLooping) {
                 let tileRow = Math.floor(currentTile.y / canvas.tileDim)
                 let tileCol = Math.floor(currentTile.x / canvas.tileDim)
-                if (tileCol < NUM_TILES_WIDTH - 1) {
+                if (tileCol < WALL_TILES_WIDTH - 1) {
                     loop1:
-                    for (let row = 0; row < NUM_TILES_HEIGHT; row++) {
-                        for (let col = 0; col < NUM_TILES_WIDTH; col++) {
+                    for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
+                        for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                             if (Object.keys(wall[row][col]).length === 2) {
                                 // If blockTileCol is bigger than wallTileCol + 1 there is no need to check with that wallTile
                                 if (tileCol === col - 1 && tileRow >= row - 1 && tileRow <= row + 1) {
@@ -190,14 +190,14 @@ export function blockNewSpeed(currentBlock, setBlock) {
 export function blockRotate(currentBlock, setBlock, wall, canvas) {
     if (currentBlock.type.name !== "O") {
         let newBlock = currentBlock
-        // If the current angle is 90 or 270 there is no need to check for available space
+        
         let canRotate = true
-        // let checkSpace = blockNeedToCheckSpace(newBlock)
-        // if (checkSpace) {
+        let checkSpace = blockNeedToCheckSpace(newBlock)
+        if (checkSpace) {
             // check available space
             // if there is no available space set canRotate = false
-            // canRotate = blockCheckAvailableSpace(newBlock, wall, canvas)
-        // }
+            canRotate = blockCheckAvailableSpace(newBlock, wall, canvas)
+        }
         if (canRotate) {
             // rotate tiles
             newBlock.rotationAngle = blockGetNewRotationAngle(newBlock.rotationAngle)
@@ -210,39 +210,50 @@ export function blockRotate(currentBlock, setBlock, wall, canvas) {
     }
 }
 
-// function blockCheckAvailableSpace(block, wall, canvas) {
-//     let isThereEnoughSpace = true
-//     let tilesRows = blockGetTilesRows(block.tiles) 
-//     // Check if canvas.width - tileX + tileX - wallTileX >= 3 * canvas.tileDim
-//     block.tiles.forEach(tile => {
-//         // Loop in the wall only on needed rows
-//         for (let row = tilesRows[0]; row < tilesRows[0].length; row--) {
+function blockCheckAvailableSpace(block, wall, canvas) {
+    let isThereEnoughSpace = true
+    let blockDims = blockGetRowsAndCols(block.tiles, canvas)
+    // Check if canvas.width - tileX + tileX - wallTileX >= 3 * canvas.tileDim
+    block.tiles.forEach(tile => {
+        // Loop in the wall only on needed rows using future width and height
+        let initialRow = blockDims.rows[0] + 1
+        let finalRow = blockDims.rows[0] >= WALL_TILES_HEIGHT ? WALL_TILES_HEIGHT : blockDims.rows[0] - blockDims.cols.length
+        for (let row = initialRow; row <= finalRow; row--) {
 
-//         }
+        }
 
-//     })
-//     return isThereEnoughSpace
-// }
+    })
+    return isThereEnoughSpace
+}
 
-// function blockGetTilesRows(tiles) {
-//     let tilesRows = []
-//     tiles.forEach(tile => {
-//         let row = Math.floor(tile.y / canvas.tileDim)
-//         tilesRows.push(row)
-//     })
-//     tilesRows.sort((a, b) => b - a)
-//     let finalRows = [ ...new Set(tilesRows) ]
-//     return finalRows
-// }
+function blockGetRowsAndCols(tiles, canvas) {
+    let tilesRows = []
+    let tilesCols = []
+    let rowsAndCols = []
+    tiles.forEach(tile => {
+        let row = Math.floor(tile.y / canvas.tileDim)
+        let col = Math.floor(tile.x / canvas.tileDim)
+        tilesRows.push(row)
+        tilesCols.push(col)
+    })
+    // Descending
+    tilesRows.sort((a, b) => b - a)
+    // Ascending
+    tilesCols.sort()
+    let finalRows = [ ...new Set(tilesRows) ]
+    let finalColss = [ ...new Set(tilesCols) ]
+    return { rows: finalRows, cols: finalColss }
+}
 
-// function blockNeedToCheckSpace(block) {
-//     if (block.rotationAngle === 90 || block.rotationAngle === 270) {
-//         return false
-//     }
-//     else {
-//         return true
-//     }
-// }
+function blockNeedToCheckSpace(block) {
+// If the current angle is 90 or 270 there is no need to check for available space
+    if (block.rotationAngle === 90 || block.rotationAngle === 270) {
+        return false
+    }
+    else {
+        return true
+    }
+}
 
 export function blockReset(canvas, currentBlock, setBlock) {
     let newBlock = currentBlock
@@ -252,8 +263,6 @@ export function blockReset(canvas, currentBlock, setBlock) {
     newBlock.tiles = tempBlock.tiles
     newBlock.rotationPoint = tempBlock.rotationPoint
     newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
-    console.log(newBlock)
-    console.log(canvas)
     setBlock(newBlock)
 }
 
@@ -272,13 +281,12 @@ function blockDrawShape(ctx2D, currentBlock, tileDim) {
 }
 
 function blockGetRotated(block, BLOCK_DELTA_ROTATION, tileDim) {
-    // TODO:
-        // - rotate the points around the rotation point
-        // - correct the points and the rotation point positions
-        // - take in account the block type and rotation angle
     let newBlock = block
+    // Rotate the points around the rotation point
     let rotatedPoints = blockGetRotatedPoints(newBlock, BLOCK_DELTA_ROTATION)
+    // Correct the points and the rotation point positions
     newBlock = blockCorrectPositions(block, rotatedPoints, tileDim)
+    return newBlock
 }
 
 function blockGetRotatedPoints(block, rotationAngle) {
@@ -364,7 +372,7 @@ function blockSetRotationPoint(block, tileDim) {
     let tiles = block.tiles
     let newRotationPoint = block.rotationPoint
     let centralPoint = tiles[3]
-    // If the block is L, J, Z, S or T it's point 4 + fixes
+    // If the block is T or Z the rotation point is updated differently
     if (block.type.name === "T" || block.type.name === "Z") {
         switch (block.rotationAngle) {
             case 0:
@@ -384,7 +392,7 @@ function blockSetRotationPoint(block, tileDim) {
                 break
         }
     }
-    // If the block is I it's always the point 4
+    // All other blocks have the central point equalt to point 4
     else {
         newRotationPoint = { x: centralPoint.x, y: centralPoint.y }
     }

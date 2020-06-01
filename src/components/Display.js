@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import '../css/Display.css'
 import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
-import { NUM_TILES_WIDTH } from '../globals.js'
+import { WALL_TILES_WIDTH } from '../globals.js'
 import { gameStart, gameFinish, gamePause } from '../libs/game.js'
 import { blockMoveSide, blockNewSpeed, blockStart, blockRotate } from '../libs/block.js'
 import { wallStart } from '../libs/wall.js'
@@ -26,9 +26,9 @@ function Display(props) {
     // Init game props
     useEffect(() => {
         let canvas = document.getElementById("display-viewport")
-        setCanvas({ width: canvas.width, height: canvas.height, tileDim: canvas.width / NUM_TILES_WIDTH })
+        setCanvas({ width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH })
         setCtx2D(canvas.getContext("2d"))
-        blockStart({ width: canvas.width, height: canvas.height, tileDim: canvas.width / NUM_TILES_WIDTH }, block, setBlock)
+        blockStart({ width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }, block, setBlock)
         wallStart(setWall)
     }, [])
 
@@ -56,16 +56,6 @@ function Display(props) {
             }
         }
     }, [props.gameReducer.gamePaused])
-
-    // Update
-    //does not need to update in side move because the tile is an object and is passed by reference
-    // useEffect(() => {
-    //     if (props.gameReducer.gameOn && update) {
-    //         gameUpdate(timer, setTimer, ctx2D, canvas, wall, setWall, block, setBlock)
-    //     }
-    //     setUpdate(false)
-    //     console.log("updating")
-    // }, [update])
 
     useEffect(() => {
         if (props.gameReducer.gameOn) {
