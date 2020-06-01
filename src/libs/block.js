@@ -365,7 +365,7 @@ function blockSetRotationPoint(block, tileDim) {
     let newRotationPoint = block.rotationPoint
     let centralPoint = tiles[3]
     // If the block is L, J, Z, S or T it's point 4 + fixes
-    if (block.type.name === "L" || block.type.name === "J" || block.type.name === "Z" || block.type.name === "S" || block.type.name === "T") {
+    if (block.type.name === "T" || block.type.name === "Z") {
         switch (block.rotationAngle) {
             case 0:
                 newRotationPoint = { x: centralPoint.x, y: centralPoint.y + tileDim }
