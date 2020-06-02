@@ -35,6 +35,9 @@ BUG:
     - Block rotation does not work on first and last columns (fixed)
     - Block rotation does not work on block I (fixed)
     - Block rotates even if there is no space around it (fixed)
+    - Some times bottom collision fails when block is speeded up
 
 TODO:
+    - Correct right collision after rotate
     - Try to use the block rotation check logic to collision detection
+    - 
