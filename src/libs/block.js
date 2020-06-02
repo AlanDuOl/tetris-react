@@ -219,9 +219,9 @@ function blockCheckAvailableSpace(block, wall, canvas) {
         let blockDims = blockGetRowsAndCols(block.tiles, canvas)
         // Loop in the wall only on needed rows using future width and height
         // The rows array is sorted to get the max value first
-        let startRow = blockDims.rows[0] + 1
+        let startRow = (blockDims.rows[0] + 1) > 1 ? (blockDims.rows[0] + 1) : 0
         // The row in the loop (not included)
-        let endRow = blockDims.rows[0] - blockDims.cols.length
+        let endRow = (startRow - blockDims.rows.length) < 0 ? - 1 : (startRow - blockDims.rows.length)
         // The number of cols to be checked is equal to the future height (rows.length)
         // The abs diference between the current height and width (cols.length - rows.length)
         let colsOffset = Math.abs(blockDims.cols.length - blockDims.rows.length)
@@ -239,13 +239,12 @@ function blockCheckAvailableSpace(block, wall, canvas) {
             startCol = WALL_TILES_WIDTH - blockDims.rows.length
             numCols = blockDims.rows.length
         }
-        let endCol = startCol + numCols
+        let endCol = (startCol + numCols) > WALL_TILES_WIDTH ? WALL_TILES_WIDTH : (startCol + numCols)
         let emptyCols = 0
         for (let col = startCol; col < endCol; col++) {
             let emptyRows = 0
             for (let row = startRow; row > endRow; row--) {
                 if (Object.keys(wall[row][col]).length === 2) {
-                    console.log("empty row")
                     emptyRows = 0
                 }
                 else {
@@ -257,12 +256,12 @@ function blockCheckAvailableSpace(block, wall, canvas) {
                 emptyCols++
                 // If the number of empty cols is >= than the future width the block can rotate
                 if (emptyCols >= blockDims.rows.length) {
-                    console.log("start row: ", startRow)
-                    console.log("end row: ", endRow)
-                    console.log("start col: ", startCol)
-                    console.log("end col: ", endCol)
-                    console.log("empty cols: ", emptyCols)
-                    console.log(wall)
+                    // console.log("start row: ", startRow)
+                    // console.log("end row: ", endRow)
+                    // console.log("start col: ", startCol)
+                    // console.log("end col: ", endCol)
+                    // console.log("empty cols: ", emptyCols)
+                    // console.log(wall)
                     isThereEnoughSpace = true
                     break
                 }

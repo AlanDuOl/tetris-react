@@ -31,7 +31,10 @@ Block rotations:
         - 270º: p4.x + tileDim
 
 BUG:
-    - Block rotation does not work before line 3
+    - Block rotation does not work before line 3 (fixed)
     - Block rotation does not work on first and last columns (fixed)
-    - Blcok rotation does not work on block I
-    - Rotation does not work between two blocks
+    - Block rotation does not work on block I (fixed)
+    - Block rotates even if there is no space around it (fixed)
+
+TODO:
+    - Try to use the block rotation check logic to collision detection
