@@ -232,11 +232,11 @@ function blockCheckAvailableSpace(block, wall, canvas) {
         // If the first col element is smaller than the offset, set startCol to 0 to avoid array out of bounds
         if (blockDims.cols[0] < colsOffset && blockDims.cols[0] !== 0) {
             startCol = 0
-            numCols = blockDims.cols.length + colsOffset
+            numCols = blockDims.rows.length + colsOffset
         }
         else if (blockDims.cols[blockDims.cols.length - 1] === WALL_TILES_WIDTH - 1 || blockDims.cols[0] === 0) {
             startCol = 0
-            numCols = blockDims.cols.length
+            numCols = blockDims.rows.length
         }
         let endCol = startCol + numCols
         let emptyCols = 0

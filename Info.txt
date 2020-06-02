@@ -29,3 +29,8 @@ Block rotations:
         - 90º p4.x - tileDim
         - 180º: p4.y - tileDim
         - 270º: p4.x + tileDim
+
+BUG:
+    - Block rotation does not work before line 3
+    - Block rotation does not work on first and last columns (fixed)
+    - Blcok rotation does not work on block I
