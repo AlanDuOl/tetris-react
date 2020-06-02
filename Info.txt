@@ -36,8 +36,8 @@ BUG:
     - Block rotation does not work on block I (fixed)
     - Block rotates even if there is no space around it (fixed)
     - Some times bottom collision fails when block is speeded up
+    - Bottom collision in tiles is failing on bottom left corner
 
 TODO:
     - Correct right collision after rotate
-    - Try to use the block rotation check logic to collision detection
-    - 
+    - Try to use the block rotation check logic to bottom collision detection

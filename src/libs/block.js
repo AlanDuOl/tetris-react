@@ -233,6 +233,9 @@ function blockCheckRotationCollision(block, wall, tileDim) {
                 let collided = false
                 for (let row = startRow; row > endRow; row--) {
                     // If there is a tile in the column set collided to true and break the loop
+                    if (!row) {
+                        console.log("row: " + row, "col: " + col)
+                    }
                     if (Object.keys(wall[row][col]).length === 2) {
                         collided = true
                         break
@@ -278,7 +281,12 @@ function blockCheckAvailableSpace(block, wall, tileDim) {
         // If the first col element is smaller than the offset, set startCol to 0 to avoid array out of bounds
         if (blockDims.cols[0] < colsOffset) {
             startCol = 0
-            numCols = blockDims.rows.length
+            if (block.type.name === "I") {
+                numCols = blockDims.cols[0] + blockDims.rows.length
+            }
+            else {
+                numCols = blockDims.rows.length
+            }
         }
         // If the block last column is equal to the wall last column
         else if (blockDims.cols[blockDims.cols.length - 1] === WALL_TILES_WIDTH - 1) {
