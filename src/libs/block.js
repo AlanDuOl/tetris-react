@@ -228,28 +228,28 @@ function blockCheckAvailableSpace(block, wall, canvas) {
         // The cols array is sorted to get the smallest value first
         let startCol = blockDims.cols[0] - colsOffset
         // numCols is the loop range needed. It varies depending on the col value
-        let numCols = blockDims.cols.length + colsOffset * 2
+        let numCols = blockDims.rows.length + colsOffset
         // If the first col element is smaller than the offset, set startCol to 0 to avoid array out of bounds
-        if (blockDims.cols[0] < colsOffset && blockDims.cols[0] !== 0) {
+        if (blockDims.cols[0] < colsOffset) {
             startCol = 0
-            numCols = blockDims.rows.length + colsOffset
+            numCols = blockDims.rows.length
         }
-        else if (blockDims.cols[blockDims.cols.length - 1] === WALL_TILES_WIDTH - 1 || blockDims.cols[0] === 0) {
-            startCol = 0
+        // If the block last column is equal to the wall last column
+        else if (blockDims.cols[blockDims.cols.length - 1] === WALL_TILES_WIDTH - 1) {
+            startCol = WALL_TILES_WIDTH - blockDims.rows.length
             numCols = blockDims.rows.length
         }
         let endCol = startCol + numCols
         let emptyCols = 0
         for (let col = startCol; col < endCol; col++) {
             let emptyRows = 0
-            console.log("cols: ", col, numCols)
             for (let row = startRow; row > endRow; row--) {
-                if (Object.keys(wall[row][col]) !== 2) {
-                    emptyRows++
-                    console.log("rows: ", emptyRows)
+                if (Object.keys(wall[row][col]).length === 2) {
+                    console.log("empty row")
+                    emptyRows = 0
                 }
                 else {
-                    emptyRows = 0
+                    emptyRows++
                 }
             }
             // cols.length is the future width
@@ -257,7 +257,12 @@ function blockCheckAvailableSpace(block, wall, canvas) {
                 emptyCols++
                 // If the number of empty cols is >= than the future width the block can rotate
                 if (emptyCols >= blockDims.rows.length) {
-                    console.log("cols: ", emptyCols)
+                    console.log("start row: ", startRow)
+                    console.log("end row: ", endRow)
+                    console.log("start col: ", startCol)
+                    console.log("end col: ", endCol)
+                    console.log("empty cols: ", emptyCols)
+                    console.log(wall)
                     isThereEnoughSpace = true
                     break
                 }

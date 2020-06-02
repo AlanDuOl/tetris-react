@@ -34,3 +34,4 @@ BUG:
     - Block rotation does not work before line 3
     - Block rotation does not work on first and last columns (fixed)
     - Blcok rotation does not work on block I
+    - Rotation does not work between two blocks
