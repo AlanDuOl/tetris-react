@@ -190,13 +190,13 @@ export function blockNewSpeed(currentBlock, setBlock) {
 export function blockRotate(currentBlock, setBlock, wall, canvas) {
     if (currentBlock.type.name !== "O") {
         let newBlock = currentBlock
-        
-        let canRotate = true
         let checkSpace = blockNeedToCheckSpace(newBlock)
+        let canRotate = true
         if (checkSpace) {
             // check available space
             // if there is no available space set canRotate = false
             canRotate = blockCheckAvailableSpace(newBlock, wall, canvas)
+
         }
         if (canRotate) {
             // rotate tiles
@@ -207,46 +207,97 @@ export function blockRotate(currentBlock, setBlock, wall, canvas) {
             // TODO: Check for collision
             setBlock(newBlock)
         }
+        
     }
 }
 
 function blockCheckAvailableSpace(block, wall, canvas) {
-    let isThereEnoughSpace = true
-    let blockDims = blockGetRowsAndCols(block.tiles, canvas)
-    // Check if canvas.width - tileX + tileX - wallTileX >= 3 * canvas.tileDim
-    block.tiles.forEach(tile => {
+    
+    try {
+        let isThereEnoughSpace = false
+        // To get the block cols and rows
+        let blockDims = blockGetRowsAndCols(block.tiles, canvas)
         // Loop in the wall only on needed rows using future width and height
-        let initialRow = blockDims.rows[0] + 1
-        let finalRow = blockDims.rows[0] >= WALL_TILES_HEIGHT ? WALL_TILES_HEIGHT : blockDims.rows[0] - blockDims.cols.length
-        for (let row = initialRow; row <= finalRow; row--) {
-
+        // The rows array is sorted to get the max value first
+        let startRow = blockDims.rows[0] + 1
+        // The row in the loop (not included)
+        let endRow = blockDims.rows[0] - blockDims.cols.length
+        // The number of cols to be checked is equal to the future height (rows.length)
+        // The abs diference between the current height and width (cols.length - rows.length)
+        let colsOffset = Math.abs(blockDims.cols.length - blockDims.rows.length)
+        // The cols array is sorted to get the smallest value first
+        let startCol = blockDims.cols[0] - colsOffset
+        // numCols is the loop range needed. It varies depending on the col value
+        let numCols = blockDims.cols.length + colsOffset * 2
+        // If the first col element is smaller than the offset, set startCol to 0 to avoid array out of bounds
+        if (blockDims.cols[0] < colsOffset && blockDims.cols[0] !== 0) {
+            startCol = 0
+            numCols = blockDims.cols.length + colsOffset
         }
-
-    })
-    return isThereEnoughSpace
+        else if (blockDims.cols[blockDims.cols.length - 1] === WALL_TILES_WIDTH - 1 || blockDims.cols[0] === 0) {
+            startCol = 0
+            numCols = blockDims.cols.length
+        }
+        let endCol = startCol + numCols
+        let emptyCols = 0
+        for (let col = startCol; col < endCol; col++) {
+            let emptyRows = 0
+            console.log("cols: ", col, numCols)
+            for (let row = startRow; row > endRow; row--) {
+                if (Object.keys(wall[row][col]) !== 2) {
+                    emptyRows++
+                    console.log("rows: ", emptyRows)
+                }
+                else {
+                    emptyRows = 0
+                }
+            }
+            // cols.length is the future width
+            if (emptyRows === blockDims.rows.length) {
+                emptyCols++
+                // If the number of empty cols is >= than the future width the block can rotate
+                if (emptyCols >= blockDims.rows.length) {
+                    console.log("cols: ", emptyCols)
+                    isThereEnoughSpace = true
+                    break
+                }
+            }
+            else {
+                emptyCols = 0
+            }
+        }
+        return isThereEnoughSpace
+    }
+    catch (e) {
+        console.log(e.message)
+    }
 }
 
 function blockGetRowsAndCols(tiles, canvas) {
-    let tilesRows = []
-    let tilesCols = []
-    let rowsAndCols = []
-    tiles.forEach(tile => {
-        let row = Math.floor(tile.y / canvas.tileDim)
-        let col = Math.floor(tile.x / canvas.tileDim)
-        tilesRows.push(row)
-        tilesCols.push(col)
-    })
-    // Descending
-    tilesRows.sort((a, b) => b - a)
-    // Ascending
-    tilesCols.sort()
-    let finalRows = [ ...new Set(tilesRows) ]
-    let finalColss = [ ...new Set(tilesCols) ]
-    return { rows: finalRows, cols: finalColss }
+    try {
+        let tilesRows = []
+        let tilesCols = []
+        tiles.forEach(tile => {
+            let row = Math.floor(tile.y / canvas.tileDim) < 0 ? 0 : Math.floor(tile.y / canvas.tileDim)
+            let col = Math.floor(tile.x / canvas.tileDim)
+            tilesRows.push(row)
+            tilesCols.push(col)
+        })
+        // Descending
+        tilesRows.sort((a, b) => b - a)
+        // Ascending
+        tilesCols.sort()
+        let finalRows = [...new Set(tilesRows)]
+        let finalCols = [...new Set(tilesCols)]
+        return { rows: finalRows, cols: finalCols }
+    }
+    catch (e) {
+        console.log(e.message)
+    }
 }
 
 function blockNeedToCheckSpace(block) {
-// If the current angle is 90 or 270 there is no need to check for available space
+    // If the current angle is 90 or 270 there is no need to check for available space
     if (block.rotationAngle === 90 || block.rotationAngle === 270) {
         return false
     }
