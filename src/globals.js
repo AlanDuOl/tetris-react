@@ -3,7 +3,7 @@ export const NUM_BLOCK_TYPES = 7
 export const BLOCK_NUM_TILES = 4
 export const WALL_TILES_WIDTH = 10
 export const WALL_TILES_HEIGHT = 17
-export const BLOCK_INITIAL_SPEED = 1
+// export const BLOCK_INITIAL_SPEED = 1
 export const BLOCK_DELTA_SPEED = 4
 export const BLOCK_DELTA_ROTATION = 90
 export const BLOCK_INITIAL_ROTATION = 0
@@ -58,10 +58,12 @@ export const blockType = {
     }
 }
 
-// export const timerSpeeds = {
-//     level1: 400,
-//     level2: 300,
-//     level3: 200,
-//     level4: 100,
-//     speedUp: 50
-// }
+export const blockInitialSpeed = {
+    level1: 1,
+    level2: 2,
+    level3: 3,
+    level4: 4,
+    level5: 5,
+    level6: 6,
+    level7: 7
+}

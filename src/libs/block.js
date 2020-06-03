@@ -1,11 +1,11 @@
 import {
-    BLOCK_INITIAL_SPEED, BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
-    WALL_TILES_WIDTH, WALL_TILES_HEIGHT
+    BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
+    WALL_TILES_WIDTH, WALL_TILES_HEIGHT, blockInitialSpeed
 } from '../globals.js'
 import { wallSetTiles } from './wall.js'
 
 
-export function blockStart(canvas, block, setBlock) {
+export function blockStart(canvas, block, setBlock, gameLevel) {
     let newBlock = block
     newBlock.speed = BLOCK_INITIAL_SPEED
     newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
@@ -16,10 +16,10 @@ export function blockStart(canvas, block, setBlock) {
     setBlock(newBlock)
 }
 
-export function blockLoop(ctx2D, canvas, wall, setWall, block, setBlock, setGameUpdate) {
+export function blockLoop(ctx2D, canvas, wall, setWall, block, setBlock, setGameUpdate, gameLevel) {
     blockDraw(ctx2D, block, canvas.tileDim)
     blockMoveDown(block, setBlock)
-    blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, setGameUpdate)
+    blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, setGameUpdate, gameLevel)
 }
 
 function blockDraw(ctx2D, currentBlock, tileDim) {
@@ -37,7 +37,7 @@ function blockMoveDown(currentBlock, setBlock) {
     setBlock(newBlock)
 }
 
-function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, setGameUpdate) {
+function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, setGameUpdate, gameLevel) {
     try {
         let collision = false
         currentBlock.tiles.forEach(currentTile => {
@@ -49,7 +49,7 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
                             wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, setGameUpdate)
-                            blockReset(canvas, currentBlock, setBlock)
+                            blockReset(canvas, currentBlock, setBlock, gameLevel)
                             collision = true
                             break loop1
                         }
@@ -290,9 +290,9 @@ function blockNeedToCheckSpace(block) {
     }
 }
 
-export function blockReset(canvas, currentBlock, setBlock) {
+export function blockReset(canvas, currentBlock, setBlock, gameLevel) {
     let newBlock = currentBlock
-    newBlock.speed = BLOCK_INITIAL_SPEED
+    newBlock.speed = blockGetInitialSpeed(gameLevel)
     newBlock.type = blockGetType()
     let tempBlock = blockSetTiles(canvas, newBlock.type)
     newBlock.tiles = tempBlock.tiles
@@ -442,6 +442,28 @@ function blockGetNewRotationAngle(currentAngle) {
         newAngle += BLOCK_DELTA_ROTATION
     }
     return newAngle
+}
+
+function blockGetInitialSpeed(gameLevel) {
+    switch (gameLevel) {
+        case 1:
+            return blockInitialSpeed.level1
+        case 2:
+            return blockInitialSpeed.level2
+        case 3:
+            return blockInitialSpeed.level3
+        case 4:
+            return blockInitialSpeed.level4
+        case 5:
+            return blockInitialSpeed.level5
+        case 6:
+            return blockInitialSpeed.level6
+        case 7:
+            return blockInitialSpeed.level7
+        default:
+            console.log("Unknown game level...")
+            return blockInitialSpeed.level1
+    }
 }
 
 function blockSetTiles(canvas, type) {

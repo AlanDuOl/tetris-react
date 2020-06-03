@@ -29,7 +29,7 @@ function Display(props) {
         let canvas = document.getElementById("display-viewport")
         setCanvas({ width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH })
         setCtx2D(canvas.getContext("2d"))
-        blockStart({ width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }, block, setBlock)
+        blockStart({ width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }, block, setBlock, props.gameReducer.level)
         wallStart(setWall)
     }, [])
 
@@ -44,12 +44,12 @@ function Display(props) {
     // Start/End
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setGameUpdate)
+            gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setGameUpdate, props.gameReducer.level)
         }
         else {
             // To avoid run on first render
             if (ctx2D) {
-                gameFinish(timer, ctx2D, canvas, block, setBlock, setWall)
+                gameFinish(timer, ctx2D, canvas, block, setBlock, setWall, props.gameReducer.level)
             }
         }
     }, [props.gameReducer.gameOn])
@@ -61,7 +61,7 @@ function Display(props) {
                 gamePause(timer)
             }
             else {
-                gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setGameUpdate)
+                gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setGameUpdate, props.gameReducer.level)
             }
         }
     }, [props.gameReducer.gamePaused])

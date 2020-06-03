@@ -45,4 +45,6 @@ TODO:
         - bottomCollision
     - Updated score
     - Game over
+    - Update level
+    - Update initial speed based on level
     - Allow keyboard keys
