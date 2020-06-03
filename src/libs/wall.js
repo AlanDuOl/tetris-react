@@ -12,7 +12,7 @@ export function wallStart(setWall) {
     setWall(wall)
 }
 
-export function wallSetTiles(tiles, wall, setWall, tileDim) {
+export function wallSetTiles(tiles, wall, setWall, tileDim, setGameUpdate) {
     // Get the column and row numbers
     try {
         let localWall = wall
@@ -24,7 +24,7 @@ export function wallSetTiles(tiles, wall, setWall, tileDim) {
                 localWall[row][col] = { x: col * tileDim, y: row * tileDim }
             }
         })
-        localWall = wallUpdate(localWall, tileDim)
+        localWall = wallUpdate(localWall, tileDim, setGameUpdate)
         setWall(localWall)
     }
     catch (e) {
@@ -54,7 +54,7 @@ function wallDraw(ctx2D, wall, tileDim) {
     }
 }
 
-function wallUpdate(wall, tileDim) {
+function wallUpdate(wall, tileDim, setGameUpdate) {
     try {
         let newWall = wall
         // Loop in rows from bottom to top
@@ -68,8 +68,10 @@ function wallUpdate(wall, tileDim) {
                         newWall = wallRemoveRow(newWall, row)
                         // Move down tiles above the emptied row
                         newWall = wallMoveTilesDown(newWall, row - 1, tileDim)
+                        // Update game
+                        setGameUpdate({ levelIncrement: 1 })
                         // Recall self with updated wall
-                        wallUpdate(newWall, tileDim)
+                        wallUpdate(newWall, tileDim, setGameUpdate)
                     }
                 }
             }
