@@ -35,10 +35,11 @@ function Display(props) {
 
     // Update game info
     useEffect(() => {
-        if (props.gameReducer.gameOn) {
+        if (props.gameReducer.gameOn && gameUpdate.update) {
             props.setGameState(actionType.gameScore, props.gameReducer.score + 1)
+            setGameUpdate({ update: false, type: "score" })
         }
-    }, gameUpdate)
+    }, [gameUpdate])
 
     // Start/End
     useEffect(() => {

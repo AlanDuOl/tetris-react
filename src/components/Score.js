@@ -18,15 +18,15 @@ function Score(props) {
             <div id="score-container">
                 <div className="score-element">
                     <label htmlFor="score-current">Points:</label>
-                    <output id="score-current">{score}</output>
+                    <output id="score-current"> {score}</output>
                 </div>
                 <div className="score-element">
                     <label htmlFor="score-level">Level:</label>
-                    <output id="score-level">{level}</output>
+                    <output id="score-level"> {level}</output>
                 </div>
                 <div className="score-element">
                     <label htmlFor="score-record">Record:</label>
-                    <output id="score-record">{record}</output>
+                    <output id="score-record"> {record}</output>
                 </div>
             </div>
         </section>
