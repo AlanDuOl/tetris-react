@@ -4,6 +4,8 @@
     grid-row: 1 / 2;
     display: flex;
     justify-content: space-around;
+    width: 220px;
+    margin: auto;
 }
 
 #score-container {

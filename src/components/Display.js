@@ -80,7 +80,7 @@ function Display(props) {
 
     return (
         <main id="display">
-            <canvas id="display-viewport" width="200" height="300">
+            <canvas id="display-viewport" width="200" height="340">
                 Browser version does not support the game
             </canvas>
         </main>
