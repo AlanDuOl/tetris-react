@@ -22,6 +22,8 @@ export const actionType = {
     blockRotation: "SET_BLOCK_ROTATION",
     blockType: "SET_BLOCK_TYPE",
     blockTiles: "SET_BLOCK_TILES",
+    gameLevel: "SET_GAME_LEVEL",
+    gameScore: "SET_GAME_SCORE"
 }
 
 
