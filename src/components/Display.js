@@ -15,6 +15,7 @@ function Display(props) {
     const [ctx2D, setCtx2D] = useState(null)
     const [timer, setTimer] = useState(0)
     const [wall, setWall] = useState(null)
+    const [gameUpdate, setGameUpdate] = useState({})
     const [block, setBlock] = useState({
         speed: 0,
         type: { name: "", fillStyle: "" },
@@ -35,7 +36,7 @@ function Display(props) {
     // Start/End
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock)
+            gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setGameUpdate)
         }
         else {
             // To avoid run on first render
@@ -52,7 +53,7 @@ function Display(props) {
                 gamePause(timer)
             }
             else {
-                gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock)
+                gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setGameUpdate)
             }
         }
     }, [props.gameReducer.gamePaused])
