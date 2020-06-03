@@ -54,7 +54,7 @@ function wallDraw(ctx2D, wall, tileDim) {
     }
 }
 
-function wallUpdate(wall, tileDim, setGameUpdate) {
+function wallUpdate(wall, tileDim, setUpdateInfo) {
     try {
         let newWall = wall
         // Loop in rows from bottom to top
@@ -69,9 +69,9 @@ function wallUpdate(wall, tileDim, setGameUpdate) {
                         // Move down tiles above the emptied row
                         newWall = wallMoveTilesDown(newWall, row - 1, tileDim)
                         // Update game
-                        setGameUpdate({ update: true, type: "score" })
+                        setUpdateInfo(true)
                         // Recall self with updated wall
-                        wallUpdate(newWall, tileDim, setGameUpdate)
+                        wallUpdate(newWall, tileDim, setUpdateInfo)
                     }
                 }
             }
