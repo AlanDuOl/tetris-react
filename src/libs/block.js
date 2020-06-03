@@ -196,67 +196,16 @@ export function blockRotate(currentBlock, setBlock, wall, canvas) {
             // check available space
             // if there is no available space set canRotate = false
             canRotate = blockCheckAvailableSpace(newBlock, wall, canvas.tileDim)
-
         }
         if (canRotate) {
             // rotate tiles
             newBlock.rotationAngle = blockGetNewRotationAngle(newBlock.rotationAngle)
             newBlock = blockGetRotated(newBlock, BLOCK_DELTA_ROTATION, canvas.tileDim)
             // TODO: Check for collision
-            newBlock = blockCheckRotationCollision(newBlock, wall, canvas.tileDim)
+            // newBlock = blockCheckRotationCollision(newBlock, wall, canvas.tileDim)
             setBlock(newBlock)
         }
         
-    }
-}
-// This functions is called after the block is rotated
-function blockCheckRotationCollision(block, wall, tileDim) {
-    try {
-        let newBlock = block
-        // To get the block cols and rows
-        let blockDims = blockGetRowsAndCols(newBlock.tiles, tileDim)
-        // Loop in the wall only on needed rows using future width and height
-        // The rows array is sorted to get the max value first
-        let startRow = blockDims.rows[0] > 0 ? blockDims.rows[0] : 0
-        // The row in the loop (not included)
-        let endRow = (startRow - blockDims.rows.length) < 0 ? - 1 : (startRow - blockDims.rows.length)
-        // The cols array is sorted to get the smallest value first
-        let startCol = blockDims.cols[0]
-        let endCol = startCol + blockDims.cols.length
-        let numCollisionCols = 0
-        if (endCol >= WALL_TILES_WIDTH) {
-            numCollisionCols = endCol - WALL_TILES_WIDTH
-        }
-        else {
-            // Loop in the columns line by line 
-            for (let col = startCol; col < endCol; col++) {
-                let collided = false
-                for (let row = startRow; row > endRow; row--) {
-                    // If there is a tile in the column set collided to true and break the loop
-                    if (!row) {
-                        console.log("row: " + row, "col: " + col)
-                    }
-                    if (Object.keys(wall[row][col]).length === 2) {
-                        collided = true
-                        break
-                    }
-                }
-                if (collided) {
-                    numCollisionCols++
-                }
-            }
-        }
-
-        if (numCollisionCols > 0) {
-            newBlock.tiles.forEach(tile => {
-                tile.x -= numCollisionCols * tileDim
-            })
-            newBlock.rotationPoint.x -= numCollisionCols * tileDim
-            return newBlock
-        }
-    }
-    catch (e) {
-        console.log(e.message)
     }
 }
 
@@ -271,28 +220,11 @@ function blockCheckAvailableSpace(block, wall, tileDim) {
         let startRow = blockDims.rows[0] > 0 ? (blockDims.rows[0] + 1) : 0
         // The row in the loop (not included)
         let endRow = (startRow - blockDims.rows.length) < 0 ? - 1 : (startRow - blockDims.rows.length)
-        // The number of cols to be checked is equal to the future height (rows.length)
-        // The abs diference between the current height and width (cols.length - rows.length)
-        let colsOffset = Math.abs(blockDims.cols.length - blockDims.rows.length)
         // The cols array is sorted to get the smallest value first
-        let startCol = blockDims.cols[0] - colsOffset
+        let startCol = blockDims.cols[0]
+        // The number of cols to be checked is equal to the future height (rows.length)
         // numCols is the loop range needed. It varies depending on the col value
-        let numCols = blockDims.rows.length + colsOffset
-        // If the first col element is smaller than the offset, set startCol to 0 to avoid array out of bounds
-        if (blockDims.cols[0] < colsOffset) {
-            startCol = 0
-            if (block.type.name === "I") {
-                numCols = blockDims.cols[0] + blockDims.rows.length
-            }
-            else {
-                numCols = blockDims.rows.length
-            }
-        }
-        // If the block last column is equal to the wall last column
-        else if (blockDims.cols[blockDims.cols.length - 1] === WALL_TILES_WIDTH - 1) {
-            startCol = WALL_TILES_WIDTH - blockDims.rows.length
-            numCols = blockDims.rows.length
-        }
+        let numCols = blockDims.rows.length
         let endCol = (startCol + numCols) > WALL_TILES_WIDTH ? WALL_TILES_WIDTH : (startCol + numCols)
         let emptyCols = 0
         for (let col = startCol; col < endCol; col++) {
@@ -309,7 +241,7 @@ function blockCheckAvailableSpace(block, wall, tileDim) {
             if (emptyRows === blockDims.rows.length) {
                 emptyCols++
                 // If the number of empty cols is >= than the future width the block can rotate
-                if (emptyCols >= blockDims.rows.length) {
+                if (emptyCols === blockDims.rows.length) {
                     isThereEnoughSpace = true
                     break
                 }
@@ -397,18 +329,17 @@ function blockGetRotatedPoints(block, rotationAngle) {
     try {
         let rotationPoint = block.rotationPoint
         let angle = (Math.PI / 180) * rotationAngle
+        const test = { x: block.tiles[0].x, y: block.tiles[0].y }
         block.tiles.forEach(tile => {
             let newTile = {}
-            newTile.x = Math.cos(angle) * (tile.x - rotationPoint.x) - Math.sin(angle) * (tile.y - rotationPoint.y) + rotationPoint.x
-            newTile.y = Math.sin(angle) * (tile.x - rotationPoint.x) - Math.cos(angle) * (tile.y - rotationPoint.y) + rotationPoint.y
+            newTile.x = Math.round(Math.cos(angle) * (tile.x - rotationPoint.x) - Math.sin(angle) * (tile.y - rotationPoint.y) + rotationPoint.x)
+            newTile.y = Math.sin(angle) * (tile.x - rotationPoint.x) + Math.cos(angle) * (tile.y - rotationPoint.y) + rotationPoint.y
             newTiles.push(newTile)
         })
+        return newTiles
     }
     catch (e) {
         console.log(e.message)
-    }
-    finally {
-        return newTiles
     }
 }
 
