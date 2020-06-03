@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import '../css/Display.css'
 import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
-import { WALL_TILES_WIDTH } from '../globals.js'
+import { WALL_TILES_WIDTH, actionType } from '../globals.js'
 import { gameStart, gameFinish, gamePause } from '../libs/game.js'
 import { blockMoveSide, blockNewSpeed, blockStart, blockRotate } from '../libs/block.js'
 import { wallStart } from '../libs/wall.js'
@@ -15,7 +15,7 @@ function Display(props) {
     const [ctx2D, setCtx2D] = useState(null)
     const [timer, setTimer] = useState(0)
     const [wall, setWall] = useState(null)
-    const [gameUpdate, setGameUpdate] = useState({})
+    const [gameUpdate, setGameUpdate] = useState({ update: false, type: "" })
     const [block, setBlock] = useState({
         speed: 0,
         type: { name: "", fillStyle: "" },
@@ -32,6 +32,13 @@ function Display(props) {
         blockStart({ width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }, block, setBlock)
         wallStart(setWall)
     }, [])
+
+    // Update game info
+    useEffect(() => {
+        if (props.gameReducer.gameOn) {
+            props.setGameState(actionType.gameScore, props.gameReducer.score + 1)
+        }
+    }, gameUpdate)
 
     // Start/End
     useEffect(() => {

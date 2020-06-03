@@ -69,7 +69,7 @@ function wallUpdate(wall, tileDim, setGameUpdate) {
                         // Move down tiles above the emptied row
                         newWall = wallMoveTilesDown(newWall, row - 1, tileDim)
                         // Update game
-                        setGameUpdate({ levelIncrement: 1 })
+                        setGameUpdate({ update: true, type: "score" })
                         // Recall self with updated wall
                         wallUpdate(newWall, tileDim, setGameUpdate)
                     }
