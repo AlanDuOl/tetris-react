@@ -35,11 +35,14 @@ BUG:
     - Block rotation does not work on first and last columns (fixed)
     - Block rotation does not work on block I (fixed)
     - Block rotates even if there is no space around it (fixed)
-    - Some times bottom collision fails when block is speeded up
-    - Bottom collision in tiles is failing on bottom left corner for some blocks (L, J)
+    - Some times bottom collision fails when block is speeded up (ok ?)
+    - Bottom collision in tiles is failing on bottom left corner for some blocks (L, J) (ok)
 
 TODO:
-    - Correct right collision after rotate
-    - Try to use the block rotation check logic to bottom collision detection
-    - Allow rotation only to the right
-    - Remove check collision after rotation
+    - Try to use the block rotation loop logic to other collision detection:
+        - checkMoveLeft
+        - checkMoveRight
+        - bottomCollision
+    - Updated score
+    - Game over
+    - Allow keyboard keys
