@@ -329,7 +329,6 @@ function blockGetRotatedPoints(block, rotationAngle) {
     try {
         let rotationPoint = block.rotationPoint
         let angle = (Math.PI / 180) * rotationAngle
-        const test = { x: block.tiles[0].x, y: block.tiles[0].y }
         block.tiles.forEach(tile => {
             let newTile = {}
             newTile.x = Math.round(Math.cos(angle) * (tile.x - rotationPoint.x) - Math.sin(angle) * (tile.y - rotationPoint.y) + rotationPoint.x)

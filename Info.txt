@@ -31,8 +31,7 @@ Block rotations:
         - 270º: p4.x + tileDim
 
 BUG:
-    - Some times bottom collision fails when block is speeded up (ok ?)
-    - After 7 points game skips to level 7
+    - Removing more than one line only adds 1 point to the score
 
 TODO:
     - Try to use the block rotation loop logic to other collision detection:
