@@ -51,6 +51,7 @@ function Display(props) {
             // To avoid run on first render
             if (ctx2D) {
                 gameFinish(timer, ctx2D, canvas, block, setBlock, setWall)
+                gameResetInfo(props.setGameState)
             }
         }
     }, [props.gameReducer.gameOn])

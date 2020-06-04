@@ -38,9 +38,7 @@ TODO:
         - checkMoveLeft
         - checkMoveRight
         - bottomCollision
-    - Updated score (ok)
-    - Game over
     - Update level
-    - Update initial speed based on level (ok)
     - Allow keyboard keys
     - Use sqlite db to save record
+    - Use web workers

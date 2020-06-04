@@ -16,6 +16,7 @@ export function wallSetTiles(tiles, wall, setWall, tileDim, setUpdate, setGameSt
     // Get the column and row numbers
     try {
         let localWall = wall
+        let gameOver = false
         tiles.forEach(tile => {
             let col = Math.floor(tile.x / tileDim)
             let row = Math.floor(tile.y / tileDim)
@@ -25,10 +26,13 @@ export function wallSetTiles(tiles, wall, setWall, tileDim, setUpdate, setGameSt
             }
             // Set game over if the tile position is outside the wall area
             if (row < 0) {
-                alert("Game Over!!")
-                setGameState(actionType.gameOn, false)
+                gameOver = true
             }
         })
+        if (gameOver) {
+            alert("Game Over!!")
+            setGameState(actionType.gameOn, false)
+        }
         // Update array has 2 values. The first is the update wall and the second is the number of rows removed from the wall
         let updateArray = wallUpdate(localWall, tileDim, 0)
         // If any row has been removed, update the wall and the game info (score, level, record)

@@ -1,7 +1,7 @@
 import { blockLoop, blockStart } from './block.js'
 import { wallStart, wallLoop } from './wall.js'
 import { TIMER_SPEED, LEVEL_FACTOR, actionType, GAME_INITIAL_LEVEL, GAME_INITIAL_SCORE } from '../globals.js'
-const sqlite3 = require('sqlite3').verbose()
+// const sqlite3 = require('sqlite3').verbose()
 
 
 export function gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, gameLevel, setGameState) {
