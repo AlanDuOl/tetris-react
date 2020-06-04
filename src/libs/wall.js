@@ -12,7 +12,7 @@ export function wallStart(setWall) {
     setWall(wall)
 }
 
-export function wallSetTiles(tiles, wall, setWall, tileDim, setGameUpdate) {
+export function wallSetTiles(tiles, wall, setWall, tileDim, setUpdate) {
     // Get the column and row numbers
     try {
         let localWall = wall
@@ -24,8 +24,15 @@ export function wallSetTiles(tiles, wall, setWall, tileDim, setGameUpdate) {
                 localWall[row][col] = { x: col * tileDim, y: row * tileDim }
             }
         })
-        localWall = wallUpdate(localWall, tileDim, setGameUpdate)
-        setWall(localWall)
+        // Update array has 2 values. The first is the update wall and the second is the number of rows removed from the wall
+        let updateArray = wallUpdate(localWall, tileDim, 0)
+        // If any row has been removed, update the wall and the game info (score, level, record)
+        if (updateArray[1] > 0) {
+            setUpdate({ needToUpdate: true, numRemovedRows: updateArray[1] })
+            localWall = updateArray[0]
+            setWall(localWall)
+        }
+        // TODO: check for game over
     }
     catch (e) {
         console.log(e.message)
@@ -54,9 +61,11 @@ function wallDraw(ctx2D, wall, tileDim) {
     }
 }
 
-function wallUpdate(wall, tileDim, setUpdateInfo) {
+function wallUpdate(wall, tileDim, updateNumber) {
     try {
         let newWall = wall
+        // this is to know how many lines have been removed and is used to update the score/level
+        let numCalls = updateNumber
         // Loop in rows from bottom to top
         for (let row = WALL_TILES_HEIGHT - 1; row >= 0; row--) {
             let rowLength = 0
@@ -68,15 +77,17 @@ function wallUpdate(wall, tileDim, setUpdateInfo) {
                         newWall = wallRemoveRow(newWall, row)
                         // Move down tiles above the emptied row
                         newWall = wallMoveTilesDown(newWall, row - 1, tileDim)
-                        // Update game
-                        setUpdateInfo(true)
+                        // Increase numCalls
+                        numCalls++
                         // Recall self with updated wall
-                        wallUpdate(newWall, tileDim, setUpdateInfo)
+                        let returnVal = wallUpdate(newWall, tileDim, numCalls)
+                        // Get the updated numCalls (it may not have changed)
+                        numCalls = returnVal[1]
                     }
                 }
             }
         }
-        return newWall
+        return [newWall, numCalls]
     }
     catch (e) {
         console.log(e.message)

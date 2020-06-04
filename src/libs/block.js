@@ -16,10 +16,10 @@ export function blockStart(canvas, block, setBlock, gameLevel) {
     setBlock(newBlock)
 }
 
-export function blockLoop(ctx2D, canvas, wall, setWall, block, setBlock, setUpdateInfo, gameLevel) {
+export function blockLoop(ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, gameLevel) {
     blockDraw(ctx2D, block, canvas.tileDim)
     blockMoveDown(block, setBlock)
-    blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, setUpdateInfo, gameLevel)
+    blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, setUpdate, gameLevel)
 }
 
 function blockDraw(ctx2D, currentBlock, tileDim) {
@@ -37,7 +37,7 @@ function blockMoveDown(currentBlock, setBlock) {
     setBlock(newBlock)
 }
 
-function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, setUpdateInfo, gameLevel) {
+function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, setUpdate, gameLevel) {
     try {
         let collision = false
         currentBlock.tiles.forEach(currentTile => {
@@ -48,7 +48,7 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
                     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
-                            wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, setUpdateInfo)
+                            wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, setUpdate)
                             blockReset(canvas, currentBlock, setBlock, gameLevel)
                             collision = true
                             break loop1

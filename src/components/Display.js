@@ -15,7 +15,8 @@ function Display(props) {
     const [ctx2D, setCtx2D] = useState(null)
     const [timer, setTimer] = useState(0)
     const [wall, setWall] = useState(null)
-    const [updateInfo, setUpdateInfo] = useState(false)
+    const [eventRef, setEventRef] = useState({})
+    const [update, setUpdate] = useState({})
     const [block, setBlock] = useState({
         speed: 0,
         type: { name: "", fillStyle: "" },
@@ -31,20 +32,21 @@ function Display(props) {
         setCtx2D(canvas.getContext("2d"))
         blockStart({ width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }, block, setBlock, props.gameReducer.level)
         wallStart(setWall)
+        setUpdate({ needToUpdate: false, numRemovedRows: 0 })
     }, [])
 
     // Update game info
     useEffect(() => {
-        if (props.gameReducer.gameOn && updateInfo) {
-            gameUpdateInfo(props.gameReducer, props.setGameState)
-            setUpdateInfo(false)
+        if (props.gameReducer.gameOn && update.needToUpdate) {
+            gameUpdateInfo(props.gameReducer, props.setGameState, update.numRemovedRows)
+            setUpdate({ needToUpdate: false, numRemovedRows: 0 })
         }
-    }, [updateInfo])
+    }, [update])
 
     // Start/End
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdateInfo, props.gameReducer.level)
+            gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, props.gameReducer.level)
         }
         else {
             // To avoid run on first render
@@ -61,7 +63,7 @@ function Display(props) {
                 gamePause(timer)
             }
             else {
-                gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdateInfo, props.gameReducer.level)
+                gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, props.gameReducer.level)
             }
         }
     }, [props.gameReducer.gamePaused])
