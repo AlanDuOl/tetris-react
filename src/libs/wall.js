@@ -1,4 +1,4 @@
-import { WALL_TILES_WIDTH, WALL_TILES_HEIGHT } from '../globals.js'
+import { WALL_TILES_WIDTH, WALL_TILES_HEIGHT, actionType } from '../globals.js'
 
 export function wallStart(setWall) {
     let wall = []
@@ -12,16 +12,21 @@ export function wallStart(setWall) {
     setWall(wall)
 }
 
-export function wallSetTiles(tiles, wall, setWall, tileDim, setUpdate) {
+export function wallSetTiles(tiles, wall, setWall, tileDim, setUpdate, setGameState) {
     // Get the column and row numbers
     try {
         let localWall = wall
         tiles.forEach(tile => {
             let col = Math.floor(tile.x / tileDim)
             let row = Math.floor(tile.y / tileDim)
-            // Set the tile position values
+            // Set the tile position values if they are inside the wall area
             if (col < WALL_TILES_WIDTH && col >= 0 && row < WALL_TILES_HEIGHT && row >= 0) {
                 localWall[row][col] = { x: col * tileDim, y: row * tileDim }
+            }
+            // Set game over if the tile position is outside the wall area
+            if (row < 0) {
+                alert("Game Over!!")
+                setGameState(actionType.gameOn, false)
             }
         })
         // Update array has 2 values. The first is the update wall and the second is the number of rows removed from the wall

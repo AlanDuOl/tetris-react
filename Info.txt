@@ -31,7 +31,7 @@ Block rotations:
         - 270º: p4.x + tileDim
 
 BUG:
-    - Removing more than one line only adds 1 point to the score
+    - 
 
 TODO:
     - Try to use the block rotation loop logic to other collision detection:
@@ -41,5 +41,6 @@ TODO:
     - Updated score (ok)
     - Game over
     - Update level
-    - Update initial speed based on level
+    - Update initial speed based on level (ok)
     - Allow keyboard keys
+    - Use sqlite db to save record

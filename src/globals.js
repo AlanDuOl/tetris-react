@@ -8,6 +8,8 @@ export const BLOCK_DELTA_ROTATION = 90
 export const BLOCK_INITIAL_ROTATION = 0
 export const TIMER_SPEED = 50
 export const LEVEL_FACTOR = 100
+export const GAME_INITIAL_LEVEL = 1
+export const GAME_INITIAL_SCORE = 0
 
 export const blockMoveDirection = {
     left: "left",
@@ -23,7 +25,9 @@ export const actionType = {
     blockType: "SET_BLOCK_TYPE",
     blockTiles: "SET_BLOCK_TILES",
     gameLevel: "SET_GAME_LEVEL",
-    gameScore: "SET_GAME_SCORE"
+    gameScore: "SET_GAME_SCORE",
+    gameOn: "SET_GAME_ON",
+    gamePaused: "SET_GAME_PAUSED"
 }
 
 

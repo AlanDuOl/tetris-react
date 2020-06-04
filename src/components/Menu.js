@@ -2,6 +2,7 @@ import React from 'react'
 import '../css/Menu.scss'
 import { connect } from 'react-redux'
 import { setGameState } from '../actions/gameActions.js'
+import { actionType } from '../globals.js'
 
 function Menu(props) {
 
@@ -9,14 +10,14 @@ function Menu(props) {
     function toggleStart(evt) {
         try {
             if (!props.gameReducer.gameOn) {
-                props.setGameState("SET_GAME_ON", true)
+                props.setGameState(actionType.gameOn, true)
             }
             else if (props.gameReducer.gameOn) {
                 // TODO: implement custom window for confirm
                 let quit = window.confirm("Finish?")
                 if (quit) {
-                    props.setGameState("SET_GAME_ON", false)
-                    props.setGameState("SET_GAME_PAUSED", false)
+                    props.setGameState(actionType.gameOn, false)
+                    props.setGameState(actionType.gamePaused, false)
                 }
             }
         }
@@ -28,11 +29,11 @@ function Menu(props) {
     function togglePause(evt) {
         try {
             if (!props.gameReducer.gamePaused && props.gameReducer.gameOn) {
-                props.setGameState("SET_GAME_PAUSED", true)
+                props.setGameState(actionType.gamePaused, true)
             }
             else if(props.gameReducer.gamePaused) {
                 // TODO: implement custom window for paused
-                props.setGameState("SET_GAME_PAUSED", false)
+                props.setGameState(actionType.gamePaused, false)
             }
         }
         catch(e) {

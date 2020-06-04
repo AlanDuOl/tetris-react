@@ -5,9 +5,9 @@ import {
 import { wallSetTiles } from './wall.js'
 
 
-export function blockStart(canvas, block, setBlock, gameLevel) {
+export function blockStart(canvas, block, setBlock) {
     let newBlock = block
-    newBlock.speed = blockGetInitialSpeed(gameLevel)
+    newBlock.speed = blockInitialSpeed.level1
     newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
     newBlock.type = blockGetType()
     let tempBlock = blockSetTiles(canvas, newBlock.type)
@@ -16,10 +16,10 @@ export function blockStart(canvas, block, setBlock, gameLevel) {
     setBlock(newBlock)
 }
 
-export function blockLoop(ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, gameLevel) {
+export function blockLoop(ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, gameLevel, setGameState) {
     blockDraw(ctx2D, block, canvas.tileDim)
     blockMoveDown(block, setBlock)
-    blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, setUpdate, gameLevel)
+    blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, setUpdate, gameLevel, setGameState)
 }
 
 function blockDraw(ctx2D, currentBlock, tileDim) {
@@ -37,7 +37,7 @@ function blockMoveDown(currentBlock, setBlock) {
     setBlock(newBlock)
 }
 
-function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, setUpdate, gameLevel) {
+function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, setUpdate, gameLevel, setGameState) {
     try {
         let collision = false
         currentBlock.tiles.forEach(currentTile => {
@@ -48,7 +48,7 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
                     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
-                            wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, setUpdate)
+                            wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, setUpdate, setGameState)
                             blockReset(canvas, currentBlock, setBlock, gameLevel)
                             collision = true
                             break loop1

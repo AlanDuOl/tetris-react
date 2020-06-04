@@ -4,7 +4,7 @@ import '../css/Display.css'
 import { setBlockState } from '../actions/blockActions'
 import { setGameState } from '../actions/gameActions'
 import { WALL_TILES_WIDTH } from '../globals.js'
-import { gameStart, gameFinish, gamePause, gameUpdateInfo } from '../libs/game.js'
+import { gameStart, gameFinish, gamePause, gameUpdateInfo, gameResetInfo } from '../libs/game.js'
 import { blockMoveSide, blockNewSpeed, blockStart, blockRotate } from '../libs/block.js'
 import { wallStart } from '../libs/wall.js'
 
@@ -15,7 +15,6 @@ function Display(props) {
     const [ctx2D, setCtx2D] = useState(null)
     const [timer, setTimer] = useState(0)
     const [wall, setWall] = useState(null)
-    const [eventRef, setEventRef] = useState({})
     const [update, setUpdate] = useState({})
     const [block, setBlock] = useState({
         speed: 0,
@@ -30,7 +29,7 @@ function Display(props) {
         let canvas = document.getElementById("display-viewport")
         setCanvas({ width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH })
         setCtx2D(canvas.getContext("2d"))
-        blockStart({ width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }, block, setBlock, props.gameReducer.level)
+        blockStart({ width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }, block, setBlock)
         wallStart(setWall)
         setUpdate({ needToUpdate: false, numRemovedRows: 0 })
     }, [])
@@ -46,12 +45,12 @@ function Display(props) {
     // Start/End
     useEffect(() => {
         if (props.gameReducer.gameOn) {
-            gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, props.gameReducer.level)
+            gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, props.gameReducer.level, props.setGameState)
         }
         else {
             // To avoid run on first render
             if (ctx2D) {
-                gameFinish(timer, ctx2D, canvas, block, setBlock, setWall, props.gameReducer.level)
+                gameFinish(timer, ctx2D, canvas, block, setBlock, setWall)
             }
         }
     }, [props.gameReducer.gameOn])
@@ -63,7 +62,7 @@ function Display(props) {
                 gamePause(timer)
             }
             else {
-                gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, props.gameReducer.level)
+                gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, props.gameReducer.level, props.setGameState)
             }
         }
     }, [props.gameReducer.gamePaused])
