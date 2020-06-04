@@ -43,8 +43,8 @@ function gameUpdateScore(gameReducer, setGameState) {
 }
 
 function gameUpdateLevel(gameReducer, setGameState) {
-    scoreLevel = Math.round(gameReducer.score + 1 / LEVEL_FACTOR) + 1
-    if (scoreLevel > currentLevel) {
+    let scoreLevel = Math.round(gameReducer.score + 1 / LEVEL_FACTOR) + 1
+    if (scoreLevel > gameReducer.level) {
         setGameState(actionType.gameLevel, gameReducer.level + 1)
     }
 }

@@ -7,7 +7,7 @@ import { wallSetTiles } from './wall.js'
 
 export function blockStart(canvas, block, setBlock, gameLevel) {
     let newBlock = block
-    newBlock.speed = BLOCK_INITIAL_SPEED
+    newBlock.speed = blockGetInitialSpeed(gameLevel)
     newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
     newBlock.type = blockGetType()
     let tempBlock = blockSetTiles(canvas, newBlock.type)

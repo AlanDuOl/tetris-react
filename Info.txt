@@ -31,19 +31,15 @@ Block rotations:
         - 270º: p4.x + tileDim
 
 BUG:
-    - Block rotation does not work before line 3 (fixed)
-    - Block rotation does not work on first and last columns (fixed)
-    - Block rotation does not work on block I (fixed)
-    - Block rotates even if there is no space around it (fixed)
     - Some times bottom collision fails when block is speeded up (ok ?)
-    - Bottom collision in tiles is failing on bottom left corner for some blocks (L, J) (ok)
+    - After 7 points game skips to level 7
 
 TODO:
     - Try to use the block rotation loop logic to other collision detection:
         - checkMoveLeft
         - checkMoveRight
         - bottomCollision
-    - Updated score
+    - Updated score (ok)
     - Game over
     - Update level
     - Update initial speed based on level
