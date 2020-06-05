@@ -16,23 +16,12 @@ exports.getData = async (req, res) => {
 
 exports.updateData = async (req, res) => {
     knex('record')
-        .select('*')
+        .update({ value: req.body.record })
         .where('id', req.body.id)
-        .then(row => {
-            if (row) {
-                return knex.update({ value: req.body.record })
-                            .then(() => {
-                                res.json({ message: `Updated field with id ${req.body.id}` })
-                            })
-            }
-            else {
-                return knex.insert({ value: req.body.record })
-                            .then(() => {
-                                res.json({ message: `Created field with id ${req.body.id}` })
-                            })
-            }
+        .then(() => {
+            res.json({ message: `Updated field with id ${req.body.id}` })
         })
         .catch(e => {
-            res.json({ message: `Failed to create/update field with id ${req.body.id}` })
+            res.json({ message: `Failed to update field with id ${req.body.id}` })
         })
 }

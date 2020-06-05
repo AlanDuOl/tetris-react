@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import '../css/Score.css'
 import { gameGetRecord, gameSaveRecord } from '../libs/game.js'
+import { setGameState } from '../actions/gameActions'
 
 function Score(props) {
 
@@ -10,11 +11,18 @@ function Score(props) {
     const [level, setLevel] = useState(0)
 
     useEffect(() => {
+        gameGetRecord(setRecord, setGameState)
+    }, [])
+
+    useEffect(() => {
         setScore(props.gameReducer.score)
         setLevel(props.gameReducer.level)
-        gameGetRecord(setRecord)
-        gameSaveRecord({ record: 0 })
+        setRecord(props.gameReducer.record)
     }, [props.gameReducer.score])
+
+    useEffect(() => {
+        gameSaveRecord(props.gameReducer.record)
+    }, [props.gameReducer.record])
 
     return (
         <section id="score">
@@ -40,4 +48,8 @@ const mapStateToProps = state => ({
     ...state
 })
 
-export default connect(mapStateToProps, null)(Score)
+const mapDispatchToProps = dispatch => ({
+    setGameState: (actionType, actionValue) => dispatch(setGameState(actionType, actionValue))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Score)

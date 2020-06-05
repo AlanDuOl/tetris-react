@@ -43,19 +43,21 @@ export function gameUpdateInfo(gameReducer, setGameState, numRemovedRows) {
     gameUpdateRecord(gameReducer, setGameState, numRemovedRows)
 }
 
-export async function gameGetRecord(setRecord) {
+export async function gameGetRecord(setRecord, setGameState) {
     const url = 'http://localhost:4000/record/get'
     const response = await fetch(url)
-    const data = response.json()
-    if (data.value) {
-        setRecord(data.value)
+    const data = await response.json()
+    if (data[0].id) {
+        setRecord(data[0].value)
+        setGameState(actionType.gameRecord, data[0].value)
     }
     else {
         console.error("No record data value")
     }
 }
 
-export function gameSaveRecord(data) {
+export function gameSaveRecord(newRecord) {
+    const data = { id: 1, record: newRecord }
     const url = 'http://localhost:4000/record/update'
     fetch(url, {
         method: 'POST',
@@ -63,7 +65,6 @@ export function gameSaveRecord(data) {
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify(data)
     })
-    .then(res => console.log(res.message))
     .catch(err => console.error(err))
 }
 
