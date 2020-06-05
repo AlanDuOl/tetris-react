@@ -1,8 +1,6 @@
 import { blockLoop, blockStart } from './block.js'
 import { wallStart, wallLoop } from './wall.js'
 import { TIMER_SPEED, LEVEL_FACTOR, actionType, GAME_INITIAL_LEVEL, GAME_INITIAL_SCORE } from '../globals.js'
-// const sqlite3 = require('sqlite3').verbose()
-
 
 export function gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, gameLevel, setGameState) {
     setTimer(setInterval(gameLoop.bind(null, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, gameLevel, setGameState), TIMER_SPEED))
@@ -42,6 +40,38 @@ export function gameResetInfo(setGameState) {
 export function gameUpdateInfo(gameReducer, setGameState, numRemovedRows) {
     gameUpdateScore(gameReducer, setGameState, numRemovedRows)
     gameUpdateLevel(gameReducer, setGameState, numRemovedRows)
+    gameUpdateRecord(gameReducer, setGameState, numRemovedRows)
+}
+
+export async function gameGetRecord(setRecord) {
+    const url = 'http://localhost:4000/record/get'
+    const response = await fetch(url)
+    const data = response.json()
+    if (data.value) {
+        setRecord(data.value)
+    }
+    else {
+        console.error("No record data value")
+    }
+}
+
+export function gameSaveRecord(data) {
+    const url = 'http://localhost:4000/record/update'
+    fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type' : 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => console.log(res.message))
+    .catch(err => console.error(err))
+}
+
+function gameUpdateRecord(gameReducer, setGameState, numRemovedRows) {
+    let newScore = gameReducer.score + numRemovedRows
+    if (newScore > gameReducer.record) {
+        setGameState(actionType.gameRecord, newScore)
+    }
 }
 
 function gameUpdateScore(gameReducer, setGameState, numRemovedRows) {
@@ -55,7 +85,3 @@ function gameUpdateLevel(gameReducer, setGameState, numRemovedRows) {
         setGameState(actionType.gameLevel, gameReducer.level + 1)
     }
 }
-
-// export function gameConnectDb() {
-//     let db = new sqlite3.Database('')
-// }

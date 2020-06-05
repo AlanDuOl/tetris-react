@@ -27,7 +27,8 @@ export const actionType = {
     gameLevel: "SET_GAME_LEVEL",
     gameScore: "SET_GAME_SCORE",
     gameOn: "SET_GAME_ON",
-    gamePaused: "SET_GAME_PAUSED"
+    gamePaused: "SET_GAME_PAUSED",
+    gameRecord: "SET_GAME_RECORD"
 }
 
 

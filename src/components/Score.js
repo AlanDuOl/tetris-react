@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import '../css/Score.css'
+import { gameGetRecord, gameSaveRecord } from '../libs/game.js'
 
 function Score(props) {
 
@@ -11,6 +12,8 @@ function Score(props) {
     useEffect(() => {
         setScore(props.gameReducer.score)
         setLevel(props.gameReducer.level)
+        gameGetRecord(setRecord)
+        gameSaveRecord({ record: 0 })
     }, [props.gameReducer.score])
 
     return (
