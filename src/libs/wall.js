@@ -38,11 +38,10 @@ export function wallSetTiles(tiles, wall, setWall, tileDim, gameReducer, setGame
         let updateArray = wallUpdate(localWall, tileDim, 0)
         // If any row has been removed, update the wall and the game info (score, level, record)
         if (updateArray[1] > 0) {
-            setGameState(actionType.gameScore, gameReducer.score + updateArray[1])
-            localWall = updateArray[0]
-            setWall(localWall)
+            setGameState(actionType.gameScore, gameReducer.score += updateArray[1])
         }
-        // TODO: check for game over
+        localWall = updateArray[0]
+        setWall(localWall)
     }
     catch (e) {
         console.log(e.message)

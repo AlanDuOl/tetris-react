@@ -49,7 +49,7 @@ export async function gameGetRecord() {
     }
 }
 
-export function gameSaveRecord(newRecord) {
+function gameSaveRecord(newRecord) {
     const data = { id: 1, record: newRecord }
     const url = 'http://localhost:4000/record/update'
     fetch(url, {
@@ -62,8 +62,8 @@ export function gameSaveRecord(newRecord) {
 }
 
 
-export function gameInitInfo(setGameState) {
-    let record = gameGetRecord()
+export async function gameInitInfo(setGameState) {
+    let record = await gameGetRecord()
     setGameState(actionType.gameRecord, record)
     setGameState(actionType.gameLevel, GAME_INITIAL_LEVEL)
     setGameState(actionType.gameScore, GAME_INITIAL_SCORE)
@@ -82,9 +82,10 @@ function gameUpdateScore(score, setScore) {
 }
 
 function gameUpdateRecord(score, record, setRecord, setGameState) {
-    if (score > record) {
+    if (score > 0 && score > record) {
         setRecord(score)
         setGameState(actionType.gameRecord, score)
+        gameSaveRecord(score)
     }
 }
 

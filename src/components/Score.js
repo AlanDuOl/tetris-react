@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import '../css/Score.css'
-import { gameInitInfo, gameSaveRecord, gameUpdateInfo } from '../libs/game.js'
+import { gameInitInfo, gameUpdateInfo } from '../libs/game.js'
 import { setGameState } from '../actions/gameActions'
 import { GAME_INITIAL_LEVEL } from '../globals'
 
@@ -18,10 +18,6 @@ function Score(props) {
     useEffect(() => {
         gameUpdateInfo(props.gameReducer.score, setScore, props.gameReducer.level, setLevel, props.gameReducer.record, setRecord, props.setGameState)
     }, [props.gameReducer.score, props.gameReducer.level, props.gameReducer.record, props.setGameState])
-
-    useEffect(() => {
-        gameSaveRecord(record)
-    }, [record])
 
     return (
         <section id="score">

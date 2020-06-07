@@ -5,7 +5,7 @@ import Menu from './components/Menu'
 import Score from './components/Score'
 import Controls from './components/Controls'
 import { gameInit } from './libs/game.js'
-import { WALL_TILES_WIDTH } from './globals.js'
+import { WALL_TILES_WIDTH, initialBlock } from './globals.js'
 
 function App() {
 
@@ -13,13 +13,7 @@ function App() {
     const [ctx2D, setCtx2D] = useState(null)
     const [timer, setTimer] = useState(0)
     const [wall, setWall] = useState(null)
-    const [block, setBlock] = useState({
-      speed: 0,
-      type: { name: "", fillStyle: "" },
-      rotationAngle: 0,
-      rotationPoint: { x: 0, Y: 0 },
-      tiles: []
-    })
+    const [block, setBlock] = useState(initialBlock)
 
     // Init game props
     useEffect(() => {
@@ -27,7 +21,7 @@ function App() {
       let canvasDims = { width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }
       setCanvas(canvasDims)
       setCtx2D(canvas.getContext("2d"))
-      gameInit(canvasDims, setWall, block, setBlock)
+      gameInit(canvasDims, setWall, initialBlock, setBlock)
     }, [])
 
     return (

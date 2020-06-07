@@ -72,3 +72,11 @@ export const blockInitialSpeed = {
     level6: 6,
     level7: 7
 }
+
+export const initialBlock = {
+    speed: 0,
+    type: { name: "", fillStyle: "" },
+    rotationAngle: 0,
+    rotationPoint: { x: 0, Y: 0 },
+    tiles: []
+}
