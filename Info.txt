@@ -40,6 +40,5 @@ TODO:
         - bottomCollision
     - Update level
     - Allow keyboard keys
-    - Use sqlite db to save record
     - Use web workers
     - Replace console.log for console.error on try catchs
