@@ -48,8 +48,8 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
                     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
-                            wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, gameReducer.score, setGameState)
-                            blockReset(canvas, currentBlock, setBlock, gameReducer.level)
+                            wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, gameReducer, setGameState)
+                            blockReset(canvas, currentBlock, setBlock, gameReducer)
                             collision = true
                             break loop1
                         }
@@ -289,9 +289,9 @@ function blockNeedToCheckSpace(block) {
     }
 }
 
-export function blockReset(canvas, currentBlock, setBlock, gameLevel) {
+export function blockReset(canvas, currentBlock, setBlock, gameReducer) {
     let newBlock = currentBlock
-    newBlock.speed = blockGetInitialSpeed(gameLevel)
+    newBlock.speed = blockGetInitialSpeed(gameReducer)
     newBlock.type = blockGetType()
     let tempBlock = blockSetTiles(canvas, newBlock.type)
     newBlock.tiles = tempBlock.tiles
@@ -442,8 +442,8 @@ function blockGetNewRotationAngle(currentAngle) {
     return newAngle
 }
 
-function blockGetInitialSpeed(gameLevel) {
-    switch (gameLevel) {
+function blockGetInitialSpeed(gameReducer) {
+    switch (gameReducer.level) {
         case 1:
             return blockInitialSpeed.level1
         case 2:

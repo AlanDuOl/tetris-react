@@ -1,36 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import '../css/Score.css'
-import { gameGetRecord, gameSaveRecord, gameUpdateInfo } from '../libs/game.js'
+import { gameInitInfo, gameSaveRecord, gameUpdateInfo } from '../libs/game.js'
 import { setGameState } from '../actions/gameActions'
+import { GAME_INITIAL_LEVEL } from '../globals'
 
 function Score(props) {
 
     const [score, setScore] = useState(0)
     const [record, setRecord] = useState(0)
-    const [level, setLevel] = useState(0)
+    const [level, setLevel] = useState(GAME_INITIAL_LEVEL)
 
     useEffect(() => {
-        gameGetRecord(setRecord, setGameState)
-    }, [])
+        gameInitInfo(props.setGameState)
+    }, [props.setGameState])
 
     useEffect(() => {
-        if (props.gameReducer.gameOn) {
-            setScore(props.gameReducer.score)
-            gameUpdateInfo(props.gameReducer, props.setGameState)
-        }
-    }, [props.gameReducer.score])
+        gameUpdateInfo(props.gameReducer.score, setScore, props.gameReducer.level, setLevel, props.gameReducer.record, setRecord, props.setGameState)
+    }, [props.gameReducer.score, props.gameReducer.level, props.gameReducer.record, props.setGameState])
 
     useEffect(() => {
-        if (props.gameReducer.gameOn) {
-            setLevel(props.gameReducer.level)
-        }
-    }, [props.gameReducer.level])
-
-    useEffect(() => {
-        gameSaveRecord(props.gameReducer.record)
-        setRecord(props.gameReducer.record)
-    }, [props.gameReducer.record])
+        gameSaveRecord(record)
+    }, [record])
 
     return (
         <section id="score">

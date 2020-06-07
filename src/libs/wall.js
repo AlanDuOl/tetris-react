@@ -12,7 +12,7 @@ export function wallStart(setWall) {
     setWall(wall)
 }
 
-export function wallSetTiles(tiles, wall, setWall, tileDim, gameScore, setGameState) {
+export function wallSetTiles(tiles, wall, setWall, tileDim, gameReducer, setGameState) {
     // Get the column and row numbers
     try {
         let localWall = wall
@@ -38,7 +38,7 @@ export function wallSetTiles(tiles, wall, setWall, tileDim, gameScore, setGameSt
         let updateArray = wallUpdate(localWall, tileDim, 0)
         // If any row has been removed, update the wall and the game info (score, level, record)
         if (updateArray[1] > 0) {
-            setGameState(actionType.gameScore, gameScore + updateArray[1])
+            setGameState(actionType.gameScore, gameReducer.score + updateArray[1])
             localWall = updateArray[0]
             setWall(localWall)
         }

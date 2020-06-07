@@ -37,26 +37,15 @@ function gameClearCanvas(ctx2D, canvas) {
     }
 }
 
-export function gameResetInfo(setGameState) {
-    setGameState(actionType.gameScore, GAME_INITIAL_SCORE)
-    setGameState(actionType.gameLevel, GAME_INITIAL_LEVEL)
-}
-
-export function gameUpdateInfo(gameReducer, setGameState) {
-    gameUpdateLevel(gameReducer, setGameState)
-    gameUpdateRecord(gameReducer, setGameState)
-}
-
-export async function gameGetRecord(setRecord, setGameState) {
+export async function gameGetRecord() {
     const url = 'http://localhost:4000/record/get'
     const response = await fetch(url)
     const data = await response.json()
-    if (data[0].id) {
-        setRecord(data[0].value)
-        setGameState(actionType.gameRecord, data[0].value)
+    if (data[0].id || data[0].id === 0) {
+        return data[0].value
     }
     else {
-        console.error("No record data value")
+        console.error("No record data")
     }
 }
 
@@ -72,15 +61,37 @@ export function gameSaveRecord(newRecord) {
     .catch(err => console.error(err))
 }
 
-function gameUpdateRecord(gameReducer, setGameState) {
-    if (gameReducer.score > gameReducer.record) {
-        setGameState(actionType.gameRecord, gameReducer.score)
+
+export function gameInitInfo(setGameState) {
+    let record = gameGetRecord()
+    setGameState(actionType.gameRecord, record)
+    setGameState(actionType.gameLevel, GAME_INITIAL_LEVEL)
+    setGameState(actionType.gameScore, GAME_INITIAL_SCORE)
+}
+
+export function gameUpdateInfo(score, setScore, level, setLevel, record, setRecord, setGameState) {
+    gameUpdateScore(score, setScore)
+    gameUpdateLevel(score, level, setLevel, setGameState)
+    gameUpdateRecord(score, record, setRecord, setGameState)
+}
+
+function gameUpdateScore(score, setScore) {
+    if (score > 0) {
+        setScore(score)
     }
 }
 
-function gameUpdateLevel(gameReducer, setGameState) {
-    let scoreLevel = Math.round(gameReducer.score / LEVEL_FACTOR) + 1
-    if (scoreLevel > gameReducer.level) {
-        setGameState(actionType.gameLevel, gameReducer.level + 1)
+function gameUpdateRecord(score, record, setRecord, setGameState) {
+    if (score > record) {
+        setRecord(score)
+        setGameState(actionType.gameRecord, score)
+    }
+}
+
+function gameUpdateLevel(score, level, setLevel, setGameState) {
+    let futureLevel = Math.round(score / LEVEL_FACTOR) + 1
+    if (futureLevel > level) {
+        setLevel(level + 1)
+        setGameState(actionType.gameLevel, level + 1)
     }
 }

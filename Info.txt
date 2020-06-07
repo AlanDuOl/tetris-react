@@ -31,7 +31,8 @@ Block rotations:
         - 270º: p4.x + tileDim
 
 BUG:
-    - 
+    - Score is not updating correctly
+    - gameReducer/blockReducer variables passed by value are not updated
 
 TODO:
     - Try to use the block rotation loop logic to other collision detection:

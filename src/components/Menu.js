@@ -3,7 +3,7 @@ import '../css/Menu.scss'
 import { connect } from 'react-redux'
 import { setGameState } from '../actions/gameActions.js'
 import { actionType } from '../globals.js'
-import { gameStart, gameFinish, gamePause, gameResetInfo } from '../libs/game.js'
+import { gameStart, gameFinish, gamePause, gameInitInfo } from '../libs/game.js'
 
 
 function Menu(props) {
@@ -22,7 +22,7 @@ function Menu(props) {
                     props.setGameState(actionType.gameOn, false)
                     props.setGameState(actionType.gamePaused, false)
                     gameFinish(props.timer, props.ctx2D, props.canvas, props.block, props.setBlock, props.setWall)
-                    gameResetInfo(props.setGameState)
+                    gameInitInfo(props.setGameState)
                 }
             }
         }
