@@ -15,9 +15,10 @@ export function gamePause(timer) {
     clearInterval(timer)
 }
 
-export function gameFinish(timer, ctx2D, canvas, block, setBlock, setWall) {
+export function gameFinish(timer, ctx2D, canvas, block, setBlock, setWall, setGameState) {
     clearInterval(timer)
     gameClearCanvas(ctx2D, canvas)
+    gameInitInfo(setGameState)
     blockStart(canvas, block, setBlock)
     wallStart(setWall)
 }
@@ -76,9 +77,7 @@ export function gameUpdateInfo(score, setScore, level, setLevel, record, setReco
 }
 
 function gameUpdateScore(score, setScore) {
-    if (score > 0) {
-        setScore(score)
-    }
+    setScore(score)
 }
 
 function gameUpdateRecord(score, record, setRecord, setGameState) {
@@ -87,6 +86,9 @@ function gameUpdateRecord(score, record, setRecord, setGameState) {
         setGameState(actionType.gameRecord, score)
         gameSaveRecord(score)
     }
+    else {
+        setRecord(record)
+    }
 }
 
 function gameUpdateLevel(score, level, setLevel, setGameState) {
@@ -94,5 +96,8 @@ function gameUpdateLevel(score, level, setLevel, setGameState) {
     if (futureLevel > level) {
         setLevel(level + 1)
         setGameState(actionType.gameLevel, level + 1)
+    }
+    else {
+        setLevel(level)
     }
 }

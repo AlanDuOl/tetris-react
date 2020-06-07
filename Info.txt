@@ -31,7 +31,7 @@ Block rotations:
         - 270º: p4.x + tileDim
 
 BUG:
-    - Score is not updating correctly
+    - Score/ record, level are not updating correctly
     - gameReducer/blockReducer variables passed by value are not updated
 
 TODO:

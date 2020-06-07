@@ -3,13 +3,12 @@ import { connect } from 'react-redux'
 import '../css/Score.css'
 import { gameInitInfo, gameUpdateInfo } from '../libs/game.js'
 import { setGameState } from '../actions/gameActions'
-import { GAME_INITIAL_LEVEL } from '../globals'
 
 function Score(props) {
 
     const [score, setScore] = useState(0)
     const [record, setRecord] = useState(0)
-    const [level, setLevel] = useState(GAME_INITIAL_LEVEL)
+    const [level, setLevel] = useState(0)
 
     useEffect(() => {
         gameInitInfo(props.setGameState)
@@ -23,7 +22,7 @@ function Score(props) {
         <section id="score">
             <div id="score-container">
                 <div className="score-element">
-                    <label htmlFor="score-current">Points:</label>
+                    <label htmlFor="score-current">Score:</label>
                     <output id="score-current"> {score}</output>
                 </div>
                 <div className="score-element">
