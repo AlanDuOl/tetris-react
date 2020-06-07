@@ -1,5 +1,5 @@
 import {
-    BLOCK_DELTA_SPEED, blockMoveDirection, actionType, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
+    BLOCK_DELTA_SPEED, blockMoveDirection, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
     WALL_TILES_WIDTH, WALL_TILES_HEIGHT, blockInitialSpeed
 } from '../globals.js'
 import { wallSetTiles } from './wall.js'
@@ -16,10 +16,10 @@ export function blockStart(canvas, block, setBlock) {
     setBlock(newBlock)
 }
 
-export function blockLoop(ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, gameLevel, setGameState) {
+export function blockLoop(ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
     blockDraw(ctx2D, block, canvas.tileDim)
     blockMoveDown(block, setBlock)
-    blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, setUpdate, gameLevel, setGameState)
+    blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
 }
 
 function blockDraw(ctx2D, currentBlock, tileDim) {
@@ -37,7 +37,7 @@ function blockMoveDown(currentBlock, setBlock) {
     setBlock(newBlock)
 }
 
-function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, setUpdate, gameLevel, setGameState) {
+function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState) {
     try {
         let collision = false
         currentBlock.tiles.forEach(currentTile => {
@@ -48,8 +48,8 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
                     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
-                            wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, setUpdate, setGameState)
-                            blockReset(canvas, currentBlock, setBlock, gameLevel)
+                            wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, gameReducer.score, setGameState)
+                            blockReset(canvas, currentBlock, setBlock, gameReducer.level)
                             collision = true
                             break loop1
                         }
@@ -59,11 +59,11 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
         })
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
 }
 
-export function blockMoveSide(canvas, wall, block, setBlock, setBlockState, moveDir) {
+export function blockMoveSide(canvas, wall, block, setBlock, moveDir) {
     // Move block to left
     if (moveDir === blockMoveDirection.left) {
         blockMoveLeft(canvas, wall, block, setBlock)
@@ -72,7 +72,6 @@ export function blockMoveSide(canvas, wall, block, setBlock, setBlockState, move
     else if (moveDir === blockMoveDirection.right) {
         blockMoveRight(canvas, wall, block, setBlock)
     }
-    setBlockState(actionType.blockMove, blockMoveDirection.none)
 }
 
 function blockMoveLeft(canvas, wall, block, setBlock) {
@@ -135,7 +134,7 @@ function blockCheckMoveLeft(canvas, wall, block) {
         })
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
     finally {
         return blockCanMove
@@ -174,7 +173,7 @@ function blockCheckMoveRight(canvas, wall, block) {
         })
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
     finally {
         return blockCanMove
@@ -253,7 +252,7 @@ function blockCheckAvailableSpace(block, wall, tileDim) {
         return isThereEnoughSpace
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
 }
 
@@ -276,7 +275,7 @@ function blockGetRowsAndCols(tiles, tileDim) {
         return { rows: finalRows, cols: finalCols }
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
 }
 
@@ -311,7 +310,7 @@ function blockDrawShape(ctx2D, currentBlock, tileDim) {
         ctx2D.fill()
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
 }
 
@@ -338,7 +337,7 @@ function blockGetRotatedPoints(block, rotationAngle) {
         return newTiles
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
 }
 

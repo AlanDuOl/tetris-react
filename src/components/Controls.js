@@ -1,33 +1,32 @@
 import React from 'react'
 import '../css/Controls.scss'
 import { connect } from 'react-redux'
-import { setBlockState } from '../actions/blockActions.js'
-import { blockMoveDirection, actionType } from '../globals.js'
+import { blockMoveDirection } from '../globals.js'
+import { blockMoveSide, blockNewSpeed, blockRotate } from '../libs/block.js'
 
 function Controls(props) {
 
-    
     function rotate() {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState(actionType.blockRotation, !props.blockReducer.rotate)
+            blockRotate(props.block, props.setBlock, props.wall, props.canvas)
         }
     }
 
     const blockSpeedUp = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState(actionType.blockSpeed, !props.blockReducer.speedUp)
+            blockNewSpeed(props.block, props.setBlock)
         }
     }
 
     const blockMoveLeft = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState(actionType.blockMove, blockMoveDirection.left)
+            blockMoveSide(props.canvas, props.wall, props.block, props.setBlock, blockMoveDirection.left)
         }
     }
 
     const blockMoveRight = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.setBlockState(actionType.blockMove, blockMoveDirection.right)
+            blockMoveSide(props.canvas, props.wall, props.block, props.setBlock, blockMoveDirection.right)
         }
     }
 
@@ -53,15 +52,11 @@ function Controls(props) {
             </div>
         </section>
     )
+
 }
 
 const mapStateToProps = state => ({
     ...state
 })
 
-const mapDispatchToProps = dispatch => ({
-    setBlockState: (actionType, stateValue) => dispatch(setBlockState(actionType, stateValue)),
-    // setBlockOn: actionValue => dispatch(setBlockOn(actionValue))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Controls)
+export default connect(mapStateToProps, null)(Controls)

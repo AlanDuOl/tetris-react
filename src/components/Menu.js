@@ -3,14 +3,17 @@ import '../css/Menu.scss'
 import { connect } from 'react-redux'
 import { setGameState } from '../actions/gameActions.js'
 import { actionType } from '../globals.js'
+import { gameStart, gameFinish, gamePause, gameResetInfo } from '../libs/game.js'
+
 
 function Menu(props) {
 
-    // Start the game and create block
-    function toggleStart(evt) {
+    // Game Start/End
+    function toggleStart() {
         try {
             if (!props.gameReducer.gameOn) {
                 props.setGameState(actionType.gameOn, true)
+                gameStart(props.setTimer, props.ctx2D, props.canvas, props.wall, props.setWall, props.block, props.setBlock, props.gameReducer, props.setGameState)
             }
             else if (props.gameReducer.gameOn) {
                 // TODO: implement custom window for confirm
@@ -18,26 +21,30 @@ function Menu(props) {
                 if (quit) {
                     props.setGameState(actionType.gameOn, false)
                     props.setGameState(actionType.gamePaused, false)
+                    gameFinish(props.timer, props.ctx2D, props.canvas, props.block, props.setBlock, props.setWall)
+                    gameResetInfo(props.setGameState)
                 }
             }
         }
         catch(e) {
-            console.log(e.message)
+            console.error(e.message)
         }
     }
-
-    function togglePause(evt) {
+    // Game Pause/Resume
+    function togglePause() {
         try {
             if (!props.gameReducer.gamePaused && props.gameReducer.gameOn) {
                 props.setGameState(actionType.gamePaused, true)
+                gamePause(props.timer)
             }
             else if(props.gameReducer.gamePaused) {
                 // TODO: implement custom window for paused
                 props.setGameState(actionType.gamePaused, false)
+                gameStart(props.setTimer, props.ctx2D, props.canvas, props.wall, props.setWall, props.block, props.setBlock, props.gameReducer, props.setGameState)
             }
         }
         catch(e) {
-            console.log(e.message)
+            console.error(e.message)
         }
     }
 

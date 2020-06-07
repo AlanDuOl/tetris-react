@@ -2,8 +2,13 @@ import { blockLoop, blockStart } from './block.js'
 import { wallStart, wallLoop } from './wall.js'
 import { TIMER_SPEED, LEVEL_FACTOR, actionType, GAME_INITIAL_LEVEL, GAME_INITIAL_SCORE } from '../globals.js'
 
-export function gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, gameLevel, setGameState) {
-    setTimer(setInterval(gameLoop.bind(null, ctx2D, canvas, wall, setWall, block, setBlock, setUpdate, gameLevel, setGameState), TIMER_SPEED))
+export function gameInit(canvasDims, setWall, block, setBlock) {
+    blockStart(canvasDims, block, setBlock)
+    wallStart(setWall)
+}
+
+export function gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
+    setTimer(setInterval(gameLoop.bind(null, ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState), TIMER_SPEED))
 }
 
 export function gamePause(timer) {
@@ -17,10 +22,10 @@ export function gameFinish(timer, ctx2D, canvas, block, setBlock, setWall) {
     wallStart(setWall)
 }
 
-function gameLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, setUpdate, gameLevel, setGameState) {
+function gameLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState) {
     if (ctx2D) {
         gameClearCanvas(ctx2D, canvas)
-        blockLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, setUpdate, gameLevel, setGameState)
+        blockLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState)
         wallLoop(ctx2D, wall, canvas.tileDim)
     }
     console.log("need to clear interval")
@@ -37,10 +42,9 @@ export function gameResetInfo(setGameState) {
     setGameState(actionType.gameLevel, GAME_INITIAL_LEVEL)
 }
 
-export function gameUpdateInfo(gameReducer, setGameState, numRemovedRows) {
-    gameUpdateScore(gameReducer, setGameState, numRemovedRows)
-    gameUpdateLevel(gameReducer, setGameState, numRemovedRows)
-    gameUpdateRecord(gameReducer, setGameState, numRemovedRows)
+export function gameUpdateInfo(gameReducer, setGameState) {
+    gameUpdateLevel(gameReducer, setGameState)
+    gameUpdateRecord(gameReducer, setGameState)
 }
 
 export async function gameGetRecord(setRecord, setGameState) {
@@ -68,20 +72,14 @@ export function gameSaveRecord(newRecord) {
     .catch(err => console.error(err))
 }
 
-function gameUpdateRecord(gameReducer, setGameState, numRemovedRows) {
-    let newScore = gameReducer.score + numRemovedRows
-    if (newScore > gameReducer.record) {
-        setGameState(actionType.gameRecord, newScore)
+function gameUpdateRecord(gameReducer, setGameState) {
+    if (gameReducer.score > gameReducer.record) {
+        setGameState(actionType.gameRecord, gameReducer.score)
     }
 }
 
-function gameUpdateScore(gameReducer, setGameState, numRemovedRows) {
-    setGameState(actionType.gameScore, gameReducer.score + numRemovedRows)
-}
-
-function gameUpdateLevel(gameReducer, setGameState, numRemovedRows) {
-    let newScore = gameReducer.score + numRemovedRows
-    let scoreLevel = Math.round(newScore / LEVEL_FACTOR) + 1
+function gameUpdateLevel(gameReducer, setGameState) {
+    let scoreLevel = Math.round(gameReducer.score / LEVEL_FACTOR) + 1
     if (scoreLevel > gameReducer.level) {
         setGameState(actionType.gameLevel, gameReducer.level + 1)
     }

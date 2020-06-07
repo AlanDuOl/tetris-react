@@ -42,3 +42,4 @@ TODO:
     - Allow keyboard keys
     - Use web workers
     - Replace console.log for console.error on try catchs
+    - Refactor game Over logic in wallSetTiles
