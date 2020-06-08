@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import '../css/Score.css'
 import { gameInitInfo, gameUpdateInfo } from '../libs/game.js'
@@ -6,16 +6,12 @@ import { setGameState } from '../actions/gameActions'
 
 function Score(props) {
 
-    const [score, setScore] = useState(0)
-    const [record, setRecord] = useState(0)
-    const [level, setLevel] = useState(0)
-
     useEffect(() => {
         gameInitInfo(props.setGameState)
     }, [props.setGameState])
 
     useEffect(() => {
-        gameUpdateInfo(props.gameReducer.score, setScore, props.gameReducer.level, setLevel, props.gameReducer.record, setRecord, props.setGameState)
+        gameUpdateInfo(props.gameReducer.score, props.gameReducer.level, props.gameReducer.record, props.setGameState)
     }, [props.gameReducer.score, props.gameReducer.level, props.gameReducer.record, props.setGameState])
 
     return (
@@ -23,15 +19,15 @@ function Score(props) {
             <div id="score-container">
                 <div className="score-element">
                     <label htmlFor="score-current">Score:</label>
-                    <output id="score-current"> {score}</output>
+                    <output id="score-current"> {props.gameReducer.score}</output>
                 </div>
                 <div className="score-element">
                     <label htmlFor="score-level">Level:</label>
-                    <output id="score-level"> {level}</output>
+                    <output id="score-level"> {props.gameReducer.level}</output>
                 </div>
                 <div className="score-element">
                     <label htmlFor="score-record">Record:</label>
-                    <output id="score-record"> {record}</output>
+                    <output id="score-record"> {props.gameReducer.record}</output>
                 </div>
             </div>
         </section>

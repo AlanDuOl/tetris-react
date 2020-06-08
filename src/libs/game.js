@@ -70,34 +70,21 @@ export async function gameInitInfo(setGameState) {
     setGameState(actionType.gameScore, GAME_INITIAL_SCORE)
 }
 
-export function gameUpdateInfo(score, setScore, level, setLevel, record, setRecord, setGameState) {
-    gameUpdateScore(score, setScore)
-    gameUpdateLevel(score, level, setLevel, setGameState)
-    gameUpdateRecord(score, record, setRecord, setGameState)
+export function gameUpdateInfo(score, level, record, setGameState) {
+    gameUpdateLevel(score, level, setGameState)
+    gameUpdateRecord(score, record, setGameState)
 }
 
-function gameUpdateScore(score, setScore) {
-    setScore(score)
-}
-
-function gameUpdateRecord(score, record, setRecord, setGameState) {
+function gameUpdateRecord(score, record, setGameState) {
     if (score > 0 && score > record) {
-        setRecord(score)
         setGameState(actionType.gameRecord, score)
         gameSaveRecord(score)
     }
-    else {
-        setRecord(record)
-    }
 }
 
-function gameUpdateLevel(score, level, setLevel, setGameState) {
+function gameUpdateLevel(score, level, setGameState) {
     let futureLevel = Math.round(score / LEVEL_FACTOR) + 1
     if (futureLevel > level) {
-        setLevel(level + 1)
         setGameState(actionType.gameLevel, level + 1)
-    }
-    else {
-        setLevel(level)
     }
 }
