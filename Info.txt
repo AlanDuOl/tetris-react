@@ -1,38 +1,6 @@
-Block rotations:
-    - Central point is equal to tile 4 point and a fake point for Z and T
 
-    - Position correction after rotate points    
-        - L, J, S, Z and T:
-            - 0º:
-                = x - tileDim
-                = y + tileDim
-            - 90º:
-                = x - tileDim
-            - 180º:
-                = y - tileDim * 2
-            - 270º:
-                = x + tileDim * 2
-                = y + tileDim
-        - I:
-            - 0º:
-                = x - tileDim * 3
-            - 90º:
-                = nothing
-            - 180º:
-                = y - tileDim * 3
-            - 270º:
-                = x + tileDim * 3
-                = y + tileDim * 3
-
-    - Fake central point for Z and T:
-        - 0º: p4.y + tileDim
-        - 90º p4.x - tileDim
-        - 180º: p4.y - tileDim
-        - 270º: p4.x + tileDim
-
-BUG:
-    - Score/ record, level are not updating correctly
-    - gameReducer/blockReducer variables passed by value are not updated
+BUGs:
+    -
 
 TODO:
     - Try to use the block rotation loop logic to other collision detection:
