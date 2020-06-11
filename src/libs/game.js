@@ -2,8 +2,8 @@ import { blockLoop, blockStart } from './block.js'
 import { wallStart, wallLoop } from './wall.js'
 import { TIMER_SPEED, LEVEL_FACTOR, actionType, GAME_INITIAL_LEVEL, GAME_INITIAL_SCORE } from '../globals.js'
 
-export function gameInit(canvasDims, setWall, block, setBlock) {
-    blockStart(canvasDims, block, setBlock)
+export function gameInit(canvasDims, setWall, setBlock) {
+    blockStart(canvasDims, setBlock)
     wallStart(setWall)
 }
 
@@ -27,11 +27,11 @@ export function gamePause(timer) {
     clearInterval(timer)
 }
 
-export function gameFinish(timer, ctx2D, canvas, block, setBlock, setWall, setGameState) {
+export function gameFinish(timer, ctx2D, canvas, setBlock, setWall, setGameState) {
     clearInterval(timer)
     gameClearCanvas(ctx2D, canvas)
     gameInitInfo(setGameState)
-    blockStart(canvas, block, setBlock)
+    blockStart(canvas, setBlock)
     wallStart(setWall)
 }
 

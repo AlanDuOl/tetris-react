@@ -5,14 +5,15 @@ import {
 import { wallSetTiles } from './wall.js'
 
 
-export function blockStart(canvas, block, setBlock) {
-    let newBlock = block
+export function blockStart(canvas, setBlock) {
+    let newBlock = {}
+    let blockType = blockGetType()
+    let blockProps = blockSetTiles(canvas, blockType)
     newBlock.speed = blockInitialSpeed.level1
     newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
-    newBlock.type = blockGetType()
-    let tempBlock = blockSetTiles(canvas, newBlock.type)
-    newBlock.tiles = tempBlock.tiles
-    newBlock.rotationPoint = tempBlock.rotationPoint
+    newBlock.type = blockType
+    newBlock.tiles = blockProps.tiles
+    newBlock.rotationPoint = blockProps.rotationPoint
     setBlock(newBlock)
 }
 
@@ -136,9 +137,7 @@ function blockCheckMoveLeft(canvas, wall, block) {
     catch (e) {
         console.error(e.message)
     }
-    finally {
-        return blockCanMove
-    }
+    return blockCanMove
 }
 
 function blockCheckMoveRight(canvas, wall, block) {
@@ -175,9 +174,7 @@ function blockCheckMoveRight(canvas, wall, block) {
     catch (e) {
         console.error(e.message)
     }
-    finally {
-        return blockCanMove
-    }
+    return blockCanMove
 }
 
 export function blockNewSpeed(currentBlock, setBlock) {
@@ -204,14 +201,13 @@ export function blockRotate(currentBlock, setBlock, wall, canvas) {
             // newBlock = blockCheckRotationCollision(newBlock, wall, canvas.tileDim)
             setBlock(newBlock)
         }
-        
     }
 }
 
 function blockCheckAvailableSpace(block, wall, tileDim) {
     
+    let isThereEnoughSpace = false
     try {
-        let isThereEnoughSpace = false
         // To get the block cols and rows
         let blockDims = blockGetRowsAndCols(block.tiles, tileDim)
         // Loop in the wall only on needed rows using future width and height
@@ -249,11 +245,11 @@ function blockCheckAvailableSpace(block, wall, tileDim) {
                 emptyCols = 0
             }
         }
-        return isThereEnoughSpace
     }
     catch (e) {
         console.error(e.message)
     }
+    return isThereEnoughSpace
 }
 
 function blockGetRowsAndCols(tiles, tileDim) {

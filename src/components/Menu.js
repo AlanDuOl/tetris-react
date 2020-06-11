@@ -21,7 +21,7 @@ function Menu(props) {
                 if (quit) {
                     props.setGameState(actionType.gameOn, false)
                     props.setGameState(actionType.gamePaused, false)
-                    gameFinish(props.timer, props.ctx2D, props.canvas, props.block, props.setBlock, props.setWall, props.setGameState)
+                    gameFinish(props.timer, props.ctx2D, props.canvas, props.setBlock, props.setWall, props.setGameState)
                 }
             }
         }

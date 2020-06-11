@@ -5,7 +5,7 @@ import Menu from './components/Menu'
 import Score from './components/Score'
 import Controls from './components/Controls'
 import { gameInit } from './libs/game.js'
-import { WALL_TILES_WIDTH, initialBlock } from './globals.js'
+import { WALL_TILES_WIDTH } from './globals.js'
 
 function App() {
 
@@ -21,7 +21,7 @@ function App() {
       let canvasDims = { width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }
       setCanvas(canvasDims)
       setCtx2D(canvas.getContext("2d"))
-      gameInit(canvasDims, setWall, initialBlock, setBlock)
+      gameInit(canvasDims, setWall, setBlock)
     }, [])
 
     return (
