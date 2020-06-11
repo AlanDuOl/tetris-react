@@ -1,5 +1,5 @@
 import { blockUpdate, blockInit, blockDraw } from './block.js'
-import { wallDraw, wallInit } from './wall.js'
+import { wallInit, wallDraw, wallUpdate } from './wall.js'
 import { TIMER_SPEED, LEVEL_FACTOR, actionType, GAME_INITIAL_LEVEL, GAME_INITIAL_SCORE } from '../globals.js'
 
 export function gameInit(canvasDims, setWall, setBlock) {
@@ -56,12 +56,11 @@ function gameDraw(ctx2D, block, wall, canvas) {
 
 function gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
     // Update block
-    let blockReset = false
-    blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
+    let blockCollided = blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
     // Wall update is tiggered by block bottom collision
-    if (blockReset) {
+    if (blockCollided) {
         wallUpdate()
-        infoUpdate()
+        // infoUpdate()
         gameCheckGameOver(gameReducer.gameOver)
     }
 }

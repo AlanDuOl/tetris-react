@@ -18,8 +18,11 @@ export function blockInit(canvas, setBlock) {
 }
 
 export function blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
+    // Move the block down
     blockMoveDown(block, setBlock)
-    blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
+    // Check if the block collided in the bottom
+    let collision = blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
+    return collision
 }
 
 export function blockDraw(ctx2D, block, tileDim) {
@@ -46,26 +49,22 @@ function blockMoveDown(block, setBlock) {
 
 function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState) {
     try {
-        // Collision variable is used to avoid unecessary loops and to return the collision tiles
         let collision = false
         currentBlock.tiles.forEach(currentTile => {
-            // If condition to avoid overchecking because one collition is enouth to get the tiles position
-            if (!collision) {
-                loop1:
+                // Check if it calls after return
                 for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
                     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
-                        // If there was a collision, reset the block, add the tiles to the wall and stop the loop
+                        // If there was a collision, reset the block, add the tiles to the wall and return true
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
                             wallAddTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, gameReducer, setGameState)
                             blockReset(canvas, currentBlock, setBlock, gameReducer)
-                            collision = true
-                            break loop1
+                            return true
                         }
                     }
                 }
-            }
         })
+        return collision
     }
     catch (e) {
         console.error(e.message)

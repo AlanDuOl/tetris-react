@@ -17,41 +17,6 @@ export function wallInit(setWall) {
     }
 }
 
-export function wallAddTiles(tiles, wall, setWall, tileDim, gameReducer, setGameState) {
-    try {
-        let gameOver = false
-        tiles.forEach(tile => {
-            // Get the column and row numbers
-            let col = Math.floor(tile.x / tileDim)
-            let row = Math.floor(tile.y / tileDim)
-            // Set the tile position values if they are inside the wall area
-            if (col < WALL_TILES_WIDTH && col >= 0 && row < WALL_TILES_HEIGHT && row >= 0) {
-                wall[row][col] = { x: col * tileDim, y: row * tileDim }
-            }
-            // Set game over if the tile position is outside the wall area
-            if (row < 0) {
-                gameOver = true
-            }
-        })
-        // Check for game over
-        if (gameOver) {
-            alert("Game Over!!")
-            setGameState(actionType.gameOn, false)
-        }
-        // Update array has 2 values. The first is the update wall and the second is the number of rows removed from the wall
-        let updateArray = wallUpdate(wall, tileDim, 0)
-        // If any row has been removed, update the wall and the game info (score, level, record)
-        if (updateArray[1] > 0) {
-            setGameState(actionType.gameScore, gameReducer.score += updateArray[1])
-        }
-        wall = updateArray[0]
-        setWall(wall)
-    }
-    catch (e) {
-        console.error(e.message)
-    }
-}
-
 export function wallDraw(ctx2D, wall, tileDim) {
     try {
         for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
@@ -70,7 +35,25 @@ export function wallDraw(ctx2D, wall, tileDim) {
     }
 }
 
-function wallUpdate(wall, tileDim, updateNumber) {
+export function wallAddTiles(tiles, wall, setWall, tileDim, gameReducer, setGameState) {
+    try {
+        tiles.forEach(tile => {
+            // Get the column and row numbers
+            let col = Math.floor(tile.x / tileDim)
+            let row = Math.floor(tile.y / tileDim)
+            // Set the tile position values if they are inside the wall area
+            if (col < WALL_TILES_WIDTH && col >= 0 && row < WALL_TILES_HEIGHT) {
+                wall[row][col] = { x: col * tileDim, y: row * tileDim }
+            }
+        })
+        setWall(wall)
+    }
+    catch (e) {
+        console.error(e.message)
+    }
+}
+
+export function wallUpdate(wall, tileDim, updateNumber) {
     let newWall = wall
     // this is to know how many lines have been removed and is used to update the score/level
     let numCalls = updateNumber
@@ -101,6 +84,27 @@ function wallUpdate(wall, tileDim, updateNumber) {
         console.error(e.message)
     }
     return [newWall, numCalls]
+}
+
+function wallCheck() {
+    
+    let gameOver = false
+    // Set game over if the tile position is outside the wall area
+    if (row < 0) {
+        gameOver = true
+    }
+    // Check for game over
+    if (gameOver) {
+        alert("Game Over!!")
+        setGameState(actionType.gameOn, false)
+    }
+    // Update array has 2 values. The first is the update wall and the second is the number of rows removed from the wall
+    let updateArray = wallUpdate(wall, tileDim, 0)
+    // If any row has been removed, update the wall and the game info (score, level, record)
+    if (updateArray[1] > 0) {
+        setGameState(actionType.gameScore, gameReducer.score += updateArray[1])
+    }
+    wall = updateArray[0]
 }
 
 function wallRemoveRow(wall, row) {
