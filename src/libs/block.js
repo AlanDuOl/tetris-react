@@ -17,13 +17,12 @@ export function blockInit(canvas, setBlock) {
     setBlock(newBlock)
 }
 
-export function blockLoop(ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
-    blockDraw(ctx2D, block, canvas.tileDim)
+export function blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
     blockMoveDown(block, setBlock)
     blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
 }
 
-function blockDraw(ctx2D, currentBlock, tileDim) {
+export function blockDraw(ctx2D, currentBlock, tileDim) {
     if (ctx2D) {
         blockDrawShape(ctx2D, currentBlock, tileDim)
     }

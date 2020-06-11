@@ -1,5 +1,5 @@
-import { blockLoop, blockInit } from './block.js'
-import { wallLoop, wallInit } from './wall.js'
+import { blockUpdate, blockInit, blockDraw } from './block.js'
+import { wallDraw, wallInit } from './wall.js'
 import { TIMER_SPEED, LEVEL_FACTOR, actionType, GAME_INITIAL_LEVEL, GAME_INITIAL_SCORE } from '../globals.js'
 
 export function gameInit(canvasDims, setWall, setBlock) {
@@ -37,13 +37,27 @@ export function gameFinish(timer, ctx2D, canvas, setBlock, setWall, setGameState
     wallInit(setWall)
 }
 
-function gameLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState) {
-    if (ctx2D) {
-        gameCanvasClear(ctx2D, canvas)
-        blockLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState)
-        wallLoop(ctx2D, wall, canvas.tileDim)
-    }
+function gameLoop(ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
+    gameDraw(ctx2D, block, wall, canvas)
+    gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
     console.log("need to clear interval")
+}
+
+function gameDraw(ctx2D, block, wall, canvas) {
+    if (ctx2D) {
+        // Clear canvas
+        gameCanvasClear(ctx2D, canvas)
+        // Draw block
+        blockDraw(ctx2D, block, canvas.tileDim)
+        // Draw wall
+        wallDraw(ctx2D, wall, canvas.tileDim)
+    }
+}
+
+function gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
+    // Update block
+    // Wall update is tiggered by block bottom collision
+    blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
 }
 
 function gameCanvasClear(ctx2D, canvas) {

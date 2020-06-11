@@ -53,11 +53,7 @@ export function wallSetTiles(tiles, wall, setWall, tileDim, gameReducer, setGame
     }
 }
 
-export function wallLoop(ctx2D, wall, tileDim) {
-    wallDraw(ctx2D, wall, tileDim)
-}
-
-function wallDraw(ctx2D, wall, tileDim) {
+export function wallDraw(ctx2D, wall, tileDim) {
     try {
         for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
             for (let col = 0; col < WALL_TILES_WIDTH; col++) {
@@ -88,9 +84,9 @@ function wallUpdate(wall, tileDim, updateNumber) {
                     rowLength++
                     if (rowLength === WALL_TILES_WIDTH) {
                         // Remove row where all tiles are not empty
-                        newWall = wallRemoveRow(newWall, row)
+                        newWall = wallRowRemove(newWall, row)
                         // Move down tiles above the emptied row
-                        newWall = wallMoveTilesDown(newWall, row - 1, tileDim)
+                        newWall = wallTilesMoveDown(newWall, row - 1, tileDim)
                         // Increase numCalls
                         numCalls++
                         // Recall self with updated wall
@@ -108,23 +104,16 @@ function wallUpdate(wall, tileDim, updateNumber) {
     return [newWall, numCalls]
 }
 
-function wallRemoveRow(wall, row) {
-    try {
-        let newWall = wall
-        for (let col = 0; col < WALL_TILES_WIDTH; col++) {
-            newWall[row][col] = {}
-        }
-        return newWall
-    }
-    catch (e) {
-        console.error(e.message)
-    }
+function wallRowRemove(wall, row) {
+    let newWall = wall
+    newWall[row] = wallRowGetEmpty()
+    return newWall
 }
 
-function wallMoveTilesDown(wall, startRow, tileDim) {
+function wallTilesMoveDown(wall, startRow, tileDim) {
     try {
         let newWall = wall
-        let emptyRow = wallGetEmptyRow()
+        let emptyRow = wallRowGetEmpty()
         // Loop in rows from bottom to top
         for (let row = startRow; row >= 0; row--) {
             // Loop in the columns and and increase y postion by tileDim where the tile is not empty
@@ -145,7 +134,7 @@ function wallMoveTilesDown(wall, startRow, tileDim) {
     }
 }
 
-function wallGetEmptyRow() {
+function wallRowGetEmpty() {
     let wallRow = []
     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
         let emptyTile = {}
