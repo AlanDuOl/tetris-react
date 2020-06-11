@@ -2,7 +2,7 @@ import {
     BLOCK_DELTA_SPEED, blockMoveDirection, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
     WALL_TILES_WIDTH, WALL_TILES_HEIGHT, blockInitialSpeed
 } from '../globals.js'
-import { wallSetTiles } from './wall.js'
+import { wallAddTiles } from './wall.js'
 
 
 export function blockInit(canvas, setBlock) {
@@ -22,23 +22,31 @@ export function blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer,
     blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
 }
 
-export function blockDraw(ctx2D, currentBlock, tileDim) {
-    if (ctx2D) {
-        blockDrawShape(ctx2D, currentBlock, tileDim)
+export function blockDraw(ctx2D, block, tileDim) {
+    try {
+        ctx2D.fillStyle = block.type.fillStyle
+        ctx2D.beginPath()
+        block.tiles.forEach(tile => {
+            ctx2D.rect(tile.x, tile.y, tileDim, tileDim)
+        })
+        ctx2D.fill()
+    }
+    catch (e) {
+        console.error(e.message)
     }
 }
 
-function blockMoveDown(currentBlock, setBlock) {
-    let newBlock = currentBlock
-    newBlock.tiles.forEach(currentTile => {
-        currentTile.y += newBlock.speed
+function blockMoveDown(block, setBlock) {
+    block.tiles.forEach(tile => {
+        tile.y += block.speed
     })
-    newBlock.rotationPoint.y += newBlock.speed
-    setBlock(newBlock)
+    block.rotationPoint.y += block.speed
+    setBlock(block)
 }
 
 function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState) {
     try {
+        // Collision variable is used to avoid unecessary loops and to return the collision tiles
         let collision = false
         currentBlock.tiles.forEach(currentTile => {
             // If condition to avoid overchecking because one collition is enouth to get the tiles position
@@ -46,9 +54,10 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
                 loop1:
                 for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
                     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
+                        // If there was a collision, reset the block, add the tiles to the wall and stop the loop
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
-                            wallSetTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, gameReducer, setGameState)
+                            wallAddTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, gameReducer, setGameState)
                             blockReset(canvas, currentBlock, setBlock, gameReducer)
                             collision = true
                             break loop1
@@ -293,20 +302,6 @@ export function blockReset(canvas, currentBlock, setBlock, gameReducer) {
     newBlock.rotationPoint = tempBlock.rotationPoint
     newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
     setBlock(newBlock)
-}
-
-function blockDrawShape(ctx2D, currentBlock, tileDim) {
-    try {
-        ctx2D.fillStyle = currentBlock.type.fillStyle
-        ctx2D.beginPath()
-        currentBlock.tiles.forEach(tile => {
-            ctx2D.rect(tile.x, tile.y, tileDim, tileDim)
-        })
-        ctx2D.fill()
-    }
-    catch (e) {
-        console.error(e.message)
-    }
 }
 
 function blockGetRotated(block, BLOCK_DELTA_ROTATION, tileDim) {

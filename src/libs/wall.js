@@ -17,17 +17,16 @@ export function wallInit(setWall) {
     }
 }
 
-export function wallSetTiles(tiles, wall, setWall, tileDim, gameReducer, setGameState) {
-    // Get the column and row numbers
+export function wallAddTiles(tiles, wall, setWall, tileDim, gameReducer, setGameState) {
     try {
-        let localWall = wall
         let gameOver = false
         tiles.forEach(tile => {
+            // Get the column and row numbers
             let col = Math.floor(tile.x / tileDim)
             let row = Math.floor(tile.y / tileDim)
             // Set the tile position values if they are inside the wall area
             if (col < WALL_TILES_WIDTH && col >= 0 && row < WALL_TILES_HEIGHT && row >= 0) {
-                localWall[row][col] = { x: col * tileDim, y: row * tileDim }
+                wall[row][col] = { x: col * tileDim, y: row * tileDim }
             }
             // Set game over if the tile position is outside the wall area
             if (row < 0) {
@@ -40,13 +39,13 @@ export function wallSetTiles(tiles, wall, setWall, tileDim, gameReducer, setGame
             setGameState(actionType.gameOn, false)
         }
         // Update array has 2 values. The first is the update wall and the second is the number of rows removed from the wall
-        let updateArray = wallUpdate(localWall, tileDim, 0)
+        let updateArray = wallUpdate(wall, tileDim, 0)
         // If any row has been removed, update the wall and the game info (score, level, record)
         if (updateArray[1] > 0) {
             setGameState(actionType.gameScore, gameReducer.score += updateArray[1])
         }
-        localWall = updateArray[0]
-        setWall(localWall)
+        wall = updateArray[0]
+        setWall(wall)
     }
     catch (e) {
         console.error(e.message)
@@ -84,9 +83,9 @@ function wallUpdate(wall, tileDim, updateNumber) {
                     rowLength++
                     if (rowLength === WALL_TILES_WIDTH) {
                         // Remove row where all tiles are not empty
-                        newWall = wallRowRemove(newWall, row)
+                        newWall = wallRemoveRow(newWall, row)
                         // Move down tiles above the emptied row
-                        newWall = wallTilesMoveDown(newWall, row - 1, tileDim)
+                        newWall = wallMoveTilesDown(newWall, row - 1, tileDim)
                         // Increase numCalls
                         numCalls++
                         // Recall self with updated wall
@@ -104,16 +103,16 @@ function wallUpdate(wall, tileDim, updateNumber) {
     return [newWall, numCalls]
 }
 
-function wallRowRemove(wall, row) {
+function wallRemoveRow(wall, row) {
     let newWall = wall
-    newWall[row] = wallRowGetEmpty()
+    newWall[row] = wallGetEmptyRow()
     return newWall
 }
 
-function wallTilesMoveDown(wall, startRow, tileDim) {
+function wallMoveTilesDown(wall, startRow, tileDim) {
     try {
         let newWall = wall
-        let emptyRow = wallRowGetEmpty()
+        let emptyRow = wallGetEmptyRow()
         // Loop in rows from bottom to top
         for (let row = startRow; row >= 0; row--) {
             // Loop in the columns and and increase y postion by tileDim where the tile is not empty
@@ -134,7 +133,7 @@ function wallTilesMoveDown(wall, startRow, tileDim) {
     }
 }
 
-function wallRowGetEmpty() {
+function wallGetEmptyRow() {
     let wallRow = []
     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
         let emptyTile = {}
