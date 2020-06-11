@@ -1,8 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import '../css/Score.css'
-// import { gameInfoInit, gameInfoUpdate } from '../libs/game.js'
-// import { setGameState } from '../actions/gameActions'
+
 
 function Score(props) {
 

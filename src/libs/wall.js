@@ -77,9 +77,9 @@ function wallAddTiles(tiles, wall, setWall, tileDim) {
             // Get the column and row numbers
             let col = Math.floor(tile.x / tileDim)
             let row = Math.floor(tile.y / tileDim)
-            // Set the tile x and y position values
+            // Set the tile x and y position values in the range of (15 > col >= 0) and (21 > row >= -4)
             if (col < WALL_TILES_WIDTH && col >= 0 && row < WALL_TILES_HEIGHT && row >= - BLOCK_NUM_TILES) {
-                // Add 4 to every index so wall accepts negative y positions
+                // Add 4 to every row index so no index is smaller than 0 and grater than 21
                 // Negative y position is needed to check for game over
                 // Because the game over check must happen after the wall updates
                 wall[row + BLOCK_NUM_TILES][col] = { x: col * tileDim, y: row * tileDim }
@@ -93,6 +93,7 @@ function wallAddTiles(tiles, wall, setWall, tileDim) {
 }
 
 function wallRemoveTiles(wall, row) {
+    // Make current row empty
     wall[row] = wallGetEmptyRow()
 }
 

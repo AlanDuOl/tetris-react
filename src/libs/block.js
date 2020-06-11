@@ -331,7 +331,7 @@ function blockSetTilesPosition(block, tiles, tileDim) {
                     tile.y += tileDim
                     break
                 default:
-                    console.log("Unknown angle...")
+                    console.error("Unknown block rotation angle...")
                     break
             }
         })
@@ -353,7 +353,7 @@ function blockSetTilesPosition(block, tiles, tileDim) {
                     tile.y += tileDim * 3
                     break
                 default:
-                    console.log("Unknown angle...")
+                    console.error("Unknown block rotation angle...")
                     break
             }
         })
@@ -381,7 +381,7 @@ function blockSetRotationPoint(block, tileDim) {
                 newRotationPoint = { x: centralPoint.x + tileDim, y: centralPoint.y }
                 break
             default:
-                console.log("Unknown angle...")
+                console.error("Unknown rotation angle for rotation point...")
                 break
         }
     }
@@ -420,7 +420,7 @@ function blockGetInitialSpeed(gameReducer) {
         case 7:
             return blockInitialSpeed.level7
         default:
-            console.log("Unknown game level...")
+            console.error("Unknown game level...")
             return blockInitialSpeed.level1
     }
 }
@@ -450,7 +450,7 @@ function blockSetTiles(canvas, type) {
             block = blockSetO(canvas)
             return block
         default:
-            console.log("Unknown block...")
+            console.error("Unknown block name...")
             break
     }
 }
@@ -562,7 +562,7 @@ function blockGetType() {
             type = blockType.O
             return type
         default:
-            console.log("Unknown block number: " + blockNumber)
+            console.error("Unknown block number: " + blockNumber)
             return type
     }
 }
