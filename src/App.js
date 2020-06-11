@@ -9,9 +9,9 @@ import { WALL_TILES_WIDTH } from './globals.js'
 
 function App() {
 
-    const [canvas, setCanvas] = useState({ width: 0, height: 0, tileDim: 0 })
+    const [canvas, setCanvas] = useState(null)
     const [ctx2D, setCtx2D] = useState(null)
-    const [timer, setTimer] = useState(0)
+    const [timer, setTimer] = useState(undefined)
     const [wall, setWall] = useState(null)
     const [block, setBlock] = useState(null)
 
