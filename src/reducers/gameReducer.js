@@ -6,7 +6,8 @@ const initialState = {
     record: 0,
     wall: [],
     gameOn: false,
-    gamePaused: false
+    gamePaused: false,
+    gameOver: false
 }
 
 const gameReducer = (state = initialState, action) => {
@@ -18,14 +19,12 @@ const gameReducer = (state = initialState, action) => {
             return Object.assign({}, state, { score: action.value })
         case actionType.gameRecord:
             return Object.assign({}, state, { record: action.value })
-        case "SET_GAME_WALL":
-            return Object.assign({}, state, { wall: action.value })
         case actionType.gameOn:
             return Object.assign({}, state, { gameOn: action.value })
         case actionType.gamePaused:
             return Object.assign({}, state, { gamePaused: action.value })
-        case "SET_GAME_STATE":
-            return Object.assign({}, state, action.value )
+        case actionType.gameOver:
+            return Object.assign({}, state, { gameOver: action.value } )
         default:
             return state  // Return the current state if action.type does not match
     }

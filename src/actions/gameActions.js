@@ -13,8 +13,8 @@ export const setGameState = (actionType, actionValue) => {
             return { type: gameActionType.gameOn, value: actionValue }
         case gameActionType.gamePaused:
             return { type: gameActionType.gamePaused, value: actionValue }
-        case "SET_GAME_STATE":
-            return { type: "SET_GAME_STATE", value: actionValue }
+        case gameActionType.gameOver:
+            return { type: gameActionType.gameOver, value: actionValue }
         case gameActionType.gameRecord:
             return { type: gameActionType.gameRecord, value: actionValue } 
         default:

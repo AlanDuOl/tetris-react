@@ -28,7 +28,8 @@ export const actionType = {
     gameScore: "SET_GAME_SCORE",
     gameOn: "SET_GAME_ON",
     gamePaused: "SET_GAME_PAUSED",
-    gameRecord: "SET_GAME_RECORD"
+    gameRecord: "SET_GAME_RECORD",
+    gameOver: "SET_GAME_OVER"
 }
 
 

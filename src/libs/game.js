@@ -56,8 +56,20 @@ function gameDraw(ctx2D, block, wall, canvas) {
 
 function gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
     // Update block
-    // Wall update is tiggered by block bottom collision
+    let blockReset = false
     blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
+    // Wall update is tiggered by block bottom collision
+    if (blockReset) {
+        wallUpdate()
+        infoUpdate()
+        gameCheckGameOver(gameReducer.gameOver)
+    }
+}
+
+function gameCheckGameOver(gameOver) {
+    if (gameOver) {
+
+    }
 }
 
 function gameCanvasClear(ctx2D, canvas) {
