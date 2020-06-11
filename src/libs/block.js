@@ -17,12 +17,12 @@ export function blockInit(canvas, setBlock) {
     setBlock(newBlock)
 }
 
-export function blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
+export function blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer) {
     // Move the block down
     blockMoveDown(block, setBlock)
     // Check if the block collided in the bottom
-    let collision = blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
-    return collision
+    let bottomCollision = blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, gameReducer)
+    return bottomCollision
 }
 
 export function blockDraw(ctx2D, block, tileDim) {
@@ -47,19 +47,20 @@ function blockMoveDown(block, setBlock) {
     setBlock(block)
 }
 
-function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState) {
+function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, gameReducer) {
     try {
         let collision = false
         currentBlock.tiles.forEach(currentTile => {
                 // Check if it calls after return
+                loop1:
                 for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
                     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
-                        // If there was a collision, reset the block, add the tiles to the wall and return true
+                        // If there was a collision add the tiles to the wall and return true
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
-                            wallAddTiles(currentBlock.tiles, wall, setWall, canvas.tileDim, gameReducer, setGameState)
-                            blockReset(canvas, currentBlock, setBlock, gameReducer)
-                            return true
+                            wallAddTiles(currentBlock.tiles, wall, setWall, canvas.tileDim)
+                            collision = true
+                            break loop1
                         }
                     }
                 }
@@ -292,15 +293,15 @@ function blockNeedToCheckSpace(block) {
     }
 }
 
-export function blockReset(canvas, currentBlock, setBlock, gameReducer) {
-    let newBlock = currentBlock
-    newBlock.speed = blockGetInitialSpeed(gameReducer)
-    newBlock.type = blockGetType()
-    let tempBlock = blockSetTiles(canvas, newBlock.type)
-    newBlock.tiles = tempBlock.tiles
-    newBlock.rotationPoint = tempBlock.rotationPoint
-    newBlock.rotationAngle = BLOCK_INITIAL_ROTATION
-    setBlock(newBlock)
+export function blockReset(canvas, block, setBlock, gameReducer) {
+    let blockType = blockGetType()
+    let blockProps = blockSetTiles(canvas, blockType)
+    block.speed = blockGetInitialSpeed(gameReducer)
+    block.type = blockType
+    block.tiles = blockProps.tiles
+    block.rotationPoint = blockProps.rotationPoint
+    block.rotationAngle = BLOCK_INITIAL_ROTATION
+    setBlock(block)
 }
 
 function blockGetRotated(block, BLOCK_DELTA_ROTATION, tileDim) {

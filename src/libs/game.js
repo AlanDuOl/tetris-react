@@ -1,4 +1,4 @@
-import { blockUpdate, blockInit, blockDraw } from './block.js'
+import { blockUpdate, blockInit, blockDraw, blockReset } from './block.js'
 import { wallInit, wallDraw, wallUpdate } from './wall.js'
 import { TIMER_SPEED, LEVEL_FACTOR, actionType, GAME_INITIAL_LEVEL, GAME_INITIAL_SCORE } from '../globals.js'
 
@@ -56,7 +56,7 @@ function gameDraw(ctx2D, block, wall, canvas) {
 
 function gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
     // Update block
-    let blockCollided = blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
+    let blockCollided = blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer)
     let numRemovedRows = 0
     // Wall update is tiggered by block bottom collision happens
     if (blockCollided) {
@@ -65,13 +65,27 @@ function gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGame
         if (numRemovedRows > 0) {
             // infoUpdate()
         }
-        gameCheckGameOver(gameReducer.gameOver)
+        gameCheckGameOver(wall, setGameState)
+        blockReset(canvas, block, setBlock, gameReducer)
     }
 }
 
-function gameCheckGameOver(gameOver) {
-    if (gameOver) {
-
+function gameCheckGameOver(wall, setGameState) {
+    try {
+        for (let row = 0; row < wall.length; row++) {
+            for (let col = 0; col < wall[0].length; col++) {
+                if (Object.keys(wall[row][col]).length === 2) {
+                    // If there is a tile in the wall with y position < 0 the game is over
+                    if (wall[row][col].y < 0) {
+                        setGameState(actionType.gameOver, true)
+                        console.log("gameover")
+                    }
+                }
+            }
+        }
+    }
+    catch (e) {
+        console.error(e.message)
     }
 }
 

@@ -35,7 +35,7 @@ export function wallDraw(ctx2D, wall, tileDim) {
     }
 }
 
-export function wallAddTiles(tiles, wall, setWall, tileDim, gameReducer, setGameState) {
+export function wallAddTiles(tiles, wall, setWall, tileDim) {
     try {
         tiles.forEach(tile => {
             // Get the column and row numbers
