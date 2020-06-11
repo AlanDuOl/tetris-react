@@ -2,7 +2,7 @@
 export const NUM_BLOCK_TYPES = 7
 export const BLOCK_NUM_TILES = 4
 export const WALL_TILES_WIDTH = 10
-export const WALL_TILES_HEIGHT = 17
+export const WALL_TILES_HEIGHT = 21
 export const BLOCK_DELTA_SPEED = 4
 export const BLOCK_DELTA_ROTATION = 90
 export const BLOCK_INITIAL_ROTATION = 0

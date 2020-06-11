@@ -17,11 +17,11 @@ export function blockInit(canvas, setBlock) {
     setBlock(newBlock)
 }
 
-export function blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer) {
+export function blockUpdate(canvas, wall, setWall, block, setBlock) {
     // Move the block down
     blockMoveDown(block, setBlock)
     // Check if the block collided in the bottom
-    let bottomCollision = blockCheckBottomCollision(canvas, wall, setWall, block, setBlock, gameReducer)
+    let bottomCollision = blockCheckBottomCollision(canvas, wall, setWall, block)
     return bottomCollision
 }
 
@@ -47,7 +47,7 @@ function blockMoveDown(block, setBlock) {
     setBlock(block)
 }
 
-function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock, gameReducer) {
+function blockCheckBottomCollision(canvas, wall, setWall, currentBlock) {
     try {
         let collision = false
         currentBlock.tiles.forEach(currentTile => {
@@ -55,7 +55,7 @@ function blockCheckBottomCollision(canvas, wall, setWall, currentBlock, setBlock
                 loop1:
                 for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
                     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
-                        // If there was a collision add the tiles to the wall and return true
+                        // If there was a collision, add the tiles to the wall and return true
                         if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
                             currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
                             wallAddTiles(currentBlock.tiles, wall, setWall, canvas.tileDim)

@@ -1,4 +1,4 @@
-import { WALL_TILES_WIDTH, WALL_TILES_HEIGHT, actionType } from '../globals.js'
+import { WALL_TILES_WIDTH, WALL_TILES_HEIGHT, BLOCK_NUM_TILES } from '../globals.js'
 
 export function wallInit(setWall) {
     let wall = []
@@ -41,9 +41,12 @@ export function wallAddTiles(tiles, wall, setWall, tileDim) {
             // Get the column and row numbers
             let col = Math.floor(tile.x / tileDim)
             let row = Math.floor(tile.y / tileDim)
-            // Set the tile position values if they are inside the wall area
-            if (col < WALL_TILES_WIDTH && col >= 0 && row < WALL_TILES_HEIGHT) {
-                wall[row][col] = { x: col * tileDim, y: row * tileDim }
+            // Set the tile x and y position values
+            if (col < WALL_TILES_WIDTH && col >= 0 && row < WALL_TILES_HEIGHT && row >= - BLOCK_NUM_TILES) {
+                // Add 4 to every index so wall accepts negative y positions
+                // Negative y position is needed to check for game over
+                // Because the game over check must happen after the wall updates
+                wall[row + BLOCK_NUM_TILES][col] = { x: col * tileDim, y: row * tileDim }
             }
         })
         setWall(wall)

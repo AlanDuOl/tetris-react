@@ -1,6 +1,7 @@
 
 BUGs:
-    -
+    - Wall does not accept tiles outside of its height:
+        - Hard to know game over because tiles don't stay outside the wall
 
 TODO:
     - Try to use the block rotation loop logic to other collision detection:
