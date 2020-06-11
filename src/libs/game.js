@@ -1,10 +1,10 @@
-import { blockLoop, blockStart } from './block.js'
-import { wallStart, wallLoop } from './wall.js'
+import { blockLoop, blockInit } from './block.js'
+import { wallLoop, wallInit } from './wall.js'
 import { TIMER_SPEED, LEVEL_FACTOR, actionType, GAME_INITIAL_LEVEL, GAME_INITIAL_SCORE } from '../globals.js'
 
 export function gameInit(canvasDims, setWall, setBlock) {
-    blockStart(canvasDims, setBlock)
-    wallStart(setWall)
+    blockInit(canvasDims, setBlock)
+    wallInit(setWall)
 }
 
 export async function gameInitInfo(setGameState) {
@@ -31,8 +31,8 @@ export function gameFinish(timer, ctx2D, canvas, setBlock, setWall, setGameState
     clearInterval(timer)
     gameClearCanvas(ctx2D, canvas)
     gameInitInfo(setGameState)
-    blockStart(canvas, setBlock)
-    wallStart(setWall)
+    blockInit(canvas, setBlock)
+    wallInit(setWall)
 }
 
 function gameLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState) {

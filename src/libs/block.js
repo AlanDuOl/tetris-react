@@ -5,7 +5,7 @@ import {
 import { wallSetTiles } from './wall.js'
 
 
-export function blockStart(canvas, setBlock) {
+export function blockInit(canvas, setBlock) {
     let newBlock = {}
     let blockType = blockGetType()
     let blockProps = blockSetTiles(canvas, blockType)

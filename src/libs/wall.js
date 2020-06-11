@@ -1,15 +1,20 @@
 import { WALL_TILES_WIDTH, WALL_TILES_HEIGHT, actionType } from '../globals.js'
 
-export function wallStart(setWall) {
+export function wallInit(setWall) {
     let wall = []
-    for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
-        let wallRow = []
-        for (let col = 0; col < WALL_TILES_WIDTH; col++) {
-            wallRow.push({})
+    try {
+        for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
+            let wallRow = []
+            for (let col = 0; col < WALL_TILES_WIDTH; col++) {
+                wallRow.push({})
+            }
+            wall.push(wallRow)
         }
-        wall.push(wallRow)
+        setWall(wall)
     }
-    setWall(wall)
+    catch (e) {
+        console.error(e.message)
+    }
 }
 
 export function wallSetTiles(tiles, wall, setWall, tileDim, gameReducer, setGameState) {
