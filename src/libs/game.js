@@ -7,6 +7,18 @@ export function gameInit(canvasDims, setWall, block, setBlock) {
     wallStart(setWall)
 }
 
+export async function gameInitInfo(setGameState) {
+    let record = await gameGetRecord()
+    setGameState(actionType.gameRecord, record)
+    setGameState(actionType.gameLevel, GAME_INITIAL_LEVEL)
+    setGameState(actionType.gameScore, GAME_INITIAL_SCORE)
+}
+
+export function gameUpdateInfo(score, level, record, setGameState) {
+    gameUpdateLevel(score, level, setGameState)
+    gameUpdateRecord(score, record, setGameState)
+}
+
 export function gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
     setTimer(setInterval(gameLoop.bind(null, ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState), TIMER_SPEED))
 }
@@ -60,19 +72,6 @@ function gameSaveRecord(newRecord) {
         body: JSON.stringify(data)
     })
     .catch(err => console.error(err))
-}
-
-
-export async function gameInitInfo(setGameState) {
-    let record = await gameGetRecord()
-    setGameState(actionType.gameRecord, record)
-    setGameState(actionType.gameLevel, GAME_INITIAL_LEVEL)
-    setGameState(actionType.gameScore, GAME_INITIAL_SCORE)
-}
-
-export function gameUpdateInfo(score, level, record, setGameState) {
-    gameUpdateLevel(score, level, setGameState)
-    gameUpdateRecord(score, record, setGameState)
 }
 
 function gameUpdateRecord(score, record, setGameState) {

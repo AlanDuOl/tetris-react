@@ -13,7 +13,7 @@ function App() {
     const [ctx2D, setCtx2D] = useState(null)
     const [timer, setTimer] = useState(0)
     const [wall, setWall] = useState(null)
-    const [block, setBlock] = useState(initialBlock)
+    const [block, setBlock] = useState(null)
 
     // Init game props
     useEffect(() => {

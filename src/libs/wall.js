@@ -44,7 +44,7 @@ export function wallSetTiles(tiles, wall, setWall, tileDim, gameReducer, setGame
         setWall(localWall)
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
 }
 
@@ -66,15 +66,15 @@ function wallDraw(ctx2D, wall, tileDim) {
         }
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
 }
 
 function wallUpdate(wall, tileDim, updateNumber) {
+    let newWall = wall
+    // this is to know how many lines have been removed and is used to update the score/level
+    let numCalls = updateNumber
     try {
-        let newWall = wall
-        // this is to know how many lines have been removed and is used to update the score/level
-        let numCalls = updateNumber
         // Loop in rows from bottom to top
         for (let row = WALL_TILES_HEIGHT - 1; row >= 0; row--) {
             let rowLength = 0
@@ -96,11 +96,11 @@ function wallUpdate(wall, tileDim, updateNumber) {
                 }
             }
         }
-        return [newWall, numCalls]
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
+    return [newWall, numCalls]
 }
 
 function wallRemoveRow(wall, row) {
@@ -112,7 +112,7 @@ function wallRemoveRow(wall, row) {
         return newWall
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
 }
 
@@ -136,7 +136,7 @@ function wallMoveTilesDown(wall, startRow, tileDim) {
         return newWall
     }
     catch (e) {
-        console.log(e.message)
+        console.error(e.message)
     }
 }
 
@@ -151,6 +151,6 @@ function wallGetEmptyRow() {
         return wallRow
     }
     else {
-        console.log("Error creating empty row")
+        console.error("Error creating empty row")
     }
 }
