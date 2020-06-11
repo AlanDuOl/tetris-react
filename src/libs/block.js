@@ -17,12 +17,9 @@ export function blockInit(canvas, setBlock) {
     setBlock(newBlock)
 }
 
-export function blockUpdate(canvas, wall, setWall, block, setBlock) {
+export function blockUpdate(block, setBlock) {
     // Move the block down
     blockMoveDown(block, setBlock)
-    // Check if the block collided in the bottom
-    let bottomCollision = blockCheckBottomCollision(canvas, wall, setWall, block)
-    return bottomCollision
 }
 
 export function blockDraw(ctx2D, block, tileDim) {
@@ -45,31 +42,6 @@ function blockMoveDown(block, setBlock) {
     })
     block.rotationPoint.y += block.speed
     setBlock(block)
-}
-
-function blockCheckBottomCollision(canvas, wall, setWall, currentBlock) {
-    try {
-        let collision = false
-        currentBlock.tiles.forEach(currentTile => {
-                // Check if it calls after return
-                loop1:
-                for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
-                    for (let col = 0; col < WALL_TILES_WIDTH; col++) {
-                        // If there was a collision, add the tiles to the wall and return true
-                        if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
-                            currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
-                            wallAddTiles(currentBlock.tiles, wall, setWall, canvas.tileDim)
-                            collision = true
-                            break loop1
-                        }
-                    }
-                }
-        })
-        return collision
-    }
-    catch (e) {
-        console.error(e.message)
-    }
 }
 
 export function blockMoveSide(canvas, wall, block, setBlock, moveDir) {
