@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import '../css/Score.css'
-import { gameInitInfo, gameUpdateInfo } from '../libs/game.js'
+import { gameInfoInit, gameInfoUpdate } from '../libs/game.js'
 import { setGameState } from '../actions/gameActions'
 
 function Score(props) {
 
     useEffect(() => {
-        gameInitInfo(props.setGameState)
+        gameInfoInit(props.setGameState)
     }, [props.setGameState])
 
     useEffect(() => {
-        gameUpdateInfo(props.gameReducer.score, props.gameReducer.level, props.gameReducer.record, props.setGameState)
+        gameInfoUpdate(props.gameReducer.score, props.gameReducer.level, props.gameReducer.record, props.setGameState)
     }, [props.gameReducer.score, props.gameReducer.level, props.gameReducer.record, props.setGameState])
 
     return (

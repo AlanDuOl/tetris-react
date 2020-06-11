@@ -7,16 +7,18 @@ export function gameInit(canvasDims, setWall, setBlock) {
     wallInit(setWall)
 }
 
-export async function gameInitInfo(setGameState) {
-    let record = await gameGetRecord()
+export async function gameInfoInit(setGameState) {
+    let record = await gameRecordGet()
     setGameState(actionType.gameRecord, record)
     setGameState(actionType.gameLevel, GAME_INITIAL_LEVEL)
     setGameState(actionType.gameScore, GAME_INITIAL_SCORE)
 }
 
-export function gameUpdateInfo(score, level, record, setGameState) {
-    gameUpdateLevel(score, level, setGameState)
-    gameUpdateRecord(score, record, setGameState)
+export function gameInfoUpdate(score, level, record, setGameState) {
+    // Score is updated directly when a wall line is removed
+    // Changes in score tigger updates in record and level
+    gameLevelUpdate(score, level, setGameState)
+    gameRecordUpdate(score, record, setGameState)
 }
 
 export function gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
@@ -29,28 +31,28 @@ export function gamePause(timer) {
 
 export function gameFinish(timer, ctx2D, canvas, setBlock, setWall, setGameState) {
     clearInterval(timer)
-    gameClearCanvas(ctx2D, canvas)
-    gameInitInfo(setGameState)
+    gameCanvasClear(ctx2D, canvas)
+    gameInfoInit(setGameState)
     blockInit(canvas, setBlock)
     wallInit(setWall)
 }
 
 function gameLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState) {
     if (ctx2D) {
-        gameClearCanvas(ctx2D, canvas)
+        gameCanvasClear(ctx2D, canvas)
         blockLoop(ctx2D, canvas, wall, setWall, currentBlock, setBlock, gameReducer, setGameState)
         wallLoop(ctx2D, wall, canvas.tileDim)
     }
     console.log("need to clear interval")
 }
 
-function gameClearCanvas(ctx2D, canvas) {
+function gameCanvasClear(ctx2D, canvas) {
     if (ctx2D) {
         ctx2D.clearRect(0, 0, canvas.width, canvas.height)
     }
 }
 
-export async function gameGetRecord() {
+async function gameRecordGet() {
     const url = 'http://localhost:4000/record/get'
     const response = await fetch(url)
     const data = await response.json()
@@ -62,7 +64,7 @@ export async function gameGetRecord() {
     }
 }
 
-function gameSaveRecord(newRecord) {
+function gameRecordSave(newRecord) {
     const data = { id: 1, record: newRecord }
     const url = 'http://localhost:4000/record/update'
     fetch(url, {
@@ -74,14 +76,14 @@ function gameSaveRecord(newRecord) {
     .catch(err => console.error(err))
 }
 
-function gameUpdateRecord(score, record, setGameState) {
+function gameRecordUpdate(score, record, setGameState) {
     if (score > 0 && score > record) {
         setGameState(actionType.gameRecord, score)
-        gameSaveRecord(score)
+        gameRecordSave(score)
     }
 }
 
-function gameUpdateLevel(score, level, setGameState) {
+function gameLevelUpdate(score, level, setGameState) {
     let futureLevel = Math.round(score / LEVEL_FACTOR) + 1
     if (futureLevel > level) {
         setGameState(actionType.gameLevel, level + 1)
