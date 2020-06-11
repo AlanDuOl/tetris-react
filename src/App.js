@@ -28,7 +28,7 @@ function App(props) {
 
     return (
       <div className="App">
-        <Score score={props.gameReducer.score} level={props.gameReducer.score} record={props.gameReducer.score} />
+        <Score />
         <Display />
         <Menu ctx2D={ctx2D} canvas={canvas} timer={timer} setTimer={setTimer} wall={wall} setWall={setWall} block={block} setBlock={setBlock} />
         <Controls canvas={canvas} wall={wall} setWall={setWall} block={block} setBlock={setBlock} />

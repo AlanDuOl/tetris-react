@@ -53,7 +53,6 @@ function gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGame
         let numRemovedRows = wallUpdate(collisionTiles, wall, setWall, canvas.tileDim)
         // If a row was removed the info should be updated (score, level, record)
         if (numRemovedRows > 0) {
-            console.log('rows removed: ', numRemovedRows)
             infoUpdate(numRemovedRows, gameReducer, setGameState)
         }
         // Check game over after update wall

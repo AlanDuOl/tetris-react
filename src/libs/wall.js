@@ -59,7 +59,7 @@ function wallUpdateTiles(wall, setWall, tileDim, initialValue) {
                         // Move down tiles above the emptied row
                         wallMoveTilesDown(wall, setWall, row - 1, tileDim)
                         // Recall self increasing numRemovedRows to see if there are more rows to remove
-                        numRemovedRows = wallUpdateTiles(wall, tileDim, ++numRemovedRows)
+                        numRemovedRows = wallUpdateTiles(wall, setWall, tileDim, ++numRemovedRows)
                     }
                 }
             }
