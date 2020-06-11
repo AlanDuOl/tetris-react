@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux'
 import './App.css';
 import Display from "./components/Display"
 import Menu from './components/Menu'
 import Score from './components/Score'
 import Controls from './components/Controls'
+import { setGameState } from './actions/gameActions.js'
 import { gameInit } from './libs/game.js'
 import { WALL_TILES_WIDTH } from './globals.js'
 
-function App() {
+function App(props) {
 
     const [canvas, setCanvas] = useState(null)
     const [ctx2D, setCtx2D] = useState(null)
@@ -21,12 +23,12 @@ function App() {
       let canvasDims = { width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }
       setCanvas(canvasDims)
       setCtx2D(canvas.getContext("2d"))
-      gameInit(canvasDims, setWall, setBlock)
-    }, [])
+      gameInit(canvasDims, setWall, setBlock, props.setGameState)
+    }, [props.setGameState])
 
     return (
       <div className="App">
-        <Score />
+        <Score score={props.gameReducer.score} level={props.gameReducer.score} record={props.gameReducer.score} />
         <Display />
         <Menu ctx2D={ctx2D} canvas={canvas} timer={timer} setTimer={setTimer} wall={wall} setWall={setWall} block={block} setBlock={setBlock} />
         <Controls canvas={canvas} wall={wall} setWall={setWall} block={block} setBlock={setBlock} />
@@ -34,4 +36,12 @@ function App() {
     );
 }
 
-export default App;
+const mapStateToProps = state => ({
+  ...state
+})
+
+const mapDispatchToProps = dispatch => ({
+  setGameState: (actionType, actionValue) => dispatch(setGameState(actionType, actionValue))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

@@ -2,7 +2,6 @@ import {
     BLOCK_DELTA_SPEED, blockMoveDirection, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
     WALL_TILES_WIDTH, WALL_TILES_HEIGHT, blockInitialSpeed
 } from '../globals.js'
-import { wallAddTiles } from './wall.js'
 
 
 export function blockInit(canvas, setBlock) {
