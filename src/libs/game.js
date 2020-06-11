@@ -57,10 +57,14 @@ function gameDraw(ctx2D, block, wall, canvas) {
 function gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
     // Update block
     let blockCollided = blockUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
-    // Wall update is tiggered by block bottom collision
+    let numRemovedRows = 0
+    // Wall update is tiggered by block bottom collision happens
     if (blockCollided) {
-        wallUpdate()
-        // infoUpdate()
+        numRemovedRows = wallUpdate(wall, canvas.tileDim, numRemovedRows)
+        // If a row was removed the info should be updated (score, level, record)
+        if (numRemovedRows > 0) {
+            // infoUpdate()
+        }
         gameCheckGameOver(gameReducer.gameOver)
     }
 }
