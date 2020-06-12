@@ -20,7 +20,7 @@ export function Game(ctx2D, canvas, setGameState) {
         this.resetState()
         this.block.init(this.canvas)
         this.wall.init()
-        this.info.init()
+        this.info.init(this.setGameState)
     }
 
     this.resetState = () => {

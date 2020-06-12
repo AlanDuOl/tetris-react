@@ -1,8 +1,6 @@
 import React from 'react'
 import '../css/Controls.scss'
 import { connect } from 'react-redux'
-import { blockMoveDirection } from '../globals.js'
-// import { blockMoveSide, blockNewSpeed, blockRotate } from '../libs/block.js'
 
 function Controls(props) {
 

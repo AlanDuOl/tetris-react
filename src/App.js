@@ -11,11 +11,6 @@ import { WALL_TILES_WIDTH } from './globals.js'
 
 function App(props) {
 
-    // const [canvas, setCanvas] = useState(null)
-    // const [ctx2D, setCtx2D] = useState(null)
-    // const [timer, setTimer] = useState(undefined)
-    // const [wall, setWall] = useState(null)
-    // const [block, setBlock] = useState(null)
     const [game, setGame] = useState(null)
 
     // Init game props
@@ -28,12 +23,14 @@ function App(props) {
     }, [props.setGameState])
 
     useEffect(() => {
-        game.init()
+        if (game) {
+            game.init()
+        }
     }, [game])
 
     return (
         <div className="App">
-            <Score info={game.info} />
+            <Score />
             <Display game={game} />
             <Menu game={game} />
             <Controls game={game} />

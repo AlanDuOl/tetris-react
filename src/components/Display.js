@@ -2,8 +2,6 @@ import React from "react"
 import '../css/Display.css'
 import { connect } from 'react-redux'
 import { setGameState } from '../actions/gameActions.js'
-// import { actionType } from '../globals.js'
-// import { gameFinish } from '../libs/game.js'
 
 function Display(props) {
 

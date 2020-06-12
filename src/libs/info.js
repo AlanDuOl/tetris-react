@@ -16,17 +16,20 @@ export function Info() {
     // this.setLevel = val => { this.level = val }
     // this.setRecord = val => { this.record = val }
 
-    this.init = async () => {
+    this.init = async setGameState => {
         let currentRecord = await this.recordGet()
         this.score = GAME_INITIAL_SCORE
         this.level = GAME_INITIAL_LEVEL
         this.record = currentRecord
+        setGameState(actionType.gameScore, GAME_INITIAL_SCORE)
+        setGameState(actionType.level, GAME_INITIAL_LEVEL)
+        setGameState(actionType.record, currentRecord)
     }
 
     this.update = (numRemovedRows, setGameState) => {
         // Update score
         let newScore = this.score + numRemovedRows
-        setGameState(actionType.gameScore, newScore)
+        this.updateScore(newScore, setGameState)
         // Changes in score tigger updates in record and level
         // Check if the level and record need to update
         this.updateLevel(newScore, setGameState)
@@ -57,15 +60,21 @@ export function Info() {
         .catch(err => console.error(err))
     }
 
-    this.updateRecord = (score, setGameState) => {
-        if (score > 0 && score > this.record) {
-            setGameState(actionType.gameRecord, score)
-            this.saveRecord(score)
+    this.updateScore = (newScore, setGameState) => {
+        this.score = newScore
+        setGameState(actionType.gameScore, newScore)
+    }
+
+    this.updateRecord = (newScore, setGameState) => {
+        if (newScore > 0 && newScore > this.record) {
+            this.record = newScore
+            setGameState(actionType.gameRecord, newScore)
+            this.saveRecord(newScore)
         }
     }
 
-    this.updateLevel = (score, setGameState) => {
-        let futureLevel = Math.floor(score / LEVEL_FACTOR) + 1
+    this.updateLevel = (newScore, setGameState) => {
+        let futureLevel = Math.floor(newScore / LEVEL_FACTOR) + 1
         if (futureLevel > this.level) {
             setGameState(actionType.gameLevel, this.level + 1)
         }

@@ -1,5 +1,5 @@
 import {
-    BLOCK_DELTA_SPEED, blockMoveDirection, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
+    BLOCK_DELTA_SPEED, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
     WALL_TILES_WIDTH, WALL_TILES_HEIGHT, blockInitialSpeed
 } from '../globals.js'
 
