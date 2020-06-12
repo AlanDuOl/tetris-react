@@ -2,8 +2,7 @@ import React from 'react'
 import '../css/Menu.scss'
 import { connect } from 'react-redux'
 import { setGameState } from '../actions/gameActions.js'
-import { actionType } from '../globals.js'
-import { gameStart, gameFinish, gamePause } from '../libs/game.js'
+import { gameStart, gameFinish, gameStop } from '../libs/game.js'
 
 
 function Menu(props) {
@@ -12,15 +11,12 @@ function Menu(props) {
     function toggleStart() {
         try {
             if (!props.gameReducer.gameOn) {
-                props.setGameState(actionType.gameOn, true)
                 gameStart(props.setTimer, props.ctx2D, props.canvas, props.wall, props.setWall, props.block, props.setBlock, props.gameReducer, props.setGameState)
             }
             else if (props.gameReducer.gameOn) {
                 // TODO: implement custom window for confirm
                 let quit = window.confirm("Finish?")
                 if (quit) {
-                    props.setGameState(actionType.gameOn, false)
-                    props.setGameState(actionType.gamePaused, false)
                     gameFinish(props.timer, props.ctx2D, props.canvas, props.setBlock, props.setWall, props.setGameState)
                 }
             }
@@ -33,12 +29,10 @@ function Menu(props) {
     function togglePause() {
         try {
             if (!props.gameReducer.gamePaused && props.gameReducer.gameOn) {
-                props.setGameState(actionType.gamePaused, true)
-                gamePause(props.timer)
+                gameStop(props.timer, props.setGameState)
             }
             else if(props.gameReducer.gamePaused) {
                 // TODO: implement custom window for paused
-                props.setGameState(actionType.gamePaused, false)
                 gameStart(props.setTimer, props.ctx2D, props.canvas, props.wall, props.setWall, props.block, props.setBlock, props.gameReducer, props.setGameState)
             }
         }

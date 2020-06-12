@@ -29,7 +29,7 @@ function App(props) {
     return (
       <div className="App">
         <Score />
-        <Display />
+        <Display ctx2D={ctx2D} canvas={canvas} timer={timer} setWall={setWall} setBlock={setBlock} setGameState={props.setGameState} />
         <Menu ctx2D={ctx2D} canvas={canvas} timer={timer} setTimer={setTimer} wall={wall} setWall={setWall} block={block} setBlock={setBlock} />
         <Controls canvas={canvas} wall={wall} setWall={setWall} block={block} setBlock={setBlock} />
       </div>

@@ -4,30 +4,37 @@ import { wallInit, wallDraw, wallUpdate } from './wall.js'
 import { infoInit, infoUpdate } from './info.js'
 
 export function gameInit(canvasDims, setWall, setBlock, setGameState) {
+    setGameState(actionType.gameOn, false)
+    setGameState(actionType.gamePaused, false)
+    setGameState(actionType.gameOver, false)
     blockInit(canvasDims, setBlock)
     wallInit(setWall)
     infoInit(setGameState)
 }
 
 export function gameStart(setTimer, ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
+    setGameState(actionType.gameOn, true)
+    setGameState(actionType.gamePaused, false)
     setTimer(setInterval(gameLoop.bind(null, ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState), TIMER_SPEED))
 }
 
-export function gamePause(timer) {
+export function gameStop(timer, setGameState) {
+    setGameState(actionType.gamePaused, true)
     clearInterval(timer)
 }
 
 export function gameFinish(timer, ctx2D, canvas, setBlock, setWall, setGameState) {
-    clearInterval(timer)
+    gameStop(timer, setGameState)
     gameCanvasClear(ctx2D, canvas)
-    infoInit(setGameState)
-    blockInit(canvas, setBlock)
-    wallInit(setWall)
+    gameInit(canvas, setWall, setBlock, setGameState)
 }
 
 function gameLoop(ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
-    gameDraw(ctx2D, block, wall, canvas)
-    gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
+    // If the game is not over, run it
+    if (!gameReducer.gameOver) {
+        gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
+        gameDraw(ctx2D, block, wall, canvas)
+    }
     console.log("need to clear interval")
 }
 
