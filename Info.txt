@@ -1,7 +1,6 @@
 
 BUGs:
-    - Rotation not working
-    - Score not updating
+    -
 
 TODO:
     - Try to use the block rotation loop logic to other collision detection:

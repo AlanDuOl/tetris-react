@@ -1,8 +1,6 @@
 import React from 'react'
 import '../css/Menu.scss'
 import { connect } from 'react-redux'
-import { setGameState } from '../actions/gameActions.js'
-
 
 function Menu(props) {
 

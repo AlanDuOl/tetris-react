@@ -1,7 +1,4 @@
-import {
-    BLOCK_DELTA_SPEED, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION,
-    WALL_TILES_WIDTH, WALL_TILES_HEIGHT, blockInitialSpeed
-} from '../globals.js'
+import { BLOCK_DELTA_SPEED, blockType, BLOCK_DELTA_ROTATION, BLOCK_INITIAL_ROTATION, WALL_TILES_WIDTH, WALL_TILES_HEIGHT, blockInitialSpeed } from '../globals.js'
 
 export function Block() {
 
@@ -256,8 +253,12 @@ export function Block() {
         try {
             let angle = (Math.PI / 180) * BLOCK_DELTA_ROTATION
             this.tiles.forEach(tile => {
-                tile.x = Math.round(Math.cos(angle) * (tile.x - this.rotationPoint.x) - Math.sin(angle) * (tile.y - this.rotationPoint.y) + this.rotationPoint.x)
-                tile.y = Math.sin(angle) * (tile.x - this.rotationPoint.x) + Math.cos(angle) * (tile.y - this.rotationPoint.y) + this.rotationPoint.y
+                // Make a copy to avoid using changed tile.x in tile.y new value
+                let currentTile = Object.assign({}, tile)
+                // Rotate tile.x around rotationPoint
+                tile.x = Math.round(Math.cos(angle) * (currentTile.x - this.rotationPoint.x) - Math.sin(angle) * (currentTile.y - this.rotationPoint.y) + this.rotationPoint.x)
+                // Rotate tile.y around rotationPoint
+                tile.y = Math.sin(angle) * (currentTile.x - this.rotationPoint.x) + Math.cos(angle) * (currentTile.y - this.rotationPoint.y) + this.rotationPoint.y
             })
         }
         catch (e) {
@@ -410,7 +411,7 @@ export function Block() {
         }
     }
 
-    this.getI = (canvas) => {
+    this.getI = canvas => {
         let leftMostX = canvas.width / 2
         let block = { tiles: [], rotationPoint: {} }
         block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 4 })
@@ -421,7 +422,7 @@ export function Block() {
         block.rotationPoint = { x: centralPoint.x, y: centralPoint.y }
         return block
     }
-    this.getS = (canvas) => {
+    this.getS = canvas => {
         let leftMostX = canvas.width / 2 - canvas.tileDim
         let block = { tiles: [], rotationPoint: {} }
         block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 3 })
@@ -432,7 +433,7 @@ export function Block() {
         block.rotationPoint = { x: centralPoint.x, y: centralPoint.y }
         return block
     }
-    this.getZ = (canvas) => {
+    this.getZ = canvas => {
         let leftMostX = canvas.width / 2 - canvas.tileDim
         let block = { tiles: [], rotationPoint: {} }
         block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })
@@ -443,7 +444,7 @@ export function Block() {
         block.rotationPoint = { x: centralPoint.x, y: centralPoint.y + canvas.tileDim }
         return block
     }
-    this.getT = (canvas) => {
+    this.getT = canvas => {
         let leftMostX = canvas.width / 2 - canvas.tileDim
         let block = { tiles: [], rotationPoint: {} }
         block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 3 })
@@ -454,7 +455,7 @@ export function Block() {
         block.rotationPoint = { x: centralPoint.x, y: centralPoint.y + canvas.tileDim }
         return block
     }
-    this.getL = (canvas) => {
+    this.getL = canvas => {
         let leftMostX = canvas.width / 2 - canvas.tileDim
         let block = { tiles: [], rotationPoint: {} }
         block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 3 })
@@ -465,7 +466,7 @@ export function Block() {
         block.rotationPoint = { x: centralPoint.x, y: centralPoint.y }
         return block
     }
-    this.getJ = (canvas) => {
+    this.getJ = canvas => {
         let leftMostX = canvas.width / 2 - canvas.tileDim
         let block = { tiles: [], rotationPoint: {} }
         block.tiles.push({ x: leftMostX, y: - canvas.tileDim })
@@ -476,7 +477,7 @@ export function Block() {
         block.rotationPoint = { x: centralPoint.x, y: centralPoint.y }
         return block
     }
-    this.getO = (canvas) => {
+    this.getO = canvas => {
         let leftMostX = canvas.width / 2 - canvas.tileDim
         let block = { tiles: [], rotationPoint: {} }
         block.tiles.push({ x: leftMostX, y: - canvas.tileDim * 2 })

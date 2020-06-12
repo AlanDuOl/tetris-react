@@ -110,7 +110,7 @@ export function Game(ctx2D, canvas, setGameState) {
 
     this.checkGameOver = () => {
         try {
-            for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
+            for (let row = 0; row < BLOCK_NUM_TILES; row++) {
                 for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                     if (Object.keys(this.wall.tiles[row][col]).length === 2) {
                         // If there is a tile in the wall with y position < 0 the game is over
