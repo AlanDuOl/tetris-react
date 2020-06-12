@@ -2,13 +2,13 @@ import React from "react"
 import '../css/Display.css'
 import { connect } from 'react-redux'
 import { setGameState } from '../actions/gameActions.js'
-import { actionType } from '../globals.js'
-import { gameFinish } from '../libs/game.js'
+// import { actionType } from '../globals.js'
+// import { gameFinish } from '../libs/game.js'
 
 function Display(props) {
 
     function clearGame() {
-        gameFinish(props.timer, props.ctx2D, props.canvas, props.setBlock, props.setWall, props.setGameState)
+        // gameFinish(props.timer, props.ctx2D, props.canvas, props.setBlock, props.setWall, props.setGameState)
     }
 
     return (

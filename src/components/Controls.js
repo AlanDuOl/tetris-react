@@ -2,31 +2,31 @@ import React from 'react'
 import '../css/Controls.scss'
 import { connect } from 'react-redux'
 import { blockMoveDirection } from '../globals.js'
-import { blockMoveSide, blockNewSpeed, blockRotate } from '../libs/block.js'
+// import { blockMoveSide, blockNewSpeed, blockRotate } from '../libs/block.js'
 
 function Controls(props) {
 
     function rotate() {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            blockRotate(props.block, props.setBlock, props.wall, props.canvas)
+            props.game.block.rotate()
         }
     }
 
     const blockSpeedUp = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            blockNewSpeed(props.block, props.setBlock)
+            props.game.block.newSpeed()
         }
     }
 
     const blockMoveLeft = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            blockMoveSide(props.canvas, props.wall, props.block, props.setBlock, blockMoveDirection.left)
+            props.game.block.moveSide(blockMoveDirection.left)
         }
     }
 
     const blockMoveRight = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            blockMoveSide(props.canvas, props.wall, props.block, props.setBlock, blockMoveDirection.right)
+            props.game.block.moveSide(blockMoveDirection.right)
         }
     }
 

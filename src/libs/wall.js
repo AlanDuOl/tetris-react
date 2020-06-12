@@ -98,7 +98,7 @@ export function Wall() {
 
     this.removeTiles = row => {
         // Make current row empty
-        this.tiles[row] = wallGetEmptyRow()
+        this.tiles[row] = this.getEmptyRow()
     }
 
     this.moveTilesDown = (startRow, tileDim) => {
