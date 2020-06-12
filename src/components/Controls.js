@@ -8,7 +8,7 @@ function Controls(props) {
 
     function rotate() {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.game.block.rotate()
+            props.game.block.rotate(props.game.canvas, props.game.wall)
         }
     }
 
@@ -20,13 +20,13 @@ function Controls(props) {
 
     const blockMoveLeft = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.game.block.moveSide(blockMoveDirection.left)
+            props.game.block.moveLeft(props.game.canvas, props.game.wall)
         }
     }
 
     const blockMoveRight = () => {
         if (props.gameReducer.gameOn && !props.gameReducer.gamePaused) {
-            props.game.block.moveSide(blockMoveDirection.right)
+            props.game.block.moveRight(props.game.canvas, props.game.wall)
         }
     }
 

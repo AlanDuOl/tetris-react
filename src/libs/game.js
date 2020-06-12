@@ -64,37 +64,37 @@ export function Game(ctx2D, canvas, setGameState) {
 
     this.update = (canvas, wall, setWall, block, setBlock, gameReducer, setGameState) => {
         // Update block
-        blockMoveDown(block, setBlock)
+        this.block.moveDown()
         // Check for collision block bottom collision with canvas and wall
-        let collisionTiles = gameGetBottomCollision(block, wall, canvas)
+        let collisionTiles = this.getBottomCollision()
         // Check if there was a block bottom collision
         // All other updates/checks are tiggered when block bottom collision happens
         if (collisionTiles.length === BLOCK_NUM_TILES) {
             // Update the wall
-            let numRemovedRows = wallUpdate(collisionTiles, wall, setWall, canvas.tileDim)
+            let numRemovedRows = this.wall.update(collisionTiles, this.canvas.tileDim)
             // If a row was removed the info should be updated (score) and checked to update (level, record)
             if (numRemovedRows > 0) {
-                infoUpdate(numRemovedRows, gameReducer, setGameState)
+                this.info.update(numRemovedRows, this.setGameState)
             }
             // Check game over after wall update
-            gameCheckGameOver(wall, setGameState)
+            this.checkGameOver()
             // If the game is not over reset the block
-            blockReset(canvas, block, setBlock, gameReducer)
+            this.block.reset(this.canvas, this.info.level)
         }
     }
 
-    this.getBottomCollision = (block, wall, canvas) => {
+    this.getBottomCollision = () => {
         try {
             let collisionTiles = []
-            block.tiles.forEach(currentTile => {
+            this.block.tiles.forEach(currentTile => {
                 // Check if it calls after return
                 loop1:
                 for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
                     for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                         // If there was a collision, add the tiles to the wall and return true
-                        if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
-                            currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
-                            collisionTiles = block.tiles.slice()
+                        if ((currentTile.x === this.wall.tiles[row][col].x && currentTile.y + this.canvas.tileDim > this.wall.tiles[row][col].y &&
+                            currentTile.y + this.canvas.tileDim < this.wall.tiles[row][col].y + this.canvas.tileDim * 2) || currentTile.y + this.canvas.tileDim > this.canvas.height) {
+                            collisionTiles = this.block.tiles.slice()
                             break loop1
                         }
                     }
@@ -107,14 +107,15 @@ export function Game(ctx2D, canvas, setGameState) {
         }
     }
 
-    this.checkGameOver = (wall, setGameState) => {
+    this.checkGameOver = () => {
         try {
-            for (let row = 0; row < wall.length; row++) {
-                for (let col = 0; col < wall[0].length; col++) {
-                    if (Object.keys(wall[row][col]).length === 2) {
+            for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
+                for (let col = 0; col < WALL_TILES_WIDTH; col++) {
+                    if (Object.keys(this.wall.tiles[row][col]).length === 2) {
                         // If there is a tile in the wall with y position < 0 the game is over
-                        if (wall[row][col].y < 0) {
-                            // setGameState(actionType.gameOver, true)
+                        if (this.wall.tiles[row][col].y < 0) {
+                            this.gameOver = true
+                            this.setGameState(actionType.gameOver, true)
                         }
                     }
                 }
@@ -125,9 +126,9 @@ export function Game(ctx2D, canvas, setGameState) {
         }
     }
 
-    this.clearCanvas = (ctx2D, canvas) => {
-        if (ctx2D) {
-            ctx2D.clearRect(0, 0, canvas.width, canvas.height)
+    this.clearCanvas = () => {
+        if (this.ctx2D) {
+            this.ctx2D.clearRect(0, 0, this.canvas.width, this.canvas.height)
         }
     }
 

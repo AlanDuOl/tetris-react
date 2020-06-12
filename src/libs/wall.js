@@ -40,9 +40,9 @@ export function Wall() {
         }
     }
 
-    this.update = (tiles, tileDim) => {
+    this.update = (blockTiles, tileDim) => {
         let numRemovedRows = 0
-        this.addTiles(tiles, tileDim)
+        this.addTiles(blockTiles, tileDim)
         numRemovedRows = this.updateTiles(tileDim, numRemovedRows)
         return numRemovedRows
     }
@@ -76,9 +76,9 @@ export function Wall() {
         return numRemovedRows
     }
 
-    this.addTiles = (tiles, tileDim) => {
+    this.addTiles = (blockTiles, tileDim) => {
         try {
-            tiles.forEach(tile => {
+            blockTiles.forEach(tile => {
                 // Get the column and row numbers
                 let col = Math.floor(tile.x / tileDim)
                 let row = Math.floor(tile.y / tileDim)
