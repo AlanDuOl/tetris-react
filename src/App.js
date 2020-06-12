@@ -6,33 +6,38 @@ import Menu from './components/Menu'
 import Score from './components/Score'
 import Controls from './components/Controls'
 import { setGameState } from './actions/gameActions.js'
-import { gameInit } from './libs/game.js'
+import { Game } from './libs/game.js'
 import { WALL_TILES_WIDTH } from './globals.js'
 
 function App(props) {
 
-    const [canvas, setCanvas] = useState(null)
-    const [ctx2D, setCtx2D] = useState(null)
-    const [timer, setTimer] = useState(undefined)
-    const [wall, setWall] = useState(null)
-    const [block, setBlock] = useState(null)
+    // const [canvas, setCanvas] = useState(null)
+    // const [ctx2D, setCtx2D] = useState(null)
+    // const [timer, setTimer] = useState(undefined)
+    // const [wall, setWall] = useState(null)
+    // const [block, setBlock] = useState(null)
+    const [game, setGame] = useState(null)
 
     // Init game props
     useEffect(() => {
-      let canvas = document.getElementById("display-viewport")
-      let canvasDims = { width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }
-      setCanvas(canvasDims)
-      setCtx2D(canvas.getContext("2d"))
-      gameInit(canvasDims, setWall, setBlock, props.setGameState)
+        let canvas = document.getElementById("display-viewport")
+        const canvasDims = { width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }
+        const ctx2D = canvas.getContext("2d")
+        const newGame = new Game(ctx2D, canvasDims, props.setGameState)
+        setGame(newGame)
     }, [props.setGameState])
 
+    useEffect(() => {
+        game.init()
+    }, [game])
+
     return (
-      <div className="App">
-        <Score />
-        <Display ctx2D={ctx2D} canvas={canvas} timer={timer} setWall={setWall} setBlock={setBlock} setGameState={props.setGameState} />
-        <Menu ctx2D={ctx2D} canvas={canvas} timer={timer} setTimer={setTimer} wall={wall} setWall={setWall} block={block} setBlock={setBlock} />
-        <Controls canvas={canvas} wall={wall} setWall={setWall} block={block} setBlock={setBlock} />
-      </div>
+        <div className="App">
+            <Score info={game.info} />
+            <Display game={game} />
+            <Menu game={game} />
+            <Controls game={game} />
+        </div>
     );
 }
 
