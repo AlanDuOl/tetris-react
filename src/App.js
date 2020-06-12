@@ -18,13 +18,13 @@ function App(props) {
         let canvas = document.getElementById("display-viewport")
         const canvasDims = { width: canvas.width, height: canvas.height, tileDim: canvas.width / WALL_TILES_WIDTH }
         const ctx2D = canvas.getContext("2d")
-        const newGame = new Game(ctx2D, canvasDims, props.setGameState)
+        const newGame = new Game(ctx2D, canvasDims)
         setGame(newGame)
     }, [props.setGameState])
 
     useEffect(() => {
         if (game) {
-            game.init()
+            game.init(props.setGameState)
         }
     }, [game])
 

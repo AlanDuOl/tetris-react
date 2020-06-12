@@ -10,13 +10,13 @@ function Menu(props) {
     function toggleStart() {
         try {
             if (!props.gameReducer.gameOn) {
-                props.game.start()
+                props.game.start(props.setGameState)
             }
             else if (props.gameReducer.gameOn) {
                 // TODO: implement custom window for confirm
                 let quit = window.confirm("Finish?")
                 if (quit) {
-                    props.game.finish()
+                    props.game.finish(props.setGameState)
                 }
             }
         }
@@ -26,13 +26,14 @@ function Menu(props) {
     }
     // Game Pause/Resume
     function togglePause() {
+        console.log(props.gameReducer.gamePaused)
         try {
             if (!props.gameReducer.gamePaused && props.gameReducer.gameOn) {
-                props.game.stop()
+                props.game.stop(props.setGameState)
             }
             else if(props.gameReducer.gamePaused) {
                 // TODO: implement custom window for paused
-                props.game.start()
+                props.game.start(props.setGameState)
             }
         }
         catch(e) {

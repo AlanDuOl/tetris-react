@@ -3,10 +3,9 @@ import { Block } from './block.js'
 import { Wall } from './wall.js'
 import { Info } from './info.js'
 
-export function Game(ctx2D, canvas, setGameState) {
+export function Game(ctx2D, canvas) {
 
     // Object consts
-    this.setGameState = setGameState
     this.timer = null
     this.ctx2D = ctx2D
     this.canvas = canvas
@@ -16,33 +15,34 @@ export function Game(ctx2D, canvas, setGameState) {
     this.info = new Info()
     this.gameOver = false
 
-    this.init = () => {
-        this.resetState()
+    this.init = setGameState => {
+        this.resetState(setGameState)
         this.block.init(this.canvas)
         this.wall.init()
-        this.info.init(this.setGameState)
+        this.info.init(setGameState)
     }
 
-    this.resetState = () => {
-        this.setGameState(actionType.gameOn, false)
-        this.setGameState(actionType.gamePaused, false)
-        this.setGameState(actionType.gameOver, false)
+    this.resetState = setGameState => {
+        setGameState(actionType.gameOn, false)
+        setGameState(actionType.gamePaused, false)
+        setGameState(actionType.gameOver, false)
     }
 
-    this.start = () => {
-        this.setGameState(actionType.gameOn, true)
+    this.start = setGameState => {
+        setGameState(actionType.gameOn, true)
+        setGameState(actionType.gamePaused, false)
         this.timer = setInterval(this.loop, TIMER_SPEED)
     }
 
-    this.stop = () => {
-        this.setGameState(actionType.gamePaused, true)
+    this.stop = setGameState => {
+        setGameState(actionType.gamePaused, true)
         clearInterval(this.timer)
     }
 
-    this.finish = () => {
-        this.stop()
+    this.finish = setGameState => {
+        this.stop(setGameState)
         this.clearCanvas()
-        this.init()
+        this.init(setGameState)
     }
 
     this.loop = () => {
