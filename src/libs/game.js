@@ -17,45 +17,48 @@ export function Game(ctx2D, canvas, setGameState) {
     this.gameOver = false
 
     this.init = () => {
-        setGameState(actionType.gameOn, false)
-        setGameState(actionType.gamePaused, false)
-        setGameState(actionType.gameOver, false)
-        blockInit(canvas)
-        wallInit()
-        infoInit()
+        this.resetState()
+        this.block.init(canvas)
+        this.wall.init()
+        this.info.init()
     }
 
-    this.start = (setTimer, ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) => {
-        setGameState(actionType.gameOn, true)
-        setGameState(actionType.gamePaused, false)
-        setTimer(setInterval(gameLoop.bind(null, ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState), TIMER_SPEED))
+    this.resetState = () => {
+        this.setGameState(actionType.gameOn, false)
+        this.setGameState(actionType.gamePaused, false)
+        this.setGameState(actionType.gameOver, false)
     }
 
-    this.stop = (timer, setGameState) => {
-        setGameState(actionType.gamePaused, true)
-        clearInterval(timer)
+    this.start = () => {
+        this.setGameState(actionType.gameOn, true)
+        this.timer = setInterval(this.loop, TIMER_SPEED)
     }
 
-    this.finish = (timer, ctx2D, canvas, setBlock, setWall, setGameState) => {
-        gameStop(timer, setGameState)
-        gameCanvasClear(ctx2D, canvas)
-        gameInit(canvas, setWall, setBlock, setGameState)
+    this.stop = () => {
+        this.setGameState(actionType.gamePaused, true)
+        clearInterval(this.timer)
     }
 
-    this.loop = (ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) => {
-        gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
-        gameDraw(ctx2D, block, wall, canvas)
+    this.finish = () => {
+        this.stop()
+        this.clearCanvas()
+        this.init()
+    }
+
+    this.loop = () => {
+        this.update()
+        this.draw()
         console.log("need to clear interval")
     }
 
-    this.draw = (ctx2D, block, wall, canvas) => {
-        if (ctx2D) {
+    this.draw = () => {
+        if (this.ctx2D) {
             // Clear canvas
-            gameCanvasClear(ctx2D, canvas)
+            this.clearCanvas()
             // Draw block
-            blockDraw(ctx2D, block, canvas.tileDim)
+            this.block.draw(this.ctx2D, this.canvas.tileDim)
             // Draw wall
-            wallDraw(ctx2D, wall, canvas.tileDim)
+            this.wall.draw(this.ctx2D, this.canvas.tileDim)
         }
     }
 
@@ -122,7 +125,7 @@ export function Game(ctx2D, canvas, setGameState) {
         }
     }
 
-    this.clearCanvas(ctx2D, canvas) {
+    this.clearCanvas = (ctx2D, canvas) => {
         if (ctx2D) {
             ctx2D.clearRect(0, 0, canvas.width, canvas.height)
         }

@@ -5,31 +5,31 @@ export function Wall() {
 
     this.tiles = []
 
-    function wallInit(setWall) {
-        let wall = []
+    this.init = () => {
+        let wallTiles = []
         try {
             for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
                 let wallRow = []
                 for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                     wallRow.push({})
                 }
-                wall.push(wallRow)
+                wallTiles.push(wallRow)
             }
-            setWall(wall)
+            this.tiles = wallTiles
         }
         catch (e) {
             console.error(e.message)
         }
     }
 
-    function wallDraw(ctx2D, wall, tileDim) {
+    this.draw = (ctx2D, tileDim) => {
         try {
             for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
                 for (let col = 0; col < WALL_TILES_WIDTH; col++) {
-                    if (Object.keys(wall[row][col]).length === 2) {
+                    if (Object.keys(this.tiles[row][col]).length === 2) {
                         ctx2D.beginPath()
                         ctx2D.fillStyle = "grba(0, 0, 255, 1)"
-                        ctx2D.rect(wall[row][col].x, wall[row][col].y, tileDim, tileDim)
+                        ctx2D.rect(this.tiles[row][col].x, this.tiles[row][col].y, tileDim, tileDim)
                         ctx2D.fill()
                     }
                 }
@@ -40,14 +40,14 @@ export function Wall() {
         }
     }
 
-    function wallUpdate(tiles, wall, setWall, tileDim) {
+    this.update = (tiles, tileDim) => {
         let numRemovedRows = 0
-        wallAddTiles(tiles, wall, setWall, tileDim)
-        numRemovedRows = wallUpdateTiles(wall, setWall, tileDim, numRemovedRows)
+        this.addTiles(tiles, tileDim)
+        numRemovedRows = this.updateTiles(tileDim, numRemovedRows)
         return numRemovedRows
     }
 
-    function wallUpdateTiles(wall, setWall, tileDim, initialValue) {
+    this.updateTiles = (tileDim, initialValue) => {
         // this is to know how many lines have been removed and is used to update the score/level
         let numRemovedRows = initialValue
         try {
@@ -55,16 +55,16 @@ export function Wall() {
             for (let row = WALL_TILES_HEIGHT - 1; row >= 0; row--) {
                 let rowLength = 0
                 for (let col = 0; col < WALL_TILES_WIDTH; col++) {
-                    if (Object.keys(wall[row][col]).length === 2) {
+                    if (Object.keys(this.tiles[row][col]).length === 2) {
                         rowLength++
                         // If there is a row without empty tiles, remove it and move the abore tiles down (if any)
                         if (rowLength === WALL_TILES_WIDTH) {
                             // Remove row where all tiles are not empty
-                            wallRemoveTiles(wall, row)
+                            this.removeTiles(row)
                             // Move down tiles above the emptied row
-                            wallMoveTilesDown(wall, setWall, row - 1, tileDim)
+                            this.moveTilesDown(row - 1, tileDim)
                             // Recall self increasing numRemovedRows to see if there are more rows to remove
-                            numRemovedRows = wallUpdateTiles(wall, setWall, tileDim, ++numRemovedRows)
+                            numRemovedRows = this.updateTiles(tileDim, ++numRemovedRows)
                         }
                     }
                 }
@@ -76,7 +76,7 @@ export function Wall() {
         return numRemovedRows
     }
 
-    function wallAddTiles(tiles, wall, setWall, tileDim) {
+    this.addTiles = (tiles, tileDim) => {
         try {
             tiles.forEach(tile => {
                 // Get the column and row numbers
@@ -87,46 +87,44 @@ export function Wall() {
                     // Add 4 to every row index so no index is smaller than 0 and grater than 21
                     // Negative y position is needed to check for game over
                     // Because the game over check must happen after the wall updates
-                    wall[row + BLOCK_NUM_TILES][col] = { x: col * tileDim, y: row * tileDim }
+                    this.tiles[row + BLOCK_NUM_TILES][col] = { x: col * tileDim, y: row * tileDim }
                 }
             })
-            setWall(wall)
         }
         catch (e) {
             console.error(e.message)
         }
     }
 
-    function wallRemoveTiles(wall, row) {
+    this.removeTiles = row => {
         // Make current row empty
-        wall[row] = wallGetEmptyRow()
+        this.tiles[row] = wallGetEmptyRow()
     }
 
-    function wallMoveTilesDown(wall, setWall, startRow, tileDim) {
+    this.moveTilesDown = (startRow, tileDim) => {
         try {
-            let emptyRow = wallGetEmptyRow()
+            let emptyRow = this.getEmptyRow()
             // Loop in rows from bottom to top
             for (let row = startRow; row >= 0; row--) {
                 // Loop in the columns and and increase y postion by tileDim where the tile is not empty
                 for (let col = 0; col < WALL_TILES_WIDTH; col++) {
                     // if ((wall[row][col].x || wall[row][col].x === 0) && (wall[row][col].y || wall[row][col].y === 0)) {
-                    if (Object.keys(wall[row][col]).length === 2) {
-                        wall[row][col].y += tileDim
+                    if (Object.keys(this.tiles[row][col]).length === 2) {
+                        this.tiles[row][col].y += tileDim
                     }
                 }
                 // Make the bellow row be equal to the current row
-                wall[row + 1] = wall[row]
+                this.tiles[row + 1] = this.tiles[row]
                 // Make the current row be equal to an empty row
-                wall[row] = emptyRow
+                this.tiles[row] = emptyRow
             }
-            setWall(wall)
         }
         catch (e) {
             console.error(e.message)
         }
     }
 
-    function wallGetEmptyRow() {
+    this.getEmptyRow = () => {
         let wallRow = []
         for (let col = 0; col < WALL_TILES_WIDTH; col++) {
             let emptyTile = {}

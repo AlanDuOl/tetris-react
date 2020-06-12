@@ -23,14 +23,14 @@ export function Info() {
         this.record = currentRecord
     }
 
-    this.update = (numRemovedRows, gameReducer, setGameState) => {
+    this.update = (numRemovedRows, setGameState) => {
         // Update score
-        let newScore = gameReducer.score + numRemovedRows
+        let newScore = this.score + numRemovedRows
         setGameState(actionType.gameScore, newScore)
         // Changes in score tigger updates in record and level
         // Check if the level and record need to update
-        this.levelUpdate(newScore, gameReducer.level, setGameState)
-        this.recordUpdate(newScore, gameReducer.record, setGameState)
+        this.updateLevel(newScore, setGameState)
+        this.updateRecord(newScore, setGameState)
     }
 
     this.recordGet = async () => {
@@ -45,7 +45,7 @@ export function Info() {
         }
     }
 
-    this.recordSave = (newRecord) => {
+    this.saveRecord = (newRecord) => {
         const data = { id: 1, record: newRecord }
         const url = 'http://localhost:4000/record/update'
         fetch(url, {
@@ -54,20 +54,20 @@ export function Info() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
-            .catch(err => console.error(err))
+        .catch(err => console.error(err))
     }
 
-    this.recordUpdate = (score, record, setGameState) => {
-        if (score > 0 && score > record) {
+    this.updateRecord = (score, setGameState) => {
+        if (score > 0 && score > this.record) {
             setGameState(actionType.gameRecord, score)
-            infoSaveRecord(score)
+            this.saveRecord(score)
         }
     }
 
-    this.levelUpdate = (score, level, setGameState) => {
+    this.updateLevel = (score, setGameState) => {
         let futureLevel = Math.floor(score / LEVEL_FACTOR) + 1
-        if (futureLevel > level) {
-            setGameState(actionType.gameLevel, level + 1)
+        if (futureLevel > this.level) {
+            setGameState(actionType.gameLevel, this.level + 1)
         }
     }
 
