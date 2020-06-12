@@ -7,8 +7,8 @@ TODO:
         - checkMoveLeft
         - checkMoveRight
         - bottomCollision
-    - Update level
+    - Check update level
     - Allow keyboard keys
     - Use web workers
-    - Replace console.log for console.error on try catchs
-    - Refactor game Over logic in wallSetTiles
+    - Refactor game Over logic
+    - gameBottomCollision may be overlooping in forEach

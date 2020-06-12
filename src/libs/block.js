@@ -16,11 +16,6 @@ export function blockInit(canvas, setBlock) {
     setBlock(newBlock)
 }
 
-export function blockUpdate(block, setBlock) {
-    // Move the block down
-    blockMoveDown(block, setBlock)
-}
-
 export function blockDraw(ctx2D, block, tileDim) {
     try {
         ctx2D.fillStyle = block.type.fillStyle
@@ -35,7 +30,7 @@ export function blockDraw(ctx2D, block, tileDim) {
     }
 }
 
-function blockMoveDown(block, setBlock) {
+export function blockMoveDown(block, setBlock) {
     block.tiles.forEach(tile => {
         tile.y += block.speed
     })
