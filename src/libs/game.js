@@ -30,11 +30,8 @@ export function gameFinish(timer, ctx2D, canvas, setBlock, setWall, setGameState
 }
 
 function gameLoop(ctx2D, canvas, wall, setWall, block, setBlock, gameReducer, setGameState) {
-    // If the game is not over, run it
-    if (!gameReducer.gameOver) {
-        gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
-        gameDraw(ctx2D, block, wall, canvas)
-    }
+    gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGameState)
+    gameDraw(ctx2D, block, wall, canvas)
     console.log("need to clear interval")
 }
 
@@ -64,11 +61,9 @@ function gameUpdate(canvas, wall, setWall, block, setBlock, gameReducer, setGame
             infoUpdate(numRemovedRows, gameReducer, setGameState)
         }
         // Check game over after wall update
-        let gameOver = gameCheckGameOver(wall, setGameState)
+        gameCheckGameOver(wall, setGameState)
         // If the game is not over reset the block
-        if (!gameOver) {
-            blockReset(canvas, block, setBlock, gameReducer)
-        }
+        blockReset(canvas, block, setBlock, gameReducer)
     }
 }
 
@@ -76,18 +71,18 @@ function gameGetBottomCollision(block, wall, canvas) {
     try {
         let collisionTiles = []
         block.tiles.forEach(currentTile => {
-                // Check if it calls after return
-                loop1:
-                for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
-                    for (let col = 0; col < WALL_TILES_WIDTH; col++) {
-                        // If there was a collision, add the tiles to the wall and return true
-                        if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
-                            currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
-                            collisionTiles = block.tiles.slice()
-                            break loop1
-                        }
+            // Check if it calls after return
+            loop1:
+            for (let row = 0; row < WALL_TILES_HEIGHT; row++) {
+                for (let col = 0; col < WALL_TILES_WIDTH; col++) {
+                    // If there was a collision, add the tiles to the wall and return true
+                    if ((currentTile.x === wall[row][col].x && currentTile.y + canvas.tileDim > wall[row][col].y &&
+                        currentTile.y + canvas.tileDim < wall[row][col].y + canvas.tileDim * 2) || currentTile.y + canvas.tileDim > canvas.height) {
+                        collisionTiles = block.tiles.slice()
+                        break loop1
                     }
                 }
+            }
         })
         return collisionTiles
     }
@@ -97,14 +92,12 @@ function gameGetBottomCollision(block, wall, canvas) {
 }
 
 function gameCheckGameOver(wall, setGameState) {
-    let gameOver = false
     try {
         for (let row = 0; row < wall.length; row++) {
             for (let col = 0; col < wall[0].length; col++) {
                 if (Object.keys(wall[row][col]).length === 2) {
                     // If there is a tile in the wall with y position < 0 the game is over
                     if (wall[row][col].y < 0) {
-                        gameOver = true
                         setGameState(actionType.gameOver, true)
                     }
                 }
@@ -114,7 +107,6 @@ function gameCheckGameOver(wall, setGameState) {
     catch (e) {
         console.error(e.message)
     }
-    return gameOver
 }
 
 function gameCanvasClear(ctx2D, canvas) {
