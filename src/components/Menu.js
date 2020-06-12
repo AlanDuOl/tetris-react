@@ -10,13 +10,13 @@ function Menu(props) {
     function toggleStart() {
         try {
             if (!props.gameReducer.gameOn) {
-                props.game.start(props.setGameState)
+                props.game.start()
             }
             else if (props.gameReducer.gameOn) {
                 // TODO: implement custom window for confirm
                 let quit = window.confirm("Finish?")
                 if (quit) {
-                    props.game.finish(props.setGameState)
+                    props.game.finish()
                 }
             }
         }
@@ -26,14 +26,13 @@ function Menu(props) {
     }
     // Game Pause/Resume
     function togglePause() {
-        console.log(props.gameReducer.gamePaused)
         try {
             if (!props.gameReducer.gamePaused && props.gameReducer.gameOn) {
-                props.game.stop(props.setGameState)
+                props.game.stop()
             }
             else if(props.gameReducer.gamePaused) {
                 // TODO: implement custom window for paused
-                props.game.start(props.setGameState)
+                props.game.start()
             }
         }
         catch(e) {
@@ -57,8 +56,4 @@ const mapStateToProps = state => ({
     ...state
 })
 
-const mapDispatchToProps = dispatch => ({
-    setGameState: (actionType, actionValue) => dispatch(setGameState(actionType, actionValue))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Menu)
+export default connect(mapStateToProps, null)(Menu)

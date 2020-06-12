@@ -16,14 +16,14 @@ export function Info() {
     // this.setLevel = val => { this.level = val }
     // this.setRecord = val => { this.record = val }
 
-    this.init = async setGameState => {
+    this.init = async (setGameState) => {
         let currentRecord = await this.recordGet()
         this.score = GAME_INITIAL_SCORE
         this.level = GAME_INITIAL_LEVEL
         this.record = currentRecord
         setGameState(actionType.gameScore, GAME_INITIAL_SCORE)
-        setGameState(actionType.level, GAME_INITIAL_LEVEL)
-        setGameState(actionType.record, currentRecord)
+        setGameState(actionType.gameLevel, GAME_INITIAL_LEVEL)
+        setGameState(actionType.gameRecord, currentRecord)
     }
 
     this.update = (numRemovedRows, setGameState) => {

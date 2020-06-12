@@ -3,46 +3,47 @@ import { Block } from './block.js'
 import { Wall } from './wall.js'
 import { Info } from './info.js'
 
-export function Game(ctx2D, canvas) {
+export function Game(ctx2D, canvas, setGameState) {
 
     // Object consts
     this.timer = null
     this.ctx2D = ctx2D
     this.canvas = canvas
+    this.setGameState = setGameState
 
     this.block = new Block()
     this.wall = new Wall()
     this.info = new Info()
     this.gameOver = false
 
-    this.init = setGameState => {
-        this.resetState(setGameState)
+    this.init = () => {
+        this.resetState(this.setGameState)
         this.block.init(this.canvas)
         this.wall.init()
-        this.info.init(setGameState)
+        this.info.init(this.setGameState)
     }
 
-    this.resetState = setGameState => {
-        setGameState(actionType.gameOn, false)
-        setGameState(actionType.gamePaused, false)
-        setGameState(actionType.gameOver, false)
+    this.resetState = () => {
+        this.setGameState(actionType.gameOn, false)
+        this.setGameState(actionType.gamePaused, false)
+        this.setGameState(actionType.gameOver, false)
     }
 
-    this.start = setGameState => {
-        setGameState(actionType.gameOn, true)
-        setGameState(actionType.gamePaused, false)
+    this.start = () => {
+        this.setGameState(actionType.gameOn, true)
+        this.setGameState(actionType.gamePaused, false)
         this.timer = setInterval(this.loop, TIMER_SPEED)
     }
 
-    this.stop = setGameState => {
-        setGameState(actionType.gamePaused, true)
+    this.stop = () => {
+        this.setGameState(actionType.gamePaused, true)
         clearInterval(this.timer)
     }
 
-    this.finish = setGameState => {
-        this.stop(setGameState)
+    this.finish = () => {
+        this.stop(this.setGameState)
         this.clearCanvas()
-        this.init(setGameState)
+        this.init(this.setGameState)
     }
 
     this.loop = () => {
@@ -62,7 +63,7 @@ export function Game(ctx2D, canvas) {
         }
     }
 
-    this.update = (canvas, wall, setWall, block, setBlock, gameReducer, setGameState) => {
+    this.update = () => {
         // Update block
         this.block.moveDown()
         // Check for collision block bottom collision with canvas and wall
